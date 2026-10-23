@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Supply Chain Management - Weeks 5 and 6</title>
+<style>
+:root{--bg:#050505;--card:#111113;--c2:#18181b;--tx:#f5f5f4;--mut:#a1a1aa;--bd:#27272a;--a:#f59e0b;--b:#34d399;--ok:#34d399;--no:#fb7185}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.65 system-ui,Segoe UI,Roboto,sans-serif}
+header{padding:24px 20px 6px;max-width:1060px;margin:auto}
+h1{margin:0;font-size:1.6rem;background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--mut);font-size:.88rem}
+nav{position:sticky;top:0;z-index:5;background:rgba(5,5,5,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--bd);padding:10px 20px}
+.in{max-width:1060px;margin:auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.sp{flex:1}
+nav button{background:var(--card);color:var(--tx);border:1px solid var(--bd);padding:7px 15px;border-radius:999px;cursor:pointer;font-size:.88rem}
+nav button.on{border-color:var(--a);color:var(--a);box-shadow:0 0 0 1px var(--a) inset}
+nav .wk button{border-radius:8px;font-weight:700}
+nav .wk button.on{background:var(--a);color:#050505}
+main{max-width:1060px;margin:auto;padding:18px 20px 60px}
+.acc{background:var(--card);border:1px solid var(--bd);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.acc>.h{padding:13px 18px;cursor:pointer;display:flex;justify-content:space-between;font-weight:600}
+.acc>.h:after{content:"+";color:var(--a);font-size:1.3rem}
+.acc.open>.h:after{content:"\2212"}
+.acc>.c{display:none;padding:2px 18px 16px;border-top:1px solid var(--bd)}
+.acc.open>.c{display:block}
+.c h4{color:var(--a);margin:16px 0 4px}
+.c ul{margin:4px 0;padding-left:20px}.c li{margin:3px 0}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.88rem}
+th,td{border:1px solid var(--bd);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:#000;color:var(--a)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.m{background:#000;border:1px solid var(--bd);border-left:3px solid var(--a);border-radius:10px;padding:9px 12px}
+.m b{display:block;color:var(--a);font-size:1.1rem}.m span{color:var(--mut);font-size:.8rem}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0}
+.flow div{background:#000;border:1px solid var(--b);border-radius:8px;padding:5px 11px;font-size:.84rem}
+.flow i{color:var(--a);font-style:normal}
+.tip{background:#000;border:1px dashed var(--a);border-radius:10px;padding:9px 13px;margin:10px 0;color:#d4d4d8;font-size:.9rem}
+.dg{background:#000;border:1px solid var(--bd);border-radius:12px;padding:10px;margin:12px 0}
+.dg svg{width:100%;height:auto;display:block}
+.dg .cap{color:var(--mut);font-size:.78rem;text-align:center;margin-top:4px}
+.fc{perspective:900px;height:150px;cursor:pointer}
+.fi{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.fc.f .fi{transform:rotateY(180deg)}
+.fa,.fb{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;border:1px solid var(--bd);background:var(--card);display:flex;align-items:center;justify-content:center;text-align:center;padding:12px;font-size:.88rem}
+.fa{font-weight:700;color:var(--a);font-size:1.02rem}
+.fb{transform:rotateY(180deg);border-color:var(--b)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+input[type=search]{width:100%;padding:10px 14px;background:var(--card);border:1px solid var(--bd);color:var(--tx);border-radius:10px;margin-bottom:14px}
+.bar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px 16px;margin-bottom:14px}
+.bar select,.bar button{background:#000;color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:7px 12px;cursor:pointer}
+.bar button.p{background:var(--a);color:#050505;border:0;font-weight:700}
+.prog{flex:1;min-width:120px;height:8px;background:#000;border-radius:9px;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--a),var(--b));transition:width .3s}
+.q{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:15px 18px;margin-bottom:14px}
+.q .t{font-size:.74rem;color:var(--a);text-transform:uppercase;letter-spacing:.06em}
+.q p{margin:4px 0 10px;font-weight:600}
+.o{display:block;width:100%;text-align:left;background:#000;color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:9px 12px;margin:6px 0;cursor:pointer;font-size:.94rem}
+.o:hover:not(:disabled){border-color:var(--a)}
+.o.ok{border-color:var(--ok);background:rgba(52,211,153,.12)}
+.o.no{border-color:var(--no);background:rgba(251,113,133,.12)}
+.ex{display:none;margin-top:8px;padding:10px 12px;border-radius:8px;background:#000;border-left:3px solid var(--a);font-size:.9rem;color:#d4d4d8}
+.ex.s{display:block}
+.chk{margin-top:6px;background:transparent;border:1px solid var(--a);color:var(--a);border-radius:8px;padding:5px 12px;cursor:pointer;font-size:.84rem}
+#res{display:none;text-align:center;background:var(--card);border:1px solid var(--a);border-radius:12px;padding:18px;margin-bottom:14px}
+#res b{font-size:2rem;color:var(--a)}
+
+.imp{background:linear-gradient(90deg,rgba(245,158,11,.14),rgba(245,158,11,.03));border:1px solid var(--a);border-left:4px solid var(--a);border-radius:10px;padding:9px 13px;margin:12px 0;font-size:.9rem;color:#fde68a}
+.imp b{color:var(--a)}
+.star{color:var(--a);font-weight:700}
+
+.prio{margin-top:8px;font-size:.8rem;color:var(--mut);align-items:center}
+.prio button{border-radius:8px!important;padding:4px 11px!important;font-size:.78rem!important}
+.prio .lg{margin-left:auto}
+.prio i.d{display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 4px 0 12px;vertical-align:-1px}
+i.d.H{background:var(--a)}i.d.M{background:var(--b)}i.d.L{background:#52525b}
+.blk{border-left:3px solid transparent;padding:2px 0 4px 12px;margin:10px 0;border-radius:2px}
+.blk.p-H{border-color:var(--a);background:linear-gradient(90deg,rgba(245,158,11,.08),transparent)}
+.blk.p-M{border-color:var(--b)}
+.blk.p-L{border-color:#3f3f46;opacity:.6}
+.blk.p-L:hover{opacity:1}
+.pb{display:inline-block;font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;font-weight:700;padding:1px 9px;border-radius:999px;margin-top:6px}
+.p-H .pb{background:var(--a);color:#050505}
+.p-M .pb{background:rgba(52,211,153,.18);color:var(--b)}
+.p-L .pb{background:#27272a;color:#a1a1aa}
+.cnt{font-size:.72rem;color:var(--mut);font-weight:400;margin-left:auto;margin-right:12px;white-space:nowrap}
+body.mode-hm .blk.p-L{display:none}
+body.mode-h .blk.p-L,body.mode-h .blk.p-M{display:none}
+</style>
+</head>
+<body>
+<header>
+<h1>Supply Chain Management</h1>
+<div class="sub">NPTEL study hub &middot; Week 5 (Lectures 21-25) and Week 6 (Lectures 26-30), with rebuilt diagrams</div>
+</header>
+<nav><div class="in">
+<span class="wk"><button data-w="5" class="on">Week 5</button> <button data-w="6">Week 6</button></span>
+<span class="sp"></span>
+<span><button data-t="notes" class="on">Notes</button> <button data-t="cards">Flashcards</button> <button data-t="imp">★ Important</button> <button data-t="quiz">Quiz</button></span>
+</div><div class="in prio" id="prio"><span>Priority view:</span><button data-m="all" class="on">All topics</button><button data-m="hm">Hide background</button><button data-m="h">Must-know only</button><span class="lg"><i class="d H"></i>Must know<i class="d M"></i>Good to know<i class="d L"></i>Background</span></div></nav>
+<main id="main"></main>
+<script>
+const L=a=>'<ul>'+a.map(x=>'<li>'+x+'</li>').join('')+'</ul>';
+const T=(h,r)=>'<table><tr>'+h.map(x=>'<th>'+x+'</th>').join('')+'</tr>'+r.map(y=>'<tr>'+y.map(x=>'<td>'+x+'</td>').join('')+'</tr>').join('')+'</table>';
+const M=a=>'<div class="cards">'+a.map(x=>'<div class="m"><b>'+x[0]+'</b><span>'+x[1]+'</span></div>').join('')+'</div>';
+const F=a=>'<div class="flow">'+a.map(x=>'<div>'+x+'</div>').join('<i>&rarr;</i>')+'</div>';
+const TIP=s=>'<div class="tip">'+s+'</div>';
+const A='#f59e0b',B='#34d399',R='#fb7185',W='#f5f5f4',G='#71717a';
+/* SVG helpers: boxes [x,y,w,h,text,color], lines [x1,y1,x2,y2,color], texts [x,y,text,color,size,anchor] */
+function SV(w,h,bx,ln,tx,cap){
+ let s=`<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,sans-serif"><defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#a1a1aa"/></marker></defs>`;
+ (ln||[]).forEach(l=>s+=`<line x1="${l[0]}" y1="${l[1]}" x2="${l[2]}" y2="${l[3]}" stroke="${l[4]||G}" stroke-width="2" ${l[5]===0?'':'marker-end="url(#ar)"'}/>`);
+ (bx||[]).forEach(b=>{const c=b[5]||A;s+=`<rect x="${b[0]}" y="${b[1]}" width="${b[2]}" height="${b[3]}" rx="8" fill="#0b0b0c" stroke="${c}" stroke-width="1.6"/>`;
+  const p=b[4].split('|');p.forEach((t,i)=>s+=`<text x="${b[0]+b[2]/2}" y="${b[1]+b[3]/2+(i-(p.length-1)/2)*15+4}" fill="${W}" font-size="12" text-anchor="middle">${t}</text>`)});
+ (tx||[]).forEach(t=>s+=`<text x="${t[0]}" y="${t[1]}" fill="${t[3]||W}" font-size="${t[4]||12}" text-anchor="${t[5]||'middle'}">${t[2]}</text>`);
+ return `<div class="dg">${s}</svg>${cap?'<div class="cap">'+cap+'</div>':''}</div>`;
+}
+const D={};
+
+/* ================= WEEK 5 ================= */
+const dFlows=SV(760,200,
+ [[10,20,120,44,'Supplier'],[160,20,120,44,'Manufacturer'],[310,20,120,44,'Distributor'],[460,20,120,44,'Retailer'],[610,20,120,44,'Customer',B]],
+ [[130,36,160,36],[280,36,310,36],[430,36,460,36],[580,36,610,36],[610,52,580,52,R],[460,52,430,52,R],[310,52,280,52,R],[160,52,130,52,R]],
+ [[380,100,'Product flow: supplier to customer (forward) and returns (reverse)',A,13],[380,128,'Funds flow: customer to supplier (payments)',R,13],[380,156,'Information flow: both directions (orders, forecasts, schedules, status)',B,13]],
+ 'Rebuilt: three flows of a supply chain (product, funds, information). Chopra and Meindl.');
+const dPhases=SV(760,150,
+ [[10,30,230,80,'1. Strategy / Design|several years|outsource vs in-house, locations,|capacities, modes, IT systems'],[265,30,230,80,'2. Planning|quarter to a year|which market from which site,|inventory policy, subcontracting',B],[520,30,230,80,'3. Operation|weekly or daily|allocate orders, due dates,|pick lists, shipments, replenishment',R]],
+ [[240,70,265,70],[495,70,520,70]],
+ [[380,135,'Configuration is fixed at each lower level; goal narrows from structure to handling individual orders',G,12]],
+ 'Rebuilt: three supply chain decision phases and their time horizons.');
+const dMacro=SV(760,170,
+ [[10,50,110,50,'Supplier',G],[160,30,150,90,'SRM|Supplier Relationship|Management'],[345,30,150,90,'ISCM|Internal Supply Chain|Management',B],[530,30,150,90,'CRM|Customer Relationship|Management'],[700,50,50,50,'Cust.',G]],
+ [[120,75,160,75],[310,75,345,75],[495,75,530,75],[680,75,700,75]],
+ [[235,140,'Sourcing, supplier evaluation, negotiation',A,11],[420,140,'Capacity, demand and supply planning, fulfilment',B,11],[605,140,'Marketing, pricing, sales, order mgmt, call centre',A,11]],
+ 'Rebuilt: three supply chain macro processes (CRM, ISCM, SRM).');
+
+const dCostSvg=`<div class="dg"><svg viewBox="0 0 760 260" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,sans-serif"><line x1="60" y1="20" x2="60" y2="220" stroke="#71717a"/><line x1="60" y1="220" x2="720" y2="220" stroke="#71717a"/>
+<polyline fill="none" stroke="#fb7185" stroke-width="3" points="80,200 200,170 320,140 440,110 560,80 680,50"/>
+<polyline fill="none" stroke="#34d399" stroke-width="3" points="80,40 200,100 320,140 440,165 560,180 680,190"/>
+<polyline fill="none" stroke="#f59e0b" stroke-width="3" stroke-dasharray="6 4" points="80,60 200,110 320,150 440,160 560,140 680,120"/>
+<text x="690" y="48" fill="#fb7185" font-size="12">Inventory + facility cost</text><text x="690" y="200" fill="#34d399" font-size="12">Transportation cost</text><text x="690" y="132" fill="#f59e0b" font-size="12">Total logistics cost</text>
+<text x="390" y="245" fill="#f5f5f4" font-size="12" text-anchor="middle">Number of facilities</text><text x="20" y="120" fill="#f5f5f4" font-size="12" transform="rotate(-90 20 120)" text-anchor="middle">Cost</text></svg><div class="cap">Rebuilt: inventory and facility cost rise with facilities; transportation falls, then rises if inbound economies of scale are lost. Total cost has a minimum.</div></div>`;
+const dNet=SV(760,150,
+ [[10,30,170,80,'Phase I|Define supply chain|strategy / design'],[200,30,170,80,'Phase II|Define regional|facility configuration',B],[390,30,170,80,'Phase III|Select desirable|potential sites'],[580,30,170,80,'Phase IV|Choose location and|capacity allocation',B]],
+ [[180,70,200,70],[370,70,390,70],[560,70,580,70]],
+ [[380,135,'Narrowing from firm-wide design to a precise site and capacity for each facility',G,12]],
+ 'Rebuilt: four-phase framework for network design decisions.');
+D[5]={notes:[
+["Lecture 21 - Fundamentals of Supply Chain Management",
+`<h4>What is a supply chain?</h4><p>Example in the lecture: a customer wants detergent and goes to a supermarket (Big Bazaar / third-party DC), supplied by P&amp;G or another manufacturer, who is supplied by plastic producers, chemical manufacturers (oil companies), packaging, paper and timber industries.</p>
+<p><b>Chopra and Meindl (2013):</b> all parties involved, directly or indirectly, in fulfilling a customer request: manufacturer, suppliers, transporters, warehouses, retailers and even customers. Within each firm it includes new product development, marketing, operations, distribution, finance and customer service. <b>Lu Dawei and Chen:</b> a group of interconnected companies that add value to the stream that transforms inputs from source to the end product or service demanded by the designated end customer.</p>
+<p><b>Supply chain management (SCM)</b> combines demand and supply networks and focuses on efficient working of every step. Every link tries to minimise cost and improve long-run performance by removing useless expense, handling and movement; it monitors distribution, production and transport via control of inventory, shipment, internal sales and production.</p>`+dFlows+
+`<h4>Objectives</h4><p>Maximise overall value generated: timely delivery, effective inventory management, flexibility and responsiveness, efficient cost-effective production, collaborative supplier-consumer relationship, improved logistics, optimised delivery (time, cost, amount), more customer value, better distribution, demand fulfilment, quality and integrated technology.</p>
+<h4>Supply chain decisions</h4>`+dPhases+T(['Phase','Horizon','Examples'],[['Strategy / design','Several years','Outsource or in-house; location and capacity of plants and warehouses; products per location; modes; information systems'],['Planning','Quarter to a year','Configuration fixed; maximise surplus; which markets from which locations, inventory policy, subcontracting, backup locations, timing and size of promotions'],['Operation','Weekly or daily','Allocate orders to inventory or production, set due dates, pick lists, allocate orders to shipments, delivery schedules, replenishment orders']])+
+`<h4>Types of supply chain models</h4>`+T(['Model','Best for'],[['Continuous flow','Mature industries; same good repeatedly; stable demand'],['Agile','Unpredictable demand or custom orders; flexibility first'],['Fast','Short life-cycle products; ride a trend and sell out before it ends'],['<b>Flexible</b>','<b>Seasonality</b>: ramp production up and down for peaks and troughs'],['Efficient','Tight profit margins; best use of equipment, inventory, order processing'],['Custom','Specialised, technical industries (e.g. automobile)']])+
+`<h4>Concept of SCM: three components</h4>`+T(['Component','Meaning','Level'],[['Configuration (architecture)','How the chain is built: size of supply base, extent of vertical integration, outsourcing, distribution channel design','Strategic'],['Relationship','Inter-firm links, mainly OEM with first-tier suppliers and customers; arm\'s length (price and volume only) versus close partnership (vision, investment plans, NPI, financials)','Strategic and operational'],['Coordination','Operational flow of material, ideally JIT; inventory, capacity, forecasting, scheduling, customer service','Operational']])],
+["Lecture 22 - SC Operations: Manufacturing versus Service SC",
+`<p>Operations management deals with producing and distributing goods and services. <b>Four functions:</b> planning, scheduling, control, improvement. SCM is a subset of operations management concentrating on material and information flow among suppliers and customers.</p>
+<h4>Services versus products</h4><p>Five attributes of services: <b>intangibility, perishability, heterogeneity, inseparability, customer participation</b>. Perishability mirrors inventory management for demand uncertainty; heterogeneity, inseparability and participation have manufacturing counterparts in modularity and JIT.</p>
+<p><b>Manufacturing supply chain:</b> network of organisations, resources and technologies that produce and distribute goods (raw materials to assembly, packaging, distribution). <b>Service supply chain:</b> interconnected activities delivering intangible services (healthcare, transport, hospitality, professional); customer engagement, service delivery, resource allocation, support.</p>`+T(['Factor','Manufacturing SC','Service SC'],[['Input','Suppliers\' materials and components','Information, labour, skills'],['Value-added process','Physical production and assembly','Customer-provider interaction'],['Output','Pre-defined product','Customised service'],['Production system','<b>Push</b> (sell from inventory)','<b>Pull</b> (initiated by customer demand)'],['Demand uncertainty','Managed with <b>inventory</b>','Managed with <b>queues</b>'],['Customer relations','Often low level','Critical to overall success']])+
+`<h4>Case: Amazon</h4><p>Began by filling orders with books bought from a distributor; added warehouses for speed (about 20 US and 30 elsewhere in 2009); outbound shipping cost almost USD 2 billion in 2009; 460,000 digital books for Kindle; acquired <b>Zappos</b> (added variety: 121,000 product descriptions, 2.2 million images) and <b>diapers.com</b> (little variety, high shipping volume).</p>`],
+["Lecture 23 - Principle Streams of Supply Chain (1)",
+`<h4>Three streams</h4>`+F(['Procurement / Supply / Sourcing','Operations / Material / Production','Logistics / Distribution'])+
+`<h4>Sourcing</h4><p>Systematic identification, assessment and enlistment of suppliers by set criteria, usually via tendering, at tactical and strategic levels; first step of the chain; balances quality against affordability.</p>`+T(['Type','Meaning'],[['Outsourcing','Hire an outside party for work done in-house; front or back office; abroad or domestic'],['<b>Insourcing</b>','Delegate to a person or team <b>within the company</b>; cost saving, on-site quality monitoring'],['Near-sourcing','Place operations close to the home market'],['Global (off-shore) sourcing','Buy from lower labour and production cost countries (China typical); new skills and resources'],['Prime / subcontracting','Subcontractor performs part of a larger project'],['Captive service operations','Partly or wholly-owned entity overseas: control and confidentiality, but weaker economies of scale'],['Professional service','Recruit specialised service occupations'],['<b>Vertical integration</b>','<b>Merging companies at different stages of the same industry</b>; acquiring a supplier = backward; acquiring distribution = forward'],['Few or many suppliers','Multi-supplier for commodities (price based); single source for close partnership'],['Joint venture','Entity of two or more parties with shared ownership, returns, risk, governance'],['Virtual enterprise','Independent firms linked by IT to share skills, costs, market access']])+
+`<h4>Procurement management: 8 steps</h4>`+F(['1 Identifying and planning','2 Choosing and selecting suppliers','3 Negotiating the contract','4 Placing the first purchase order','5 Accelerating (expediting) the order','6 Receipt and inspection','7 Clearing the invoice and payment','8 Maintaining relationships and records'])+
+`<p>Procurement must be part of product development; use risk management and performance indicators; it is continuous, not one-time. Example: construction company sourcing cement and steel.</p>
+<h4>Supply management</h4><p>Identifying, acquiring and managing resources and suppliers: goals are cost control, efficient resource allocation, risk management and information gathering.</p>`],
+["Lecture 24 - Principle Streams of Supply Chain (2)",
+`<h4>Operations management</h4><p>Converts inputs (raw material, labour, equipment, technology) into outputs as effectively as possible. Functions: planning, scheduling, execution. Applied in manufacturing, service, retail, hospitality, logistics and supply chain.</p>
+<h4>Material management</h4>`+L(['<b>MRP</b> - quantity and timing of raw materials needed; avoids over and under stocking','<b>Purchase planning</b> - when and how much to order; balance holding cost against ordering cost','<b>Inventory control</b> - raw material, WIP, finished goods','<b>Material supply management</b> - flow from suppliers to production','<b>Quality control</b> - inspect and test materials','<b>Cost reduction</b> - timely procurement, less waste'])+
+`<h4>Production management: the 6 M's</h4>`+F(['Man','Machine','Methods','Materials','Money','Markets'])+
+`<p>Goals: right quantity, quality, time and cost. Functions: product and resource selection, production planning and control, machine maintenance and replacement. Strategies: <b>continuous improvement, JIT, TPM (Total Productive Maintenance), SCM</b>. Example: furniture plant.</p>
+<h4>Logistics management</h4><p>Planning, implementation and control of movement and storage of goods, services and information; delivers the right product to the right place at the right time in the right condition while <b>minimising costs and maximising efficiency</b>. Components: warehouse management (WMS: barcode, RFID, automation), transportation management (TMS: tracking, mediator between order systems and carriers), distribution management systems (order management, inventory allocation, warehouse forecasting).</p>`],
+["Lecture 25 - Objectives of Supply Chain Networks",
+`<p><b>Supply chain profitability</b> = revenue from the customer minus total supply chain cost; customers are the only source of revenue. A <b>supply chain network</b> is the interconnected system of suppliers, manufacturers, distributors, retailers, warehouses, transport providers and customers; network design builds and models the chain to understand cost and time to market.</p>
+<h4>Four network design decision categories</h4>`+T(['Decision','Question'],[['Facility role','What role and what processes at each facility?'],['Facility location','Where should facilities be?'],['Capacity allocation','How much capacity at each?'],['Market and supply allocation','Which markets does each facility serve and which sources feed it?']])+
+`<h4>Factors influencing network decisions</h4>`+T(['Factor','Insight'],[['Strategic','Cost leaders pick lowest-cost sites (Foxconn, Flextronics in China); responsive firms stay near market (Zara in Portugal and Spain)'],['Technological','High economies of scale: few big plants (semiconductors, AMD); low fixed cost: many local plants (Coca-Cola bottling)'],['Macroeconomic','Taxes, tariffs, exchange rates, shipping costs'],['Political','Stable countries; Global Political Risk Index (Eurasia Group): government, society, security, economy'],['Infrastructure','1990s China: Shanghai, Tianjin, Guangzhou despite higher costs'],['Competitive','Locate near or far from competitors depending on competition form, resources'],['Customer response time','Convenience stores many and close; supermarkets fewer, larger']])+dCostSvg+
+`<h4>Framework</h4>`+dNet+L(['<b>Phase I</b> - stages and who performs them; competitive strategy; competitor evolution; capital constraints (acquire, build or partner)','<b>Phase II</b> - demand forecast by region; homogeneous needs favour large consolidated facilities, varied needs favour local ones; economies of scale or scope','<b>Phase III</b> - hard infrastructure (suppliers, transport, communication, utilities, warehousing) and soft infrastructure (skilled workforce, turnover, community receptivity)','<b>Phase IV</b> - precise location and capacity maximising profit given margin, demand, costs, taxes and tariffs'])+
+`<h4>Case: Zara (Inditex)</h4>`+M([['4-6 weeks','Design-to-sales cycle (industry: 6+ months)'],['75%','Merchandise display changed in a short span'],['~40%','Production capacity owned; rest outsourced'],['24 h / 48 h','Delivery to Europe / Americas-Asia stores from 8 Spanish DCs']])+
+`<p>Uncertain-demand items from Europe, predictable items from Asia; over 40% of purchases after the season starts (typical retailer under 20%); half the markdowns; strong IT for sales data.</p>`]],
+gl:[["Supply chain","All parties directly or indirectly fulfilling a customer request (Chopra and Meindl)."],["SCM","Managing demand and supply networks to minimise cost and improve performance."],["Three flows","Product, funds and information."],["Strategy / design","Multi-year structural decisions."],["Planning phase","Quarter to a year; configuration fixed."],["Operation phase","Weekly or daily order-level decisions."],["Continuous flow model","Mature industries, stable demand."],["Agile model","Unpredictable demand, custom orders."],["Fast model","Short life-cycle trend products."],["Flexible model","Seasonal demand peaks and troughs."],["Efficient model","Thin margins, maximum efficiency."],["Custom model","Specialised industries such as automobiles."],["SC configuration","Architecture of the chain; strategic."],["SC relationship","Arm's length versus close partnership."],["SC coordination","Operational, ideally JIT flow of materials."],["Push system","Sell from inventory, driven by forecast; manufacturing."],["Pull system","Initiated by customer demand; services."],["Insourcing","Delegating to a team inside the company."],["Near-sourcing","Operations placed close to home market."],["Captive service operation","Own entity overseas; control but less scale."],["Vertical integration","Merging firms at different stages of one industry."],["Backward / forward integration","Acquire a supplier / acquire distribution."],["Virtual enterprise","Independent firms linked by IT."],["Procurement steps","Plan, choose, negotiate, PO, accelerate, receive and inspect, pay, maintain records."],["MRP","Material requirements planning: quantity and timing of materials."],["6 M's","Man, Machine, Methods, Materials, Money, Markets."],["TPM","Total Productive Maintenance."],["Network design decisions","Facility role, location, capacity allocation, market and supply allocation."],["Four design phases","Strategy, regional configuration, potential sites, location and capacity."],["Hard vs soft infrastructure","Physical facilities versus skills, turnover, receptivity."],["Zara","4-6 week cycle, local fast sourcing for uncertain items."],["Global Political Risk Index","Eurasia Group index over four categories."]],
+q:[
+["o","'Implied demand uncertainty' in a supply chain focuses on:",["The total annual sales forecast of a company along with the variability caused due to seasonal patterns","The uncertainty associated with the portion of demand the supply chain plans to satisfy","The transportation costs across distribution centres","The variability in supplier pricing because of the seasonal pricing"],1,"Implied demand uncertainty concerns only the part of demand the chain plans to serve (Week 6 lecture)."],
+["o","The three Supply Chain Macro Processes are:",["Planning, Sourcing, and Delivering","Design, Build, and Distribute","Procurement, Operations, and Logistics","Customer Relationship Management, Internal Supply Chain Management, and Supplier Relationship Management"],3,"CRM, ISCM and SRM."],
+["o","In the Cyclic View, which cycle occurs at the interface between the retailer and the distributor?",["Customer order cycle","Replenishment cycle","Manufacturing cycle","Procurement cycle"],1,"Customer order: customer-retailer; replenishment: retailer-distributor; manufacturing: distributor-manufacturer; procurement: manufacturer-supplier."],
+["o","In the Push/Pull View, a 'Pull' process is best defined as:",["Execution initiated in anticipation of customer orders (speculative)","Producing goods before knowing actual customer demand","Execution initiated in response to a customer order (reactive)","Holding large amounts of finished goods inventory"],2,"Pull is reactive; push is speculative."],
+["o","Which transportation mode is generally used to achieve the highest responsiveness?",["Sea freight","Rail transport","Air freight","Pipeline"],2,"Air is fastest but costliest."],
+["o","The six key drivers of supply chain performance are:",["Facilities, Inventory, Transportation, Information, Sourcing, and Pricing","People, Process, Technology, Culture, Structure, and Strategy","Planning, Scheduling, Executing, Monitoring, Controlling, and Improving","Procurement, Operations, Logistics, Distribution, Returns, and Sustainability"],0,"Chopra and Meindl's six drivers."],
+["o","Centralizing facilities in a supply chain tends to:",["Increase responsiveness and increase costs","Increase efficiency but reduce responsiveness","Reduce efficiency and reduce responsiveness","Increase responsiveness and reduce costs"],1,"Centralising gains scale economies but customers are farther away."],
+["o","According to Little's Law, reducing inventory while keeping throughput constant will:",["Decrease flow time","Increase flow time","Have no effect on flow time","Eliminate the need for safety stock"],0,"I = D x T, so lower I with constant D means lower T."],
+["o","In Amazon's pricing example, customers opting for free shipping (7-14 business days) help Amazon by:",["Generating the highest revenue per order","Levelling out the workload at the warehouse over time, improving efficiency","Increasing the urgency of logistics operations","Reducing the need for any inventory"],1,"Slow free shipping lets Amazon smooth warehouse workload."],
+["o","A firm serving primarily emergency orders faces _____ implied demand uncertainty compared to a firm with long lead times.",["Lower","Equal","Higher","No difference in"],2,"Long lead times let orders be filled evenly, lowering uncertainty."],
+["x","Which of these is NOT one of the three flows in a supply chain?",["Product","Funds","Information","Labour"],3,"Product, funds and information."],
+["x","The supply chain planning phase covers a time frame of:",["Weekly or daily","A quarter to a year","Several years","Hourly only"],1,"Strategy is multi-year; operation is weekly or daily."],
+["x","Which supply chain model suits short life-cycle trend products?",["Continuous flow","Fast","Efficient","Custom"],1,"The fast model sells a trend product out before the trend ends."],
+["x","Which statement about supply chain configuration is correct?",["It is purely operational","It is also called supply chain architecture and is strategic","It covers only coordination of inventory","It concerns only price and volume exchange"],1,"Configuration decides supply base size, vertical integration, outsourcing and channel design."],
+["x","Acquiring your input supplier is called:",["Forward integration","Backward integration","Near-sourcing","Insourcing"],1,"Backward integration moves upstream; forward moves into distribution."],
+["x","Which step is 5 in the procurement management process?",["Placing the first purchase order","Accelerating the order","Receipt and inspection","Clearing the invoice"],1,"Step 4 is first PO, step 5 accelerating the order, step 6 receipt and inspection."],
+["x","In service supply chains, demand uncertainty is mainly handled using:",["Finished goods inventory","Queues","Raw material stock","Push production"],1,"Manufacturing uses inventory; services use queues."],
+["x","Which is NOT among the 5 unique attributes of services in Lecture 22?",["Perishability","Inseparability","Heterogeneity","Standardised storability"],3,"Attributes: intangibility, perishability, heterogeneity, inseparability, customer participation."],
+["x","Semiconductor manufacturing typically uses:",["Many small local plants","A few high-capacity facilities","Only retail outlets","No facilities"],1,"Economies of scale and cheap transport favour few large plants; Coca-Cola bottling is the opposite."],
+["x","As the number of facilities in a network increases, inventory and facility costs:",["Decrease","Increase","Stay the same","Vanish"],1,"Transportation cost falls at first, then can rise if inbound scale is lost."],
+["x","Phase III of network design (select potential sites) emphasises which infrastructure?",["Only soft infrastructure","Hard infrastructure (suppliers, transport, utilities) and soft infrastructure (skilled workforce)","Only taxes","Competitor prices"],1,"Hard and soft infrastructure both matter."],
+["x","Zara achieves a design-to-sales cycle of about:",["6 months","3 months","4 to 6 weeks","1 day"],2,"The industry average exceeds six months."]
+]};
+
+/* ================= WEEK 6 ================= */
+const dScor=SV(760,230,
+ [[10,20,130,50,'PLAN'],[160,20,130,50,'SOURCE',B],[310,20,130,50,'MAKE'],[460,20,130,50,'DELIVER',B],[610,20,130,50,'RETURN'],[10,100,730,34,'ENABLE (rules, data, policies, risk, compliance supporting all processes)',G],[10,160,140,46,'Reliability',B],[160,160,140,46,'Responsiveness',B],[310,160,140,46,'Agility',B],[460,160,140,46,'Costs',B],[610,160,130,46,'Asset mgmt|efficiency',B]],
+ [[140,45,160,45],[290,45,310,45],[440,45,460,45],[590,45,610,45]],
+ [[375,152,'Five performance attributes',B,12]],
+ 'Rebuilt: SCOR model (Supply-Chain Council). Processes across the top, performance attributes below. The 4 P\'s: Performance, Process, Practice, People.');
+const dCyc=SV(760,200,
+ [[10,70,110,50,'Customer',B],[160,70,110,50,'Retailer'],[310,70,110,50,'Distributor'],[460,70,110,50,'Manufacturer'],[610,70,110,50,'Supplier']],
+ [[120,95,160,95],[270,95,310,95],[420,95,460,95],[570,95,610,95]],
+ [[140,50,'Customer order cycle',B,11],[290,150,'Replenishment cycle',A,11],[440,50,'Manufacturing cycle',B,11],[590,150,'Procurement cycle',A,11],[375,185,'Each cycle operates at the interface between two successive stages',G,11]],
+ 'Rebuilt: cyclic view of supply chain processes.');
+const dPush=`<div class="dg"><svg viewBox="0 0 760 150" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,sans-serif"><defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#a1a1aa"/></marker></defs>
+<rect x="20" y="40" width="440" height="44" rx="8" fill="#0b0b0c" stroke="#f59e0b" stroke-width="1.6"/><text x="240" y="67" fill="#f5f5f4" font-size="13" text-anchor="middle">PUSH: speculative, driven by forecasts</text>
+<rect x="470" y="40" width="270" height="44" rx="8" fill="#0b0b0c" stroke="#34d399" stroke-width="1.6"/><text x="605" y="67" fill="#f5f5f4" font-size="13" text-anchor="middle">PULL: reactive, driven by orders</text>
+<line x1="465" y1="20" x2="465" y2="110" stroke="#fb7185" stroke-width="2" stroke-dasharray="5 4"/><text x="465" y="130" fill="#fb7185" font-size="12" text-anchor="middle">Push/pull boundary: customer order arrives</text>
+<text x="20" y="25" fill="#a1a1aa" font-size="12">Supplier, manufacturing, replenishment ...</text><text x="740" y="25" fill="#a1a1aa" font-size="12" text-anchor="end">... customer order cycle</text></svg><div class="cap">Rebuilt: push/pull view. Processes before the order are push; those after are pull.</div></div>`;
+const dLittle=`<div class="cards"><div class="m"><b>I = D x T</b><span>Little's Law: Inventory = Throughput (demand rate) x Flow time</span></div><div class="m"><b>T = I / D</b><span>Cut inventory at constant throughput and flow time falls</span></div></div>`;
+D[6]={notes:[
+["Lecture 26 - Supply Chain Uncertainty and Processes",
+`<p>Opening question: are you 100% sure the delivery will come this weekend, and that the truck holds exactly 1,500 units? COVID-19 was not foreseen either. <b>Supply chain uncertainty</b> = unpredictability that disrupts flow of goods: natural disasters, geopolitics, labour shortages, logistics disruptions, demand swings.</p>
+<h4>Demand versus implied demand uncertainty</h4>`+T(['Concept','Meaning'],[['Demand uncertainty','Overall unpredictability of customer demand (trends, behaviour, economy)'],['<b>Implied demand uncertainty</b>','Uncertainty of the <b>portion of demand the chain plans to satisfy</b>, shaped by order frequency, lead times, service level']])+
+L(['<b>Emergency orders versus long lead time:</b> emergency-serving firm has <b>higher</b> implied uncertainty; long lead time lets orders be filled evenly','<b>Service level:</b> raising it means meeting rare surges, so implied uncertainty rises even if underlying demand uncertainty is unchanged'])+
+`<h4>Supply uncertainty</h4>`+L(['<b>Capability of the chain</b> - production process and yields; e.g. PC industry with new components: low yields, breakdowns','<b>Product life-cycle position</b> - new phone: high; salt in a supermarket: low','Linked to implied demand uncertainty; falls as technology matures'])+
+`<h4>Risk versus uncertainty</h4><p><b>Risk</b> = outcome and probability, so it can be estimated (low probability but severe impact is still big risk). <b>Uncertainty</b> = decision makers cannot estimate the outcome or probability.</p>
+<h4>Sources (courier-industry study)</h4>`+L(['<b>Logistics</b> - delivery delays, network management, storage, carrier strength, machine failures','<b>Information</b> - accuracy, availability, timeliness; infrastructure breakdown','<b>Customer-related</b> - volatile behaviour, reputation, receivables, forecast errors (consignors and consignees)','<b>Environmental</b> - political, economic, social, technological, environmental; labour issues, congestion, disasters, fuel'])+
+`<h4>Countering uncertainty</h4>`+L(['Diversify suppliers across regions','Enhance visibility (analytics, tracking, data sharing)','Build flexibility (buffer stock, agile manufacturing)','Strengthen relationships','Invest in resilience (redundant capacity, backup inventory)','Risk management (assessments, scenario planning, alternative routes)','Monitor and adapt; use automation, AI, data analytics'])+
+`<h4>Mitigating through automated planning</h4>`+L(['More frequent plans (yearly to weekly reviews cuts inventory)','Consistent planning methods using best practices','Integrating more data sources','Visibility across the chain, reducing the <b>bullwhip effect</b>','Holistic KPI tracking'])+
+`<h4>Macro processes</h4>`+dMacro],
+["Lecture 27 - Supply Chain Operational Views",
+`<h4>SCOR model</h4><p>Planning and diagnostic system from the <b>Supply-Chain Council</b>; benchmarking and diagnostic tools; more than 250 metrics. Five management processes: <b>Plan, Source, Make, Deliver, Return</b> (plus Enable). Five performance dimensions: <b>Reliability, Responsiveness, Agility, Costs, Asset Management Efficiency</b>.</p>`+dScor+
+T(['Process','Scope'],[['Plan','Planning, scheduling, coordinating resources to meet demand'],['Source','Procuring materials, products, services from suppliers'],['Make','Manufacturing, assembling, producing to demand'],['Deliver','Order management, inventory management, transport and delivery'],['Return','Returns, repairs, recycling, disposal after delivery']])+
+`<h4>4 P's of SCOR</h4>`+L(['<b>Performance</b> - KPIs on the five attributes','<b>Process</b> - standard process framework (plan, source, make, deliver, return, enable)','<b>Practice</b> - methods and tools, best practices','<b>People</b> - skills, organisation, collaboration, continuous improvement'])+
+`<p><b>Attributes:</b> reliability (right quantity, right condition), responsiveness (speed), costs, asset management (working capital and fixed assets).</p>
+<h4>Benefits and limitations</h4>`+T(['Benefits','Limitations'],[['Covers the whole chain; benchmarking; aligns metrics across boundaries; common vocabulary; standard improvement targets','Complexity and time; one-size-fits-all; rigid linear structure; limited scope (little on social responsibility and sustainability); depends on complete accurate data']])+
+`<p>E-commerce note: digital supply chains (HTML, HTTPS, TCP/IP) let firms never meet suppliers or customers; SCOR can close gaps; online customers expect fast, cheap, easy-pay, supported delivery.</p>
+<h4>Process and cyclic view</h4>`+dCyc+L(['<b>Customer</b> - convert arrivals into orders','<b>Retailer</b> - order entry communicated quickly','<b>Distributor</b> - reach target customers directly and cost-efficiently; access for services','<b>Manufacturer</b> - make to order, turn raw material into product','<b>Supplier</b> - contributes goods or services to the next link'])+
+`<p>Cyclic view clearly defines process owners, roles and desired outcomes; useful for operational decisions.</p>
+<h4>Push/pull view</h4>`+dPush+TIP('<b>Pull</b> = reactive (in response to a customer order). <b>Push</b> = speculative (in anticipation of orders).')],
+["Lecture 28 - Supply Chain Models and Modelling Systems",
+`<p><b>Supply chain modelling</b> designs and analyses a chain to find improvements and simulate scenarios. Model types: static, dynamic, Monte Carlo, linear programming, simulation, queuing, statistical. Choice depends on the optimisation goal. Wrong framework choice exposes the firm to risk, interruption and cost escalation.</p>
+<h4>Major components</h4><p>Inventory (most critical), transportation, warehousing, manufacturing, procurement, distribution, customer service, information technology.</p>
+<h4>Supply chain models</h4>`+T(['Model','Idea','Example'],[['Continuous','Steady flow; JIT; stable demand and uniform goods; less flexible to sudden change','Amazon'],['Fast chain','Quick delivery, short life cycles; design-to-shelf in weeks versus six months','Zara'],['Efficient chain','Reduce waste, maximise efficiency in competitive markets; relies on production forecasts; vulnerable to labour or material shortages',''],['Agile','Responsive and adaptive; volatile demand; four traits: <b>process alignment, virtual integration, network base, market sensitivity</b>; can charge more; profitable only to a volume threshold','Nike'],['Custom-configured','Tailored to customer; blends agile and continuous flow; small batch, prototypes','Dell'],['Flexible','Handles demand peaks and long low periods; needs part segmentation, precise stocking algorithms, flexible planning; "toggle on or off"','Hewlett Packard'],['Virtual (future)','Cloud computing and analytics for visibility and communication','Procter and Gamble']])+
+`<h4>Best practices</h4><p>Understand business needs; choose approach; validate with accurate data; test what-if scenarios; consider different models; involve stakeholders; update regularly; document assumptions and limits; train users; monitor KPIs.</p>
+<h4>Challenges</h4><p>Complex relationships, imperfect data, multiple objectives, dynamic environment, integration issues, resource constraints, scenario complexity, risk and uncertainty, change management.</p>
+<h4>Control towers</h4><p>Cloud-based, using AI, machine learning and big data for end-to-end real-time visibility across the network; plan for unknowns and reduce disruption.</p>
+<h4>Cases</h4>`+M([['9 to 2 weeks','Intel Atom chip order cycle after make-to-order pilot (Malaysia)'],['> USD 4 saved','Per unit on a USD 20 chip (cost was about USD 5.50)'],['10% cost cut','Chemical company MILP network model'],['95% next-day','Products delivered next day after redesign']])+
+`<p>Intel: only inventory was a lever, so it moved to make-to-order, a bi-weekly assembly test window, formal S&amp;OP and vendor-managed inventory. The chemical company used a MILP model (sites, candidate DCs, demand regions), faced ERP data standardisation and resistance to change.</p>`],
+["Lectures 29 and 30 - Supply Chain Drivers",
+`<p><b>Drivers</b> determine responsiveness and efficiency: <b>Facilities, Inventory, Transportation, Information, Sourcing, Pricing</b>. <b>Cross-functional</b> drivers (information, sourcing, pricing) integrate across departments; <b>logistics</b> drivers (facilities, inventory, transportation) concern physical flow.</p>`+SV(760,170,
+ [[10,15,230,40,'Facilities',B],[265,15,230,40,'Inventory',B],[520,15,230,40,'Transportation',B],[10,115,230,40,'Information'],[265,115,230,40,'Sourcing'],[520,115,230,40,'Pricing']],null,
+ [[380,85,'Logistics drivers (top)  |  Cross-functional drivers (bottom)',G,12]],'Rebuilt: six supply chain drivers.')+
+`<h4>Facilities</h4><p>Centralising raises efficiency, lowers responsiveness; decentralising the reverse. Toyota and Honda build plants in major markets; Honda\'s flexible SUV/car plants helped in 2008. Decisions: role, location, capacity, product versus functional focus, cross-docking versus storage. Higher utilisation lowers unit cost but raises delay.</p>
+<p>Metrics: capacity, utilisation, processing/setup/down/idle time, cost per unit, quality losses, theoretical versus actual flow time, <b>flow time efficiency</b> (theoretical / actual), top-20% SKU volume, batch size, service level, product variety.</p>
+<h4>Inventory</h4>`+dLittle+L(['Matches supply and demand; exploits economies of scale; raises responsiveness but ties up capital','Types: <b>cycle, safety, seasonal</b> inventory; level of product availability','Amazon: best sellers in many regional warehouses, slow movers in few, slowest printed or ordered on demand','Metrics: cash conversion cycle, average inventory, <b>inventory turnover</b> (COGS / average inventory), <b>DIO</b> (average inventory / COGS per day), batch size, safety inventory, fill rate, fraction of time out of stock, obsolete inventory'])+
+`<h4>Transportation</h4>`+L(['Faster modes raise responsiveness and cost; slower (sea, rail) raise efficiency','Modes: air, truck, rail, sea, pipeline, internet','<b>Dell</b> flies components from Asia to cut inventory; <b>Blue Nile</b> centralises diamond inventory and uses FedEx overnight','Metrics: inbound/outbound transport cost, shipment size, cost per shipment, fraction by mode'])+
+`<h4>Information</h4><p>Improves asset use, coordination, responsiveness and cost (Seven-Eleven Japan, Wal-Mart); push needs forecasts, pull needs actual demand data; enabling tech: ERP, analytics, cloud. <b>Diminishing returns:</b> more information raises complexity and cost. Metrics: forecast horizon (at least the lead time), update frequency, forecast error (the measure of uncertainty). Sunsweet cut production overruns from 30% to under 15%.</p>
+<h4>Sourcing</h4><p>In-house versus outsource; supplier selection; globalisation (IKEA modules from low-cost countries); outsource for responsiveness when in-house is costly (next-day carriers); keep in-house for control (Zara); outsource for efficiency (scale). Cisco outsources nearly all manufacturing. Metrics: days payable outstanding, cost of goods, inbound transport cost.</p>
+<h4>Pricing</h4><p>Matches supply and demand and raises profit. <b>Everyday low pricing</b> stabilises demand; <b>high-low</b> uses periodic discounts; menu pricing by time, location or speed. <b>Amazon:</b> standard shipping (3-5 business days) USD 4.98, two-day USD 13.97, one-day USD 22.97, or <b>free shipping (7-14 days)</b>, which levels warehouse workload.</p>`]],
+gl:[["Supply chain uncertainty","Unpredictability and volatility disrupting flow of goods and materials."],["Demand uncertainty","Overall unpredictability of customer demand."],["Implied demand uncertainty","Uncertainty of the portion of demand the chain plans to satisfy."],["Supply uncertainty","Variability in availability and reliability of supply; high for new products."],["Risk vs uncertainty","Risk can be estimated (outcome x probability); uncertainty cannot."],["Bullwhip effect","Demand variance amplification upstream; reduced by visibility."],["CRM","Interface firm-customer: marketing, pricing, sales, order management."],["ISCM","Internal processes: capacity, demand and supply planning, fulfilment."],["SRM","Interface firm-suppliers: selection, negotiation."],["SCOR","Supply-Chain Council model: Plan, Source, Make, Deliver, Return (+Enable)."],["SCOR attributes","Reliability, responsiveness, agility, costs, asset management efficiency."],["4 P's of SCOR","Performance, Process, Practice, People."],["Cyclic view","Customer order, replenishment, manufacturing, procurement cycles."],["Customer order cycle","Customer-retailer interface."],["Replenishment cycle","Retailer-distributor interface."],["Manufacturing cycle","Distributor-manufacturer interface."],["Procurement cycle","Manufacturer-supplier interface."],["Push process","Speculative, in anticipation of orders."],["Pull process","Reactive, in response to an order."],["Continuous model","Steady flow, stable demand (Amazon)."],["Fast chain","Short life cycle, speed (Zara)."],["Efficient chain","Waste reduction in competitive markets."],["Agile model","Process alignment, virtual integration, network base, market sensitivity (Nike)."],["Custom-configured","Customer-tailored (Dell)."],["Flexible model","Peaks and low demand (Hewlett Packard)."],["Virtual model","Cloud and analytics (P&G)."],["Control tower","Cloud AI platform for end-to-end real-time visibility."],["MILP","Mixed-integer linear programming, used for network design."],["Six drivers","Facilities, Inventory, Transportation, Information, Sourcing, Pricing."],["Little's Law","I = D x T."],["Cycle / safety / seasonal inventory","Core, buffer and peak-demand stocks."],["Inventory turnover","COGS (or sales) / average inventory."],["DIO","Days of inventory outstanding."],["Flow time efficiency","Theoretical flow time / actual flow time."],["EDLP vs high-low","Steady prices versus periodic deep discounts."],["Intel Atom case","Order cycle 9 weeks to 2; saved over USD 4 per chip."]],
+q:[
+["o","Which supply chain model is best suited for companies affected by seasonality, with high demand peaks and low volume at other times?",["Continuous flow model","Agile model","Fast model","Flexible model"],3,"The flexible model ramps production up and down."],
+["o","In the Manufacturing vs Service SC comparison, how is 'demand uncertainty' managed differently?",["Manufacturing uses queues; services use inventory","Manufacturing uses inventory; services use queues","Both use inventory equally","Both use queues equally"],1,"Services cannot stock, so they queue."],
+["o","Production Management uses the '6 M's'. Which of the following is NOT one of the 6 M's?",["Man and Machine","Methods and Money","Materials and Markets","Motivation and Media"],3,"Man, Machine, Methods, Materials, Money, Markets."],
+["o","What is the correct sequence of the first three steps in Procurement Management?",["Placing the Purchase Order, Negotiating the Contract, Identifying and Planning","Identifying and Planning, Choosing and Selecting Suppliers, Negotiating the Contract","Negotiating the Contract, Identifying and Planning, Choosing Suppliers","Receipt and Inspection, Clearing the Invoice, Maintaining Records"],1,"Steps 1 to 3 of the 8-step procurement process."],
+["o","Vertical Integration in sourcing involves:",["Forming joint ventures with international companies","Merging of companies at different production and/or distribution stages in the same industry","Outsourcing all non-core activities","Purchasing from multiple suppliers simultaneously"],1,"Backward (supplier) or forward (distribution) integration."],
+["o","Which is a key characteristic of a Service Supply Chain's production system?",["Pull (initiated by customer demand)","Push (sell from inventory)","Both push and pull equally","Neither push nor pull"],0,"Services are pull; manufacturing is push."],
+["o","Which type of sourcing involves delegating a job to someone within the company itself?",["Outsourcing","Near-sourcing","Insourcing","Global sourcing"],2,"Insourcing keeps work in-house."],
+["o","The three principle streams of the supply chain are:",["Planning, Execution, and Monitoring","Procurement/Supply/Sourcing; Operations/Material/Production; Logistics/Distribution","Inbound, Internal, and Outbound logistics","Strategic, Tactical, and Operational management"],1,"Lectures 23 and 24."],
+["o","Logistics Management delivers the right product to the right place, at the right time, in the right condition, while:",["Maximizing advertising spend","Minimizing costs and maximizing efficiency","Increasing production batch sizes","Reducing the number of suppliers"],1,"Cost minimisation and efficiency."],
+["o","Supply chain network design decisions fall into four categories. Which is NOT one of them?",["Facility role","Facility location","Employee compensation","Capacity allocation"],2,"The fourth is market and supply allocation."],
+["x","Risk differs from uncertainty because risk:",["Cannot be estimated","Is a function of outcome and probability and can be estimated","Only applies to demand","Is always low"],1,"Uncertainty is when outcome or probability cannot be estimated."],
+["x","Raising a supply chain's service level will:",["Reduce implied demand uncertainty","Increase implied demand uncertainty even if demand uncertainty is unchanged","Have no effect","Eliminate surges"],1,"It requires covering rare surges."],
+["x","SCOR's five management processes are:",["Plan, Source, Make, Deliver, Return","Design, Build, Test, Ship, Bill","Buy, Store, Move, Sell, Return","Forecast, Order, Pack, Ship, Track"],0,"Enable supports all of them."],
+["x","Which is NOT a SCOR performance attribute?",["Reliability","Responsiveness","Brand loyalty","Asset management efficiency"],2,"Reliability, responsiveness, agility, costs, asset management efficiency."],
+["x","The manufacturing cycle occurs at the interface between:",["Customer and retailer","Retailer and distributor","Distributor and manufacturer","Manufacturer and supplier"],2,"Manufacturer-supplier is the procurement cycle."],
+["x","A 'Push' process is executed:",["In response to a customer order","In anticipation of customer orders","Only for services","Only after delivery"],1,"Push is speculative."],
+["x","Which is NOT one of the four traits of an agile supply chain?",["Process alignment","Virtual integration","Network base","Fixed long-term forecasting"],3,"Market sensitivity is the fourth."],
+["x","Dell's individualised computer configurations illustrate which model?",["Continuous","Custom-configured","Efficient","Flexible"],1,"Custom-configured chains tailor to the customer."],
+["x","In the Intel Atom chip case, the order cycle was reduced from:",["9 weeks to 2 weeks","2 weeks to 9 weeks","12 weeks to 6 weeks","5 days to 1 day"],0,"Make-to-order cut inventory and saved over USD 4 per unit."],
+["x","According to Little's Law, inventory equals:",["Throughput divided by flow time","Throughput multiplied by flow time","Flow time minus throughput","Demand plus cost"],1,"I = D x T."],
+["x","Blue Nile's strategy combines:",["Decentralised inventory and slow shipping","Centralised diamond inventory and FedEx overnight delivery","Many physical stores","Outsourced design only"],1,"Responsive transport allows centralised inventory and lower costs."],
+["x","Amazon's free shipping option ships in:",["1 day","2 days","3-5 business days","7-14 business days"],3,"It helps level out warehouse workload."],
+["x","Flow time efficiency is the ratio of:",["Actual to theoretical flow time","Theoretical to actual average flow time","Capacity to utilisation","Inventory to sales"],1,"Low values mean much time is spent waiting."]
+]};
+
+
+/* ================= FULLER VERSION PATCH ================= */
+const IMP=s=>'<div class="imp"><b>\u2605 Important:</b> '+s+'</div>';
+
+/* ---- Week 5 additions ---- */
+const dChain=SV(760,230,
+ [[10,10,150,36,'Plastic producer',G],[10,56,150,36,'Chemical manufacturer|(oil company)',G],[10,102,150,36,'Packaging / paper',G],[10,148,150,36,'Timber industry',G],[220,70,150,60,'Manufacturer|(P&G etc.)'],[420,70,150,60,'Supermarket / DC|(Big Bazaar or 3PL)',B],[620,70,130,60,'Customer|wants detergent',B]],
+ [[160,28,220,90],[160,74,220,100],[160,120,220,110],[160,166,220,115],[370,100,420,100],[570,100,620,100]],
+ [[380,215,'Rebuilt: the lecture\'s detergent example. Many upstream tiers feed the manufacturer; the customer is at the end.',G,11]],
+ null);
+const dSvc=SV(760,190,
+ [[10,10,740,36,'Service supply chain strategy: BALANCE competitive service requirements with cost and investments'],[10,66,230,50,'Value propositions|core competencies|product and service offerings',B],[265,66,230,50,'Organisation and|decision-making',B],[520,66,230,50,'Systems and tools',B],[137,136,230,40,'Policies and procedures'],[392,136,230,40,'Performance targets and benchmarks']],
+ [[375,46,375,66,A,0]],null,'Rebuilt: service supply chain framework from the lecture slide.');
+D[5].notes[0][1]=IMP('Asked: <b>supply chain models</b> (flexible = seasonality). Likely follow-ups: <b>three decision phases</b> and horizons, the Chopra and Meindl definition, the <b>three flows</b>.')+D[5].notes[0][1]+
+`<h4>Worked example: the detergent supply chain</h4>`+dChain+
+`<h4>Logistics versus SCM</h4><p>Logistics (Week 1) is the planning, implementation and control of movement and storage. SCM is wider: it integrates demand and supply networks and every party from raw-material source to end customer. Every link tries to <b>minimise cost and improve long-run performance</b> by eradicating useless expense, handling and movement.</p>
+<h4>Basic supply chain stages (Chopra and Meindl)</h4>`+F(['Supplier','Manufacturer','Distributor / wholesaler','Retailer','Customer'])+
+`<p>A supply chain is dynamic: product, information and funds flow continuously. Design, planning and operation of these flows decide success or failure; chains must adapt to changing technology and customer expectations.</p>
+<h4>Objectives of SCM (full list from the slide)</h4>`+T(['Group','Objectives'],[['Delivery','Timely delivery; optimise delivery (time, cost, amount); enhance distribution'],['Inventory and production','Effective inventory management; efficient, cost-effective production; improve quality'],['Customer','Increase value for the customer; increase demand fulfilment'],['Responsiveness','Flexibility and responsiveness; improve logistics management'],['Relationships and technology','Collaborative supplier-consumer relationship; improved integrated technology']])+
+`<h4>Conclusion of the lecture</h4><p>Procurement, production, distribution and logistics must be strategically aligned with business goals. Technology adoption, partner collaboration and sustainability are increasingly important. A well-managed chain drives innovation, resilience and value creation.</p>`;
+
+D[5].notes[1][1]=IMP('Asked: <b>manufacturing uses inventory, services use queues</b>; manufacturing is <b>push</b>, services are <b>pull</b>. Know the 5 service attributes.')+D[5].notes[1][1]+
+`<h4>Significance of the supply chain in operations management</h4>`+L(['<b>Network of organisations</b> - suppliers, manufacturers, distributors, retailers and customers create and deliver products or services','<b>Flow of resources</b> - planning and coordination put the right resources at the right time and place','<b>Focus</b> - SCM is a subset of operations management concerned with material and information flow among suppliers and customers','<b>Impact</b> - less waste and better resource use (efficiency), superior quality, timely and responsive service (satisfaction)'])+
+`<h4>Service attributes and their manufacturing counterparts</h4>`+T(['Service attribute','Manufacturing parallel'],[['Intangibility','Blurred by tangible elements inside service processes'],['Perishability','Inventory management to handle demand uncertainty'],['Heterogeneity','Modularity (variety from standard parts)'],['Inseparability','Just-in-time production'],['Customer participation','JIT and build-to-order practices']])+
+`<h4>Service supply chain framework</h4>`+dSvc+
+`<h4>Amazon in detail</h4>`+L(['Started by filling every order with books bought from a distributor, in response to customer orders','Added warehouses so it could react faster: about <b>20 in the US and 30 elsewhere</b> (2009)','Uses USPS, UPS, FedEx; outbound shipping cost almost <b>USD 2 billion</b> in 2009','Kindle: more than <b>460,000 digital books</b>, plus audio and video','Acquired <b>Zappos</b> (variety: 121,000 product descriptions, 2.2 million images) and <b>diapers.com</b> (little variety, large shipping volume)'])+
+`<p>Lesson: manufacturing and service chains differ, but inventory management, process optimisation and customer satisfaction matter in both.</p>`;
+
+D[5].notes[2][1]=IMP('Asked: <b>three streams</b>, <b>insourcing</b>, <b>vertical integration</b>, and the <b>first three procurement steps in order</b>.')+D[5].notes[2][1]+
+`<h4>Sourcing vs procurement vs supply management</h4>`+T(['Term','Meaning'],[['Sourcing','Finding, assessing and enlisting suppliers by criteria (tendering); strategic and tactical; first step of the chain'],['Procurement management','Overseeing and administering all methods of acquiring materials, products, goods and services; involves buyer, seller and many platforms; not a one-time activity; use technology'],['Supply management','Identifying, acquiring and managing resources and suppliers (goods, information, services); goals: cost control, efficient allocation, risk management, effective information gathering']])+
+`<h4>The 8 procurement steps explained</h4>`+T(['Step','Meaning'],[['1 Identifying and planning','Define needs and plan the purchase; involve procurement in product development'],['2 Choosing and selecting suppliers','Evaluate against criteria'],['3 Negotiating the contract','Know your negotiating position'],['4 Placing the first purchase order','Formal order issue'],['5 Accelerating the order','Expediting to keep delivery on schedule'],['6 Receipt and inspection','Verify quantity and quality'],['7 Clearing the invoice and payment','Match and pay'],['8 Maintaining relationships and records','Supplier relationship and documentation']])+
+`<p>Example: a construction company finds suppliers of cement and steel, negotiates contracts, builds relationships, checks quality and ensures delivery to the site on time. Also from the lecture: manufacturing as a sourcing option means creating new products from raw materials or components.</p>`;
+
+D[5].notes[3][1]=IMP('Asked: the <b>6 M\'s</b> (Man, Machine, Methods, Materials, Money, Markets) and the logistics management goal (<b>minimise cost, maximise efficiency</b>).')+D[5].notes[3][1]+
+`<h4>Operations managers are responsible for</h4>`+L(['Creating, implementing and administering operations systems, processes and practices','Balancing resources, revenue and costs for highest profit','Steering product and service design by customer needs','Overseeing operations strategy','Streamlining production, logistics and supply chain workflows'])+
+`<h4>Where operations management applies</h4>`+T(['Domain','Focus'],[['Manufacturing','Design, create, deliver goods; plan, schedule, control raw materials, labour, equipment'],['Service','Manage service delivery for a smooth customer experience'],['Retail','Stocking shelves, inventory, customer service'],['Hospitality','Front desk, housekeeping, catering'],['Logistics','Efficient flow of products and services origin to consumption'],['Supply chain','Transformation from raw material to finished product; resource, information and financial flows']])+
+`<h4>Material management</h4><p>Planning, organising and controlling the flow of materials for a manufacturer (MRP, sourcing, purchasing, stock and movement). Primary goal: materials available in the right quantity, at the right time and place, at lowest cost. Includes <b>MRP, purchase planning, inventory control, material supply management, quality control</b> and cost reduction (see list above).</p>
+<h4>Production management</h4><p>Narrow definition of production management as just "transforming inputs into outputs" ignores the human factor, hence the <b>6 M's</b>. Goals: right quantity, right quality, right time, right cost. Strategies: continuous improvement, JIT, <b>TPM</b>, SCM. Example: furniture plant where planning sets targets and quality control checks output.</p>
+<h4>Logistics management components</h4>`+T(['System','Function'],[['<b>WMS</b> (warehouse)','Software automating receiving, put-away, picking, packing, shipping using barcode, RFID and automation'],['<b>TMS</b> (transport)','Manages transport of goods; tracks delivery and shipment status; mediates between legacy order systems and carriers'],['Distribution management system','Order management, inventory allocation, warehouse forecasting; streamlines distribution']]);
+
+D[5].notes[4][1]=IMP('Asked: the <b>four network design decision categories</b> (not employee compensation). Know cost-versus-responsiveness location logic and the 4 phases.')+D[5].notes[4][1]+
+`<h4>More objectives of the supply chain</h4>`+L(['Marketing has only one source of revenue: <b>customers</b>; manage product, service, information and funds flow properly','<b>Profitability</b> = what the customer pays minus the firm\'s expenses to supply the product; higher profitability means more value','<b>Replenishment</b> (restoring stock to a former level) is easy with an adequate chain; distributors deliver faster','Shorter time to fill and order; better efficiency; world-class performance through coordination','Right levels of pre and post-production inventory; easier balance of supply and demand','Efficiency and efficacy: better labour, space and equipment use; lower fixed asset, manufacturing, transportation and inventory costs, and shorter system-wide response time','Better decisions for top and middle managers; supports stability strategy and competitive advantage','Intermediaries used properly give regular distribution of goods'])+
+`<h4>Definition and components</h4><p>CIPS: network design covers all movements and storage of raw materials, WIP and finished goods from origin to consumption, and the planning, implementation and control of operations. Components: suppliers, manufacturers, distributors, retailers, warehouses, transport providers, customers. Networks range from simple linear chains to global multi-tier networks; managing them means optimising processes, collaboration and technology for visibility and responsiveness.</p>
+<h4>Zara discussion questions (from the lecture)</h4>`+L(['What advantage does Zara gain from a very responsive supply chain?','Why both in-house and outsourced manufacturing, and why keep capacity in Europe?','Why source uncertain-demand products locally and predictable ones from Asia?','Why replenish stores several times a week, and how does frequency affect inventory?','Is the responsive replenishment infrastructure better suited to online or physical retail?'])+
+`<p>Model answers: speed matches display to preferences (full-price sales, half the markdowns); European sources are fast for uncertain items while Asia is cheap for predictable ones; frequent replenishment keeps store stock close to demand and cuts inventory and forecast error.</p>`;
+
+/* ---- Week 6: additions and split of drivers ---- */
+D[6].notes[0][1]=IMP('Asked: <b>implied demand uncertainty</b> (emergency orders = higher; higher service level = higher) and the <b>three macro processes</b> CRM, ISCM, SRM.')+D[6].notes[0][1]+
+`<h4>Why automation reduces uncertainty (5 reasons)</h4>`+T(['Reason','Detail'],[['Frequency','Automated planning allows more frequent plans; yearly to weekly review reduces inventory'],['Consistency','Best practice from all planners; predictable downstream processes'],['More data','Combine inventory, sales forecasts, production plans'],['Visibility','Shared plans reduce the <b>bullwhip effect</b>; downstream has time to react'],['Holistic KPIs','Quantify process changes (e.g. warehouse headcount versus service)']])+
+`<h4>Macro process aims</h4>`+T(['Process','Aim','Includes'],[['CRM','Generate demand, ease order placement and tracking','Marketing, pricing, sales, order management, call centre'],['ISCM','Fulfil demand efficiently and cheaply','Capacity planning, demand and supply planning, order fulfilment'],['SRM','Arrange supply sources','Supplier evaluation and selection, supply term negotiation']]);
+
+D[6].notes[1][1]=IMP('Asked: <b>replenishment cycle = retailer-distributor</b>; <b>pull = reactive</b>; know SCOR processes and attributes.')+D[6].notes[1][1]+
+`<h4>SCOR levels (standard SCOR structure)</h4>`+T(['Level','Content'],[['1','Top-level process types (plan, source, make, deliver, return)'],['2','Configuration: process categories'],['3','Process elements, inputs, outputs, metrics'],['4+','Company-specific implementation']])+
+`<p>The lecture also stresses that cyclic, process and push/pull views together give a holistic perspective from planning and sourcing to manufacturing, delivery and returns.</p>`;
+
+D[6].notes[2][1]=IMP('Know each <b>model with its example company</b> (Amazon, Zara, Nike, Dell, HP, P&G), agile\'s <b>four traits</b>, and the Intel numbers.')+D[6].notes[2][1]+
+`<h4>Benefits of supply chain modelling</h4><p>Simulate scenarios, find the most efficient or practical option, balance cost and service, support informed manager decisions. Linear programming optimises resource distribution for a goal; simulation and queuing models test dynamics.</p>
+<h4>Model comparison cheat sheet</h4>`+T(['Model','Keyword','Example'],[['Continuous','Stable demand, JIT','Amazon'],['Fast','Short life cycle','Zara'],['Efficient','Thin margins','-'],['Agile','Volatile demand, 4 traits','Nike'],['Custom-configured','Tailored to customer','Dell'],['Flexible','Seasonal peaks','Hewlett Packard'],['Virtual','Cloud and analytics','P&G']]);
+
+const dDrv=SV(760,170,
+ [[10,15,230,40,'Facilities',B],[265,15,230,40,'Inventory',B],[520,15,230,40,'Transportation',B],[10,115,230,40,'Information'],[265,115,230,40,'Sourcing'],[520,115,230,40,'Pricing']],null,
+ [[380,85,'Logistics drivers (top row)  |  Cross-functional drivers (bottom row)',G,12]],'Rebuilt: six supply chain drivers.');
+const dTrade=SV(760,150,
+ [[10,30,330,80,'RESPONSIVENESS|fast modes (air, express), decentralised facilities,|more finished goods near customers',B],[420,30,330,80,'EFFICIENCY|slow cheap modes (sea, rail), centralised facilities,|inventory held upstream or as raw material']],
+ [[340,70,420,70,A],[420,90,340,90,A]],[[380,135,'Every driver is a trade-off between the two ends of this scale',G,12]],'Rebuilt: responsiveness versus efficiency trade-off.');
+D[6].notes.splice(3,1,
+["Lecture 29 - Supply Chain Drivers (Facilities and Inventory)",
+IMP('Asked: the <b>six drivers</b>, <b>centralising facilities = efficiency up, responsiveness down</b>, and <b>Little\'s Law</b>.')+
+`<p>Drivers are the key elements that decide a chain's responsiveness and efficiency and interact to meet the competitive strategy. They can also be sources of vulnerability and risk.</p>`+dDrv+dTrade+
+T(['Type','Drivers','Character'],[['Logistics drivers','Facilities, inventory, transportation','Physical movement, storage, delivery; narrower; often external partners; efficiency and cost'],['Cross-functional drivers','Information, sourcing, pricing','Integration across departments; broader scope from procurement to customer service; larger impact']])+
+`<h4>Facilities</h4>`+L(['Physical locations where inventory is stored or transformed: warehouses, plants, DCs','Centralising raises efficiency, lowers responsiveness; decentralising does the reverse','<b>Toyota and Honda</b> open plants in every major market (responsiveness, protection from currency and trade barriers); Honda\'s flexible SUV/car plants helped in 2008','Role: flexibility versus capacity, product versus functional focus, cross-docking versus storage','Location: economies of scale versus proximity; macroeconomic, labour, infrastructure, tax','Capacity: excess capacity gives flexibility but raises cost; high utilisation improves efficiency but hurts responsiveness'])+
+`<h4>Facility metrics</h4>`+T(['Metric','Meaning'],[['Capacity','Maximum a facility can process'],['Utilisation','Fraction of capacity in use; unit cost falls and delays rise as it increases'],['Processing / setup / down / idle time','Fractions of time in each state; utilisation should be limited by demand, not setup or downtime'],['Production cost per unit','Average cost per unit, case or pound'],['Quality losses','Fraction of output lost to defects'],['Theoretical flow time','Time if no delays occur'],['Actual average flow time','Theoretical plus delays; use for due dates'],['Flow time efficiency','Theoretical / actual flow time (low = lots of waiting)'],['Top 20% SKUs and customers','Share of volume from top 20%'],['Average batch size','Average produced per batch'],['Production service level','Fraction of production orders completed on time'],['Product variety','Number of products processed; cost and flow time rise with variety']])+
+`<h4>Inventory</h4>`+dLittle+
+L(['Matches supply and demand (buffer between production and consumption)','Exploits economies of scale in production and transport','Raises responsiveness (e.g. apparel) but high inventory ties up capital, adds holding cost, risks markdown and obsolescence','Form, location and quantity decide competitiveness: finished goods near customers = responsive and costly; centralised raw material = cheap and slow','<b>Amazon:</b> best sellers stocked in many regional warehouses, slow movers in few, slowest from publisher or printed on demand','Three inventory types: <b>cycle</b> (normal demand), <b>safety</b> (buffer against uncertainty), <b>seasonal</b> (peak periods); also the desired level of product availability'])+
+`<h4>Inventory metrics</h4>`+T(['Metric','Meaning'],[['Cash conversion cycle','Inventory, payables and receivables; time to turn cash outlay into cash from sales'],['Average inventory','In units, days of demand and financial value'],['Seasonal inventory','Difference between inflow beyond cycle and safety stock and sales'],['Inventory turnover','COGS or sales / average inventory'],['DIO','Average inventory / COGS per day; high means slow selling'],['Average replenishment batch size','Per SKU; max minus min inventory'],['Average safety inventory','Inventory on hand when a replenishment arrives'],['Fill rate','Share of orders met from stock'],['Fraction of time out of stock','Time a SKU has zero inventory; estimates lost sales'],['Obsolete inventory','Share past an obsolescence date']])],
+["Lecture 30 - Supply Chain Drivers (Transportation, Information, Sourcing, Pricing)",
+IMP('Asked: <b>air freight = highest responsiveness</b>; <b>Amazon free shipping (7-14 days) levels warehouse workload</b>. Remember the Dell, Blue Nile, Sunsweet and Cisco examples.')+
+`<h4>Transportation</h4>`+L(['Moves product between stages; fast modes raise responsiveness and cost, slow modes (sea, rail) raise efficiency','Fast transport lets firms carry less inventory; mode choice shapes inventory and facility decisions','<b>Dell</b> flies components from Asia (less inventory, higher transport cost); <b>Blue Nile</b> centralises diamond stock and ships FedEx overnight (no costly stores)','Network design: direct shipments versus consolidation points; modes: air, truck, rail, sea, pipeline, internet for information goods; choice by speed, shipment size, cost, flexibility','Inbound cost sits in COGS; outbound cost in selling, general and administrative expense'])+
+T(['Transportation metric','Meaning'],[['Average inbound transportation cost','Cost of bringing product in (percent of sales or COGS)'],['Average incoming shipment size','Units or value per inbound shipment'],['Inbound cost per shipment','Shows scale opportunities with shipment size'],['Average outbound transportation cost','Cost of sending out (per unit or percent of sales)'],['Average outbound shipment size','Units or value per outbound shipment'],['Outbound cost per shipment','Scale opportunities outbound'],['Fraction transported by mode','Share by truck, rail, air; finds over or under-used modes']])+
+`<h4>Information</h4>`+L(['Raises asset utilisation, coordinates flows, increases responsiveness, cuts cost, supports customer-centric offers and IT investment','Examples: <b>Seven-Eleven Japan, Wal-Mart</b>','<b>Push</b> needs forecasts; <b>pull</b> needs actual demand data','<b>S&OP</b> aligns sales forecasts with production and inventory plans; enabling tech: ERP, analytics, cloud','<b>Sunsweet Growers</b> replaced Excel planning with an S&OP suite: production overruns fell from <b>30% to under 15%</b>, forecast accuracy up 15-20%, early warnings 2-3 weeks sooner'])+
+T(['Information metric','Meaning'],[['Forecast horizon','How far ahead; must be at least the decision lead time'],['Frequency of update','Update more often than the decision is revisited'],['Forecast error','Forecast minus actual; measure of uncertainty, drives safety inventory and spare capacity'],['Seasonal factors','Season average demand versus annual average'],['Variance from plan','Planned versus actual production or inventory; flags shortages and surpluses'],['Demand variability / order variability ratio','Standard deviations of demand and orders; below one may signal amplification issues']])+
+`<div class="tip"><b>Complexity versus value:</b> more information raises complexity and cost, with diminishing marginal value; share the minimum needed (e.g. aggregate sales rather than detailed point-of-sale data).</div>
+<h4>Sourcing</h4>`+L(['Purchasing goods and services; choose responsive or efficient sources, in-house or outsourced','Low-cost countries: IKEA furniture modules; Dell sources some PCs from China while keeping responsive in-house capacity','Outsource for responsiveness when in-house is costly (next-day package delivery); keep in-house for control (Zara quick order)','Outsource for efficiency when third parties offer scale','<b>Cisco:</b> low-end home routers made and packed in China and shipped in bulk; high-end products from responsive contract manufacturers in the US','Decisions: in-house or outsource, supplier selection (number, criteria, negotiation or auction), procurement','Outsource only if it raises supply chain surplus more than doing it internally'])+
+T(['Sourcing metric','Meaning'],[['Days payable outstanding','Days between supplier performing and being paid'],['Average purchase price','Quantity-weighted price'],['Supply quality','Quality of supplied product'],['Supply lead time','Order to arrival; long = less responsive, more inventory'],['Fraction of on-time deliveries','Share of on-time deliveries'],['Range of purchase price','Fluctuation; checks quantity-price link'],['Average purchase quantity','Is enough aggregation occurring?'],['Supplier reliability','Variability of lead time and delivered quantity']])+
+`<h4>Pricing</h4>`+L(['Sets revenue and customer segments; matches supply and demand when the chain is inflexible (short-term discounts shift demand)','Costco: consistently low prices for a segment valuing affordability','<b>Everyday low pricing</b> gives stable demand and efficiency; <b>high-low</b> uses periodic deep discounts; <b>menu pricing</b> by time or delivery location','Pricing must reflect economies of scale and customer response-time preferences','<b>Amazon (July 2008, two books worth USD 30):</b> standard 3-5 business days USD 4.98; two-day USD 13.97; one-day USD 22.97; <b>free shipping 7-14 business days</b>','One-day buyers create high urgency; free-shipping buyers <b>level out warehouse workload</b>, so Amazon serves both responsive and cost-focused customers'])+
+`<p>Pricing metrics include profit margin, revenue per unit, and variation of price and demand over time. Overall goal: raise total supply chain surplus.</p>`]);
+
+/* ---- Important topic lists ---- */
+D[5].imp=[
+['Three SC decision phases','Strategy/design = several years; planning = quarter to a year; operation = weekly or daily. Configuration is fixed at the lower levels.'],
+['Supply chain models','Flexible = seasonality; continuous flow = mature, stable; agile = unpredictable or custom; fast = short life cycle; efficient = thin margins; custom = specialised (automobile).'],
+['Definition and flows','Chopra and Meindl: all parties directly or indirectly fulfilling a customer request. Three flows: product, funds, information.'],
+['Three SCM components','Configuration (architecture, strategic), relationship (arm\'s length vs partnership), coordination (operational, JIT).'],
+['Manufacturing versus service SC','Push (sell from inventory) vs pull (customer initiated); inventory vs queues; customer relations low vs critical. 5 service attributes.'],
+['Three principle streams','Procurement/supply/sourcing; operations/material/production; logistics/distribution.'],
+['Sourcing types','Insourcing (inside the company), outsourcing, near-sourcing, global sourcing, captive operations, vertical integration (backward = supplier, forward = distribution).'],
+['Procurement 8 steps','1 identify and plan, 2 choose suppliers, 3 negotiate contract, 4 first PO, 5 accelerate order, 6 receipt and inspection, 7 invoice and payment, 8 relationships and records.'],
+['6 M\'s of production','Man, Machine, Methods, Materials, Money, Markets.'],
+['Logistics management goal','Right product, place, time, condition while minimising cost and maximising efficiency; WMS, TMS, DMS.'],
+['Network design decisions','Facility role, facility location, capacity allocation, market and supply allocation (not employee compensation).'],
+['Factors in network design','Cost leaders go low-cost (Foxconn); responsive firms stay near market (Zara); scale favours few plants (semiconductors), low fixed cost favours many (Coca-Cola).'],
+['Cost versus number of facilities','Inventory and facility cost rise; transportation cost falls then can rise; total has a minimum.'],
+['Four-phase network framework','I strategy, II regional configuration, III potential sites (hard and soft infrastructure), IV location and capacity.'],
+['Zara numbers','4-6 week cycle vs 6+ months; 24 h Europe / 48 h elsewhere delivery; 40% own capacity; half the markdowns.']];
+D[6].imp=[
+['Implied demand uncertainty','Uncertainty of the demand portion the chain plans to serve. Emergency orders = higher; higher service level = higher.'],
+['Risk vs uncertainty','Risk = outcome x probability, estimable; uncertainty cannot be estimated. Supply uncertainty higher for new products and immature processes.'],
+['Three macro processes','CRM (customer interface), ISCM (internal), SRM (supplier interface).'],
+['Cyclic view','Customer order (customer-retailer), replenishment (retailer-distributor), manufacturing (distributor-manufacturer), procurement (manufacturer-supplier).'],
+['Push/pull view','Pull = reactive to an order; push = speculative, anticipating orders.'],
+['SCOR model','Plan, Source, Make, Deliver, Return (+Enable); five attributes; 4 P\'s; 250+ metrics; Supply-Chain Council.'],
+['Seven SC models with examples','Continuous (Amazon), fast (Zara), efficient, agile (Nike; 4 traits), custom-configured (Dell), flexible (HP), virtual (P&G).'],
+['Intel Atom case','Make-to-order; order cycle 9 to 2 weeks; saved over USD 4 on a USD 20 chip (from about USD 5.50).'],
+['Six drivers','Facilities, inventory, transportation (logistics) + information, sourcing, pricing (cross-functional).'],
+['Facilities trade-off','Centralise = efficiency up, responsiveness down; decentralise = reverse.'],
+['Little\'s Law','I = D x T; cutting inventory at constant throughput cuts flow time.'],
+['Inventory types and metrics','Cycle, safety, seasonal; turnover, DIO, fill rate, cash conversion cycle.'],
+['Transportation trade-off','Air = most responsive, costly; sea and rail = efficient. Dell flies parts; Blue Nile uses FedEx overnight.'],
+['Information limits','Share the minimum necessary; Sunsweet 30% to under 15% overruns; forecast error drives safety stock.'],
+['Pricing and Amazon','Menu pricing: USD 4.98 / 13.97 / 22.97 or free (7-14 days) which levels warehouse workload; EDLP vs high-low.']];
+
+
+/* fix: original question sets belong to the opposite weeks */
+(function(){const o=w=>D[w].q.filter(q=>q[0]==='o'),x=w=>D[w].q.filter(q=>q[0]==='x');const a=o(5),b=o(6);D[5].q=[...b,...x(5)];D[6].q=[...a,...x(6)];})();
+
+/* ================= PRIORITY SYSTEM ================= */
+const KEYS={
+1:[[/goods, information and resources/i,'Q1'],[/order processing/i,'Q2'],[/just-in-time/i,'Q3'],[/omni-channel/i,'Q4'],[/order intensity|roadblocks/i,'Q5'],[/5PL|aggregator/,'Q6'],[/\bgreen\b/i,'Q7'],[/cross-dock/i,'Q8'],[/seasonal storage/i,'Q9'],[/2PL|asset-based/i,'Q10']],
+2:[[/\bEDI\b|Electronic Data Interchange/,'Q1'],[/blockchain/i,'Q2'],[/incoterms/i,'Q3'],[/\bexporting\b/i,'Q4'],[/acquisition|Corus/i,'Q5'],[/Pareto|80-20/,'Q6'],[/PDCA|Deming/,'Q7'],[/\bOTD\b|On-Time Delivery/,'Q8'],[/Seiso|5S/,'Q9'],[/exchange rate/i,'Q10']],
+5:[[/flexible/i,'Q1'],[/queues/i,'Q2'],[/6 M's|Man, Machine/,'Q3'],[/Identifying and planning|Negotiating the contract/i,'Q4'],[/vertical integration/i,'Q5'],[/\bPull\b/,'Q6'],[/insourcing/i,'Q7'],[/Procurement \/ Supply \/ Sourcing/i,'Q8'],[/minimis(e|ing) costs? and maximis/i,'Q9'],[/Facility role|network design decision/i,'Q10']],
+6:[[/implied demand/i,'Q1, Q10'],[/macro process|\bCRM\b|\bISCM\b|\bSRM\b/,'Q2'],[/cyclic|replenishment cycle/i,'Q3'],[/push\/pull|reactive/i,'Q4'],[/air freight|fast modes|most responsive/i,'Q5'],[/six drivers|Facilities, inventory, transportation/i,'Q6'],[/central(is|iz)ing|centralise/i,'Q7'],[/Little/,'Q8'],[/free shipping/i,'Q9']],
+9:[[/response time/i,'Q1'],[/product availability/i,'Q2'],[/inbound lot sizes|outbound cost per unit exceeds inbound|outbound transportation costs per unit/i,'Q3'],[/last-mile/i,'Q4'],[/direct shipping/i,'Q5'],[/\bFLP\b|computational geometry/,'Q6'],[/point rating/i,'Q7'],[/economic factors/i,'Q8'],[/centre of gravity/i,'Q9'],[/\bDell\b/,'Q10']],
+10:[[/overproduction/i,'Q1'],[/geography/i,'Q2'],[/over-reliance|past data/i,'Q3'],[/insider knowledge/i,'Q4'],[/effective capacity/i,'Q5'],[/Major components of transportation|Load, Mode, Flow/i,'Q6'],[/balanced/i,'Q7'],[/carrying cost|stock-outs/i,'Q8'],[/long-term \/ strategic|strategic capacity/i,'Q9'],[/limited visibility/i,'Q10']]
+};
+const OVR={
+1:[[/^Reference books$/,'L'],[/^Evolution$/,'M'],[/^Global scenario$/,'L'],[/^Indian scenario$/,'L'],[/^7 steps to plan/,'L'],[/^Cases$/,'L'],[/^Key components$/,'L'],[/^Why companies outsource/,'L'],[/^Case study: Elixia/,'L'],[/^Components of storage/,'M'],[/^Architecture/,'M'],[/^Factors driving/,'M'],[/^Key elements$/,'M'],[/^The Seven R/,'M'],[/^Logistics management$/,'M'],[/^Logistics design and manag/,'M']],
+2:[[/^Solutions customers expect/,'L'],[/^Case: Same-day/,'L'],[/^Stakeholders$/,'L'],[/^7 steps$/,'L'],[/^Case: Noatum/,'L'],[/^Logistics performance/,'L'],[/^3\. Quality circles/,'L'],[/^5\. Benchmarking/,'L'],[/^Cross-border transactions/,'M'],[/^Transportation management$/,'M'],[/^Supply management$/,'M'],[/^Warehousing and order/,'M']],
+5:[[/^Worked example: the detergent/,'L'],[/^Logistics versus SCM/,'M'],[/^Basic supply chain stages/,'M'],[/^Objectives$/,'M'],[/^Objectives of SCM \(full/,'L'],[/^Conclusion of the lecture/,'L'],[/^Case: Amazon/,'L'],[/^Amazon in detail/,'L'],[/^Where operations management/,'L'],[/^Operations managers are responsible/,'L'],[/^Case: Zara/,'L'],[/^Zara discussion/,'L'],[/^More objectives/,'L'],[/^Definition and components/,'L'],[/^Supply management$/,'M'],[/^Sourcing vs procurement/,'M'],[/^The 8 procurement steps explained/,'M'],[/^Operations management$/,'M'],[/^Material management$/,'M'],[/^Production management$/,'M'],[/^Logistics management components/,'M'],[/^Significance of the supply chain/,'M'],[/^Service supply chain framework/,'L'],[/^Service attributes and their/,'M'],[/^Factors influencing network/,'M'],[/^Framework$/,'M']],
+6:[[/^Sources \(courier/,'L'],[/^Countering uncertainty/,'M'],[/^Mitigating through automated/,'L'],[/^Why automation reduces/,'L'],[/^Macro process aims/,'M'],[/^Best practices/,'L'],[/^Challenges$/,'L'],[/^Control towers/,'L'],[/^Cases$/,'L'],[/^Benefits of supply chain modelling/,'L'],[/^Facility metrics/,'M'],[/^Inventory metrics/,'M'],[/^SCOR levels/,'L'],[/^Benefits and limitations/,'L'],[/^Major components/,'L'],[/^Model comparison cheat/,'M'],[/^Supply chain models$/,'M'],[/^SCOR model/,'M'],[/^4 P's of SCOR/,'M'],[/^Supply uncertainty/,'M'],[/^Risk versus uncertainty/,'M'],[/^Information$/,'M'],[/^Sourcing$/,'M']],
+9:[[/^Impact of online sales on customer/,'M'],[/^Impact of online sales on costs/,'M'],[/^Selecting a design/,'M'],[/^Comparative ranking/,'M'],[/^Facility location without proper/,'M'],[/^Three-tier model/,'L'],[/^Factors affecting facility location/,'L'],[/^Operations strategies/,'M'],[/^Systematic site evaluation/,'L'],[/^Qualitative models/,'M'],[/^Quantitative models/,'M'],[/^1\. Median/,'M'],[/^3\. Varignon/,'L'],[/^Resource-oriented/,'L'],[/^Design options for/,'M']],
+10:[[/^Context: demand in India/,'L'],[/^Types of demand forecasting/,'M'],[/^Methods$/,'M'],[/^Qualitative methods/,'M'],[/^Delphi method/,'M'],[/^Survey method/,'L'],[/^Interviews and focus groups/,'L'],[/^Salesforce composite/,'L'],[/^Quantitative methods/,'M'],[/^Trend projection/,'L'],[/^Capacity planning strategies/,'L'],[/^Capacity planning process/,'M'],[/^Alternatives$/,'L'],[/^Evaluating alternatives/,'L'],[/^Break-even analysis/,'M'],[/^Example: pizza/,'M'],[/^Make or buy/,'M'],[/^Sequencing rules/,'M'],[/^Advantages and limitations/,'L'],[/^Types of scheduling/,'L'],[/^Johnson's rule/,'M'],[/^n jobs on three/,'L'],[/^1\. Load/,'M'],[/^Fleet selection/,'L'],[/^2\. Mode/,'M'],[/^3\. Flow/,'M'],[/^4\. Route/,'L'],[/^Transportation management systems/,'L'],[/^Assumptions$/,'L'],[/^Phase I/,'M'],[/^1\. North-West/,'M'],[/^2\. Least Cost/,'M'],[/^3\. Vogel/,'M'],[/^Phase II/,'M'],[/^Lecture example: optimal/,'L'],[/^Why transportation programming/,'L'],[/^Mathematical model/,'M'],[/^Hungarian method/,'M'],[/^Worked example$/,'M'],[/^Worked example \d/,'L'],[/^Advantages of assignment/,'L']]
+};
+function tierOf(w,si,p){
+ const hm=p.match(/^<h4>(.*?)<\/h4>/);
+ const head=hm?hm[1].replace(/<[^>]*>/g,''):'Overview';
+ const o=(OVR[w]||[]).find(r=>r[0].test(head)&&(r[2]===undefined||r[2]===si));
+ const asked=(KEYS[w]||[]).filter(k=>k[0].test(p)).map(k=>k[1]);
+ let t,a=[];
+ if(o){t=o[1];}
+ else if(asked.length){t='H';a=asked;}
+ else if(/class="imp"/.test(p)){t='M';}
+ else t='M';
+ return {t,a:a,head};
+}
+function decorate(){
+ document.querySelectorAll('.acc').forEach((acc,si)=>{
+  const c=acc.querySelector('.c');if(c.dataset.d)return;c.dataset.d='1';
+  const cnt={H:0,M:0,L:0};
+  c.innerHTML=c.innerHTML.split(/(?=<h4>)/).filter(p=>p.trim()).map(p=>{
+   const hm=/^<h4>/.test(p);
+   if(!hm&&/class="imp"/.test(p)&&p.replace(/<[^>]*>/g,'').length<420)return p;
+   const r=tierOf(wk,si,p);cnt[r.t]++;
+   const lab=r.t==='H'?'\u2605 Must know'+(r.a.length?' \u00b7 asked in '+[...new Set(r.a.join(', ').split(', '))].join(', '):''):r.t==='M'?'\u25cf Good to know':'\u25cb Background';
+   return '<div class="blk p-'+r.t+'"><span class="pb">'+lab+'</span>'+p+'</div>';
+  }).join('');
+  const h=acc.querySelector('.h');
+  h.innerHTML=h.innerHTML+'<span class="cnt">\u2605 '+cnt.H+' \u00b7 \u25cf '+cnt.M+' \u00b7 \u25cb '+cnt.L+'</span>';
+ });
+}
+document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{document.body.className='mode-'+b.dataset.m;document.querySelectorAll('[data-m]').forEach(x=>x.classList.toggle('on',x===b));});
+
+/* ================= ENGINE ================= */
+let wk=5,tab='notes';
+const main=document.getElementById('main');
+const lab={o:'Original assignment',x:'Extra practice'};
+const S={};
+function newQ(w){S[w]={st:{},score:0,done:0,f:'all',order:[]}}
+newQ(5);newQ(6);
+function render(){
+ if(tab==='notes'){
+  main.innerHTML=D[wk].notes.map(d=>`<div class="acc"><div class="h">${d[0]}</div><div class="c">${d[1]}</div></div>`).join('');
+  main.querySelectorAll('.h').forEach(h=>h.onclick=()=>h.parentNode.classList.toggle('open'));
+  main.querySelector('.acc').classList.add('open');decorate();
+ }else if(tab==='cards'){
+  main.innerHTML=`<input type="search" id="fs" placeholder="Search Week ${wk} terms..."><div class="grid" id="fg"></div>`;
+  const draw=f=>{const g=document.getElementById('fg');
+   g.innerHTML=D[wk].gl.filter(x=>(x[0]+x[1]).toLowerCase().includes(f)).map(x=>`<div class="fc"><div class="fi"><div class="fa">${x[0]}</div><div class="fb">${x[1]}</div></div></div>`).join('');
+   g.querySelectorAll('.fc').forEach(c=>c.onclick=()=>c.classList.toggle('f'));};
+  draw('');document.getElementById('fs').oninput=e=>draw(e.target.value.toLowerCase());
+ }else if(tab==='imp'){
+  main.innerHTML='<div class="imp"><b>★ Important topics for Week '+wk+'.</b> These are the ideas the assignment questions tested or that the lectures stress with numbers, definitions or named examples. Revise these first.</div>'+T(['#','Important topic','What to remember'],D[wk].imp.map((x,i)=>[i+1,'<b>'+x[0]+'</b>',x[1]]));
+ }else quiz();
+}
+function quiz(){
+ const s=S[wk],qs=D[wk].q;
+ main.innerHTML=`<div class="bar"><label>Set <select id="qs"><option value="all">All Week ${wk} questions</option><option value="o">Original assignment (${qs.filter(q=>q[0]==='o').length})</option><option value="x">Extra practice (${qs.filter(q=>q[0]==='x').length})</option></select></label><span id="sc"></span><div class="prog"><i id="pg"></i></div><button class="p" id="rs">Reset / Retake</button></div><div id="res"></div><div id="qb"></div>`;
+ const sel=document.getElementById('qs');sel.value=s.f;
+ sel.onchange=()=>{newQ(wk);S[wk].f=sel.value;quiz()};
+ document.getElementById('rs').onclick=()=>{const f=s.f;newQ(wk);S[wk].f=f;quiz()};
+ const idx=qs.map((q,i)=>i).filter(i=>s.f==='all'||qs[i][0]===s.f);
+ s.order=idx;
+ document.getElementById('qb').innerHTML=idx.map((i,n)=>{const q=qs[i];
+  return `<div class="q" id="q${i}"><div class="t">Q${n+1} &middot; ${lab[q[0]]}</div><p>${q[1]}</p>`+q[2].map((o,j)=>`<button class="o" data-q="${i}" data-o="${j}">${'ABCD'[j]}) ${o}</button>`).join('')+`<button class="chk" data-c="${i}">Check Answer</button><div class="ex" id="e${i}"></div></div>`}).join('');
+ document.querySelectorAll('.o').forEach(b=>b.onclick=()=>ans(+b.dataset.q,+b.dataset.o));
+ document.querySelectorAll('.chk').forEach(b=>b.onclick=()=>ans(+b.dataset.c,-1));
+ idx.forEach(i=>{if(s.st[i]!==undefined)show(i,s.st[i])});
+ upd();
+}
+function show(i,sel){
+ const q=D[wk].q[i];
+ document.querySelectorAll(`#q${i} .o`).forEach((b,j)=>{b.disabled=true;if(j===q[3])b.classList.add('ok');else if(j===sel)b.classList.add('no')});
+ const e=document.getElementById('e'+i);
+ e.innerHTML=(sel===q[3]?'<b style="color:var(--ok)">Correct.</b> ':sel===-1?'<b>Answer: '+'ABCD'[q[3]]+'.</b> ':'<b style="color:var(--no)">Incorrect.</b> Correct answer: '+'ABCD'[q[3]]+'. ')+q[4];
+ e.classList.add('s');
+}
+function ans(i,o){
+ const s=S[wk];if(s.st[i]!==undefined)return;
+ s.st[i]=o;s.done++;if(o===D[wk].q[i][3])s.score++;
+ show(i,o);upd();
+}
+function upd(){
+ const s=S[wk],n=s.order.length;
+ document.getElementById('sc').textContent=`Score: ${s.score} / ${s.done} (of ${n})`;
+ document.getElementById('pg').style.width=(n?s.done/n*100:0)+'%';
+ if(n&&s.done===n){const r=document.getElementById('res'),p=s.score/n;r.style.display='block';
+  r.innerHTML=`<b>${s.score} / ${n}</b><div>${Math.round(p*100)}% &middot; ${p>=.8?'Excellent work':p>=.6?'Good, review the misses':'Revisit the notes and retry'}</div>`}
+}
+document.querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{wk=+b.dataset.w;document.querySelectorAll('[data-w]').forEach(x=>x.classList.toggle('on',x===b));render();scrollTo(0,0)});
+document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tab=b.dataset.t;document.querySelectorAll('[data-t]').forEach(x=>x.classList.toggle('on',x===b));render();scrollTo(0,0)});
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logistics &amp; SCM - NPTEL Study Hub</title>
+<style>
+:root{--bg:#050505;--card:#111113;--tx:#f5f5f4;--mut:#a1a1aa;--bd:#27272a;--a:#f59e0b;--b:#34d399;--ok:#22c55e;--no:#ef4444}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.65 system-ui,Segoe UI,Roboto,sans-serif}
+header{padding:24px 20px 6px;max-width:1040px;margin:auto}
+h1{margin:0;font-size:1.6rem;background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--mut);font-size:.88rem}
+nav{position:sticky;top:0;z-index:5;background:rgba(5,5,5,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--bd);padding:10px 20px}
+.in{max-width:1040px;margin:auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.sp{flex:1}
+nav button{background:var(--card);color:var(--tx);border:1px solid var(--bd);padding:7px 15px;border-radius:999px;cursor:pointer;font-size:.88rem}
+nav button.on{border-color:var(--a);color:var(--a);box-shadow:0 0 0 1px var(--a) inset}
+nav .wk button{border-radius:8px;font-weight:700}
+nav .wk button.on{background:var(--a);color:#000000}
+main{max-width:1040px;margin:auto;padding:18px 20px 60px}
+.acc{background:var(--card);border:1px solid var(--bd);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.acc>.h{padding:13px 18px;cursor:pointer;display:flex;justify-content:space-between;font-weight:600}
+.acc>.h:after{content:"+";color:var(--a);font-size:1.3rem}
+.acc.open>.h:after{content:"\2212"}
+.acc>.c{display:none;padding:2px 18px 16px;border-top:1px solid var(--bd)}
+.acc.open>.c{display:block}
+.c h4{color:var(--b);margin:14px 0 4px}
+.c ul{margin:4px 0;padding-left:20px}.c li{margin:3px 0}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.88rem}
+th,td{border:1px solid var(--bd);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:#000000;color:var(--a)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.m{background:#000000;border:1px solid var(--bd);border-left:3px solid var(--a);border-radius:10px;padding:9px 12px}
+.m b{display:block;color:var(--a);font-size:1.1rem}.m span{color:var(--mut);font-size:.8rem}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0}
+.flow div{background:#000000;border:1px solid var(--b);border-radius:8px;padding:5px 11px;font-size:.84rem}
+.flow i{color:var(--a);font-style:normal}
+.tip{background:#000000;border:1px dashed var(--b);border-radius:10px;padding:9px 13px;margin:10px 0;color:#d4d4d8;font-size:.9rem}
+.fc{perspective:900px;height:150px;cursor:pointer}
+.fi{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.fc.f .fi{transform:rotateY(180deg)}
+.fa,.fb{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;border:1px solid var(--bd);background:var(--card);display:flex;align-items:center;justify-content:center;text-align:center;padding:12px;font-size:.88rem}
+.fa{font-weight:700;color:var(--a);font-size:1.02rem}
+.fb{transform:rotateY(180deg);border-color:var(--b)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+input[type=search]{width:100%;padding:10px 14px;background:var(--card);border:1px solid var(--bd);color:var(--tx);border-radius:10px;margin-bottom:14px}
+.bar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px 16px;margin-bottom:14px}
+.bar select,.bar button{background:#000000;color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:7px 12px;cursor:pointer}
+.bar button.p{background:var(--a);color:#000000;border:0;font-weight:700}
+.prog{flex:1;min-width:120px;height:8px;background:#000000;border-radius:9px;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--a),var(--b));transition:width .3s}
+.q{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:15px 18px;margin-bottom:14px}
+.q .t{font-size:.74rem;color:var(--b);text-transform:uppercase;letter-spacing:.06em}
+.q p{margin:4px 0 10px;font-weight:600}
+.o{display:block;width:100%;text-align:left;background:#000000;color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:9px 12px;margin:6px 0;cursor:pointer;font-size:.94rem}
+.o:hover:not(:disabled){border-color:var(--a)}
+.o.ok{border-color:var(--ok);background:rgba(34,197,94,.14)}
+.o.no{border-color:var(--no);background:rgba(239,68,68,.14)}
+.ex{display:none;margin-top:8px;padding:10px 12px;border-radius:8px;background:#000000;border-left:3px solid var(--a);font-size:.9rem;color:#d4d4d8}
+.ex.s{display:block}
+.chk{margin-top:6px;background:transparent;border:1px solid var(--b);color:var(--b);border-radius:8px;padding:5px 12px;cursor:pointer;font-size:.84rem}
+#res{display:none;text-align:center;background:var(--card);border:1px solid var(--a);border-radius:12px;padding:18px;margin-bottom:14px}
+#res b{font-size:2rem;color:var(--a)}
+
+.prio{margin-top:8px;font-size:.8rem;color:var(--mut);align-items:center}
+.prio button{border-radius:8px!important;padding:4px 11px!important;font-size:.78rem!important}
+.prio .lg{margin-left:auto}
+.prio i.d{display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 4px 0 12px;vertical-align:-1px}
+i.d.H{background:var(--a)}i.d.M{background:var(--b)}i.d.L{background:#52525b}
+.blk{border-left:3px solid transparent;padding:2px 0 4px 12px;margin:10px 0;border-radius:2px}
+.blk.p-H{border-color:var(--a);background:linear-gradient(90deg,rgba(245,158,11,.08),transparent)}
+.blk.p-M{border-color:var(--b)}
+.blk.p-L{border-color:#3f3f46;opacity:.6}
+.blk.p-L:hover{opacity:1}
+.pb{display:inline-block;font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;font-weight:700;padding:1px 9px;border-radius:999px;margin-top:6px}
+.p-H .pb{background:var(--a);color:#050505}
+.p-M .pb{background:rgba(52,211,153,.18);color:var(--b)}
+.p-L .pb{background:#27272a;color:#a1a1aa}
+.cnt{font-size:.72rem;color:var(--mut);font-weight:400;margin-left:auto;margin-right:12px;white-space:nowrap}
+body.mode-hm .blk.p-L{display:none}
+body.mode-h .blk.p-L,body.mode-h .blk.p-M{display:none}
+.imp{background:linear-gradient(90deg,rgba(245,158,11,.14),rgba(245,158,11,.03));border:1px solid var(--a);border-left:4px solid var(--a);border-radius:10px;padding:9px 13px;margin:12px 0;font-size:.9rem;color:#fde68a}.imp b{color:var(--a)}</style>
+</head>
+<body>
+<header>
+<h1>Logistics &amp; Supply Chain Management</h1>
+<div class="sub">NPTEL study hub &middot; built from the Week 1 (Lectures 1-5) and Week 2 (Lectures 6-11) transcripts</div>
+</header>
+<nav><div class="in">
+<span class="wk"><button data-w="1" class="on">Week 1</button> <button data-w="2">Week 2</button></span>
+<span class="sp"></span>
+<span id="tabs"><button data-t="notes" class="on">Notes</button> <button data-t="cards">Flashcards</button> <button data-t="imp">★ Important</button> <button data-t="quiz">Quiz</button></span>
+</div><div class="in prio" id="prio"><span>Priority view:</span><button data-m="all" class="on">All topics</button><button data-m="hm">Hide background</button><button data-m="h">Must-know only</button><span class="lg"><i class="d H"></i>Must know<i class="d M"></i>Good to know<i class="d L"></i>Background</span></div></nav>
+<main id="main"></main>
+<script>
+const L=a=>'<ul>'+a.map(x=>'<li>'+x+'</li>').join('')+'</ul>';
+const T=(h,r)=>'<table><tr>'+h.map(x=>'<th>'+x+'</th>').join('')+'</tr>'+r.map(y=>'<tr>'+y.map(x=>'<td>'+x+'</td>').join('')+'</tr>').join('')+'</table>';
+const M=a=>'<div class="cards">'+a.map(x=>'<div class="m"><b>'+x[0]+'</b><span>'+x[1]+'</span></div>').join('')+'</div>';
+const F=a=>'<div class="flow">'+a.map(x=>'<div>'+x+'</div>').join('<i>&rarr;</i>')+'</div>';
+const TIP=s=>'<div class="tip">'+s+'</div>';
+const D={};
+
+/* =============== WEEK 1 =============== */
+D[1]={notes:[
+["Lecture 1 - Introduction to Logistics: Design and Management",
+`<p><b>Logistics</b> = management of the flow of <b>goods, information and resources</b> from the point of <b>origin to the point of consumption</b>, both <b>forward and reverse</b>. It covers planning, implementing and controlling efficient movement and storage of goods plus related information and financial transactions within a supply chain.</p>
+<h4>Evolution</h4>`+F(['Local','Regional / National','Global'])+
+`<h4>The Seven R's of logistics</h4>`+L(['Right <b>product</b> (with right information about it)','Right <b>quantity</b>','Right <b>time</b>','Right <b>condition</b>','Right <b>place</b>','Right <b>customer</b>','Right (financial) <b>resources</b>'])+
+`<h4>Key elements</h4>`+F(['Transportation','Warehousing','Inventory control','Order fulfilment','Distribution'])+
+`<p>Context from the lecture: 10-minute deliveries create pressure, so failures must be anticipated. The ultimate aim is to deliver the correct products to the right location at the right time while <b>minimising expenses and maximising effectiveness</b>. Effective logistics optimises operations, cuts cost, raises customer satisfaction and gives competitive advantage.</p>
+<h4>Reference books</h4>`+L(['Donald Waters - Logistics: An Introduction to Supply Chain Management','Ghiani, Laporte, Musmanno - Introduction to Logistics Systems Management','John J. Liu - Supply Chain Management and Transport Logistics','Mangan and Lalwani - Global Logistics and Supply Chain Management','Bramel and Simchi-Levi - The Logic of Logistics'])],
+["Lecture 2 - Stakeholders, Advantages and Modern Concepts",
+`<h4>Logistics stakeholders and process flow</h4>`+T(['Stage','What happens'],[
+['Order placement','Customer orders goods or services'],['Order processing','Sales / customer service team processes the order'],
+['Picking and packing','Orders picked from shelves; securely packed'],['Warehousing','Products stored at strategic locations'],
+['Inventory management','Levels checked to avoid <b>stock-outs</b>; reorder cycles replenish raw material'],
+['Transportation','Trucks, trains, ships, aircraft move packed orders'],['Delivery','Local carriers / postal services do <b>last-mile</b> delivery'],
+['Order tracking','Customers track using <b>docket numbers</b> from the provider'],['Customer service','Handles inquiries, issues, after-sale returns'],
+['Feedback and improvement','Customer feedback and internal metrics reveal scope to improve']])+
+`<h4>Logistics management</h4><p>Planning, implementation and control of movement and storage of goods, services and information across the supply chain: strategising, executing and overseeing the flow.</p>
+<h4>Advantages of effective logistics management</h4>`+L(['<b>Efficiency</b> - fewer interruptions','<b>Cost reduction</b> - optimised routes, warehouse operations and inventory levels','<b>Customer satisfaction</b> - timely delivery builds loyalty','<b>Competitive advantage</b> - superior service, faster delivery, lower cost','<b>Risk management</b> - mitigates stock-outs, delays, disruptions','<b>Resource optimisation</b> - vehicles, warehouses, manpower','<b>Market expansion</b> - reach new customers in new regions'])+
+`<h4>Logistics design and management: core elements</h4>`+L(['<b>Strategic planning</b> - objectives, market demand, alignment with business goals','<b>Inventory management</b> - balance supply and demand via forecasting and optimisation','<b>Warehousing</b> - storage efficiency, material handling, inventory control','<b>Transportation</b> - modes, route optimisation, freight management','<b>Order processing</b> - timely, accurate, entry to delivery','<b>Distribution</b> - timely delivery, last-mile optimisation, cost minimisation','<b>Technology</b> - RFID, IoT, AI-ML, UAV (drones), GPS for real-time monitoring','<b>Continuous improvement</b> - KPIs, reachability, deliverability, adapting to market'])+
+`<p>Design also considers cost optimisation, customer satisfaction, sustainability and risk; it involves analysing demand patterns, choosing transport modes, designing warehouse layouts and implementing inventory control.</p>
+<h4>Modern logistics concepts</h4>`+T(['Concept','Idea'],[
+['Lean','From lean manufacturing: waste reduction, streamlined processes'],
+['Just-in-Time (JIT)','Minimise holding cost by aligning production and delivery schedules with customer demand; shorter lead times'],
+['Agile','Flexibility and responsiveness; dynamic networks, real-time analytics, close collaboration with partners'],
+['Green (sustainable)','Optimised routes, eco-friendly fuels and vehicles, packaging reduction, recycling, waste reduction'],
+['Collaborative','Cooperation among stakeholders: share information, resources, best practice'],
+['Omni-channel','Seamless, consistent experience across sales channels; driven by e-commerce and multi-channel retailing'],
+['Reverse','Returns, exchanges, end-of-life disposal; recover value, comply with recycling regulations'],
+['Supply chain visibility','Real-time tracking of inventory and shipments using RFID, AI-ML, IoT, UAV, GPS, cloud software']])],
+["Lecture 3 - Manufacturing Logistics: National and International Scenario",
+`<p><b>Manufacturing logistics</b> oversees materials, resources and procedures used to produce goods: procurement, inventory control, production scheduling, transportation and distribution of finished products.</p>
+<h4>Architecture</h4>`+L(['<b>Supply chain management</b> - flow of materials from suppliers to plant and product to end customer','<b>Inventory management</b> - balance levels to cut holding cost while meeting production','<b>Production planning and scheduling</b> - meet demand with minimum lead time and cost','<b>Quality control</b> - quality of raw materials and finished goods','<b>Material handling</b> - movement inside the facility with suitable equipment','<b>Transportation</b> - among suppliers, plants, distribution centres, customers','<b>Warehousing</b> - storage and handling of materials and finished goods','<b>Reverse logistics</b> - defective or excess material returns, recycling'])+
+`<h4>Factors driving development of logistics</h4>`+T(['Factor','Effect'],[
+['Globalisation','International trade raises complexity; needs advanced global transport, inventory, distribution solutions'],
+['E-commerce growth','Faster delivery, adaptable fulfilment, cross-channel integration'],
+['Supply chain collaboration','Alliances among suppliers, manufacturers, distributors, LSPs'],
+['Technology','GPS, RFID, cloud, analytics: real-time visibility, optimisation, automation'],
+['Infrastructure','Ports, airports, railways, highways cut transit times'],
+['Emerging markets','Opportunity plus new market dynamics and regulation'],
+['Sustainability','Alternative fuels, green packaging, energy-efficient modes'],
+['Customer expectations','Faster delivery, accurate tracking, hassle-free returns'],
+['Regulatory changes','Trade, customs, safety, environmental standards']])+
+`<h4>Global scenario</h4>`+M([['EUR 8.4 trillion','Logistics industry worth in 2021'],['EUR 13.7 trillion','Projected by 2027'],['USD 9 trillion','Global logistics cost in 2020'],['10.7% of GDP','Share of world GDP (USD 85.24 trillion)'],['Asia-Pacific','Largest share of logistics costs'],['United States','Largest 3PL market']])+
+`<h4>Indian scenario</h4>`+M([['USD 274 billion','Market size, 2022'],['USD 563 billion','Projected by 2030'],['9.4% CAGR','Growth rate'],['14% of GDP','India logistics cost'],['11%','BRICS average (India is higher)']])+
+`<p>Logistics is the backbone of every sector's supply chain (healthcare, hospitality, manufacturing). It is time-bound: a few hours' delay at one stage ripples into days at delivery.</p>
+<h4>Challenges faced by Indian logistics companies</h4>`+T(['Challenge','Detail'],[
+['High order intensity ratio','Bulk order surges (festivals) break ETA and prioritisation; limited resources due to difficult payment cycles'],
+['Transportation roadblocks','Poor internal roads, hill accidents and landslides, congestion, checkpoints, toll stations'],
+['Rail tariffs','High cost, congested network, monsoon floods cancel services'],
+['Port and shipping problems','Slowest mode; understaffed ports, overstuffed berths, shallow ports cannot take large vessels'],
+['Lack of skilled personnel','Under-skilled, over-worked staff; poor training and pay cause turnover'],
+['Slow technology transition','Setup cost, foreign trainers, learning time; returns may not recover investment'],
+['Warehousing and taxation','Pest, leakage, space shortage; govt warehouses hold grain; layered taxes waste time'],
+['Competition with global giants','Short cycles and free one-day delivery at competitive prices'],
+['Customer mindset','Unwilling to pay extra for under 2-day delivery; expectations set by Amazon'],
+['Rising fuel costs','Higher freight surcharge reduces profit'],
+['Government policies','Tighter compliance mandates create bottlenecks'],
+['Shortage of drivers and delivery staff','Burn-out from heavy time-bound workloads']])],
+["Lecture 4 - Storage and Warehousing",
+`<p><b>Storage</b> = holding goods, materials and products at points along the supply chain from raw material to finished goods. Example: quick-commerce (Blinkit, Zepto) 10-minute delivery works because of <b>dark stores</b>.</p>
+<h4>Components of storage</h4>`+L(['<b>Warehousing</b> - hubs owned by manufacturers, wholesalers, retailers or 3PLs','<b>Inventory management</b> - optimisation, replenishment, cycle counting, valuation','<b>Storage facilities</b> - warehouses, distribution centres, cold storage, <b>bonded warehouses</b> (customs control), cross-docking facilities','<b>Equipment</b> - pallet racks, shelving, mezzanine floors, forklifts, conveyors, AS/RS','<b>Safety and security</b> - CCTV, access control, alarms, barriers','<b>Material handling</b> - protecting, storing, controlling materials; manual versus automated'])+
+`<h4>Warehouse layout: FAST</h4>`+M([['F - Flow','Stock inflow and outflow strategy'],['A - Accessibility','Safe travel room for staff and forklifts'],['S - Space','Maximise storage; minimise offices, empty pallet areas'],['T - Throughput','Units processed per time interval (outbound)']])+
+`<h4>7 steps to plan the layout</h4>`+F(['Define purpose','Diagram and total area','Storage requirements','Equipment needs','Map and optimise space','Test traffic flow','Implement'])+
+`<h4>Utilities of warehouses</h4>`+L(['<b>Product consolidation</b> - lower transport cost','<b>Cross-docking</b> - unload, sort, load outbound immediately','<b>Value-added services</b> - packaging, labelling, <b>kitting</b>, assembly','<b>Seasonal storage</b> - smooths demand and supply fluctuations','<b>Inventory management</b> - hold until needed for production or distribution','<b>Risk mitigation</b> - buffer against supplier delays, transport issues, disasters'])+
+`<h4>Cross-docking</h4>`+T(['Utilities','Challenges','Impacts'],[['JIT inventory<br>Optimised transport<br>Lower holding cost<br>Improved efficiency<br>Faster transit','Supplier / customer relationships<br>Quality control without normal warehousing checks<br>Coordination of inbound/outbound schedules<br>Technology and infrastructure cost','Better customer service<br>Efficiency<br>Cost savings<br>Competitive advantage']])+
+`<h4>Cases</h4>`+L(['<b>Amazon</b> - cross-docking centres for fast retail delivery','<b>Roche Diagnostics (Switzerland)</b> - perishable products needing same-day delivery, cross-docking suppliers keep required conditions','<b>Mainfreight (NZ)</b> - cross-dock services; suited to perishables, constant-demand retail items, pre-barcoded goods'])],
+["Lecture 5 - Logistics Service Providers",
+`<p>An <b>LSP</b> offers transportation, storage, distribution and management services for businesses: road/rail/air/sea transport, warehousing, freight forwarding, customs brokerage, inventory management, order fulfilment, packaging, consulting, technology.</p>
+<h4>Key components</h4>`+L(['Services offered and customisation','Expertise and experience','Global reach','Technology integration (TMS, WMS, GPS, RFID, cloud)','Risk management (insurance, contingency, compliance)','Cost efficiency (economies of scale, pay-per-use pricing)','Continuous improvement'])+
+`<h4>Why companies outsource (A.T. Kearney survey)</h4><p>Avoid capital expenditure, cut costs, increase flexibility, focus on core business, improve service, lack of scale, acquire talent, avoid labour problems. Most outsourced: domestic transport, warehousing, international transport, customs brokerage, freight forwarding. Strategic, customer-facing activities are outsourced least.</p>
+<h4>Types of LSP</h4>`+T(['Type','Description'],[
+['<b>1PL</b>','Firm or individual with own cargo organises transport; supplier and customer only, no middlemen; own fleet, warehouses, staff; vertical integration; full risk'],
+['<b>2PL</b>','<b>Asset-based carrier</b> owning means of transport (rail, road, sea, air); mainly international heavy / wholesale goods; narrower scope'],
+['<b>3PL</b>','Transport plus warehousing, terminal operations and other services; scalable, global, tech-enabled; <b>90% of Fortune 500</b> use a 3PL (Armstrong and Associates)'],
+['<b>4PL</b>','<b>Lead logistics provider</b> overseeing entire supply chain; lacks physical assets; negotiates between companies; single invoice; end-to-end visibility'],
+['<b>5PL</b>','<b>Logistics aggregator</b>; bundles needs of multiple 3PLs for better rates; fully integrated solution through multiple outsourced providers']])+
+`<h4>Case study: Elixia</h4><p>A leading Indian 3PL struggled to allocate and manage costs for local and upcountry deliveries due to improper vehicle allocation. After defining budgeted costs and dedicated vehicle capacity, it saved <b>INR 6.7 lac in one month</b>.</p>`]],
+gl:[["Logistics","Management of flow of goods, information and resources from origin to consumption (forward and reverse)."],["7 R's","Right product, quantity, time, condition, place, customer, (financial) resources."],["Key elements","Transportation, warehousing, inventory control, order fulfilment, distribution."],["Last-mile delivery","Final leg to the customer via local carriers or postal services."],["Docket number","Number supplied by the provider so customers can track orders."],["Lean logistics","Waste reduction and streamlined processes."],["JIT","Align production and delivery with demand to minimise holding cost."],["Agile logistics","Flexibility and responsiveness to market change."],["Green logistics","Eco-friendly fuels, packaging reduction, recycling; also sustainable logistics."],["Collaborative logistics","Partners share information, resources and best practice."],["Omni-channel","Consistent experience across channels, driven by e-commerce."],["Reverse logistics","Returns, exchanges and end-of-life disposal; recover value."],["Supply chain visibility","Real-time tracking using RFID, AI-ML, IoT, UAV, GPS, cloud."],["Manufacturing logistics","Materials, resources and procedures for producing goods."],["Logistics cost share","Global 10.7% of GDP (2020); India 14% versus BRICS 11%."],["Indian market size","USD 274 bn (2022) to USD 563 bn (2030), 9.4% CAGR."],["Order intensity ratio","Surge of bulk orders that breaks timelines (festival season)."],["Dark store","Local fulfilment point enabling 10-minute quick commerce."],["Bonded warehouse","Warehouse for goods under customs control."],["AS/RS","Automated storage and retrieval system."],["FAST","Flow, Accessibility, Space, Throughput: warehouse layout factors."],["Kitting","Packing complementary products into one sellable kit."],["Cross-docking","Unload, sort, load outbound without long-term storage."],["Seasonal storage","Warehouse use to absorb demand fluctuations."],["1PL","Company runs its own logistics in-house."],["2PL","Asset-based carrier owning ships, aircraft, trucks."],["3PL","Outsourced multi-service provider; used by 90% of Fortune 500."],["4PL","Lead logistics provider integrating the whole supply chain; no own assets."],["5PL","Logistics aggregator bundling demand of 3PLs."],["Elixia case","Indian 3PL saved INR 6.7 lac in a month by optimising vehicle allocation."]],
+q:[
+["o","Which of the following best defines logistics?",["Manufacturing goods at the lowest cost","Management of the flow of goods, information and resources from point of origin to point of consumption","Marketing and distribution of finished products only","Financial planning of a company's supply chain"],1,"Logistics covers the full flow, forward and reverse, from origin to consumption."],
+["o","Which step comes immediately after order placement in the logistics process?",["Delivery","Transportation","Order Processing","Warehousing"],2,"Placement is followed by processing by the sales or customer service team."],
+["o","Just-in-Time (JIT) logistics primarily aims to:",["Increase buffer stock in warehouses","Minimize inventory holding costs by aligning production with customer demand","Expand the number of suppliers","Increase lead times for better planning"],1,"JIT aligns production and delivery schedules with demand, cutting holding cost and lead time."],
+["o","Omni-channel logistics is primarily driven by the growth of:",["Air freight","E-commerce and multi-channel retailing","Rail transportation","Traditional brick and mortar stores"],1,"The lecture links omni-channel to e-commerce and multi-channel retailing."],
+["o","Which is a challenge specific to Indian logistics companies?",["Surplus of delivery staff and drivers","Overdevelopment of warehousing infrastructure","High order intensity ratio and transportation roadblocks","Excessive investment in new technologies"],2,"India has a shortage of drivers, poor warehousing and slow technology adoption."],
+["o","A 5PL provider is also known as a:",["Logistics aggregator","Asset-based carrier","Lead logistics provider","In-house logistics manager"],0,"5PL aggregates the demand of 3PLs. Lead logistics provider is 4PL."],
+["o","Which concept reduces environmental impact through eco-friendly fuels, packaging reduction and waste minimization?",["Lean Logistics","Agile Logistics","Green Logistics","Reverse Logistics"],2,"Green (sustainable) logistics."],
+["o","Cross-docking is best described as:",["Long-term storage in a central warehouse","A type of customs clearance procedure","A method of inventory counting","Incoming shipments unloaded, sorted and loaded onto outbound trucks without long-term storage"],3,"No long-term storage is the defining feature."],
+["o","Which of the following is a utility of warehousing?",["Increasing transportation costs","Reducing product quality","Providing seasonal storage to handle demand fluctuations","Replacing manufacturing operations"],2,"Seasonal storage smooths supply and demand fluctuations."],
+["o","Which provider is an 'asset-based carrier' owning ships, airlines or trucks?",["1PL","2PL","4PL","5PL"],1,"2PL owns the means of transport."],
+["x","The Seven R's of logistics do NOT include which of the following?",["Right quantity","Right condition","Right competitor","Right customer"],2,"The R's: product, quantity, time, condition, place, customer, resources."],
+["x","Global total logistics costs in 2020 were about what share of world GDP?",["4.5%","7.2%","10.7%","15.3%"],2,"About USD 9 trillion, roughly 10.7% of GDP."],
+["x","India's logistics cost as a percentage of GDP is:",["8%, below the BRICS average","11%, equal to BRICS","14%, above the BRICS average of 11%","20%, double the BRICS average"],2,"14% for India versus an 11% BRICS average."],
+["x","Projected Indian logistics market by 2030 and CAGR:",["USD 563 billion at 9.4%","USD 274 billion at 5%","USD 1 trillion at 12%","USD 400 billion at 3%"],0,"From USD 274 bn in 2022 to USD 563 bn by 2030 at 9.4% CAGR."],
+["x","In the FAST warehouse layout framework, the 'T' stands for:",["Transport","Throughput","Time","Technology"],1,"Throughput: units processed per time interval."],
+["x","Which type of facility holds goods under customs control?",["Cold storage","Bonded warehouse","Cross-dock","Mezzanine floor"],1,"Bonded warehouses hold goods under customs control."],
+["x","Warehouse kitting refers to:",["Counting stock cyclically","Packing complementary individual products into a single sellable pack","Moving goods by forklift","Returning goods to supplier"],1,"A value-added service that bundles complementary products."],
+["x","Which company in the lecture used cross-docking for perishable products needing same-day delivery?",["Roche Diagnostics","Elixia","Mainfreight only for IT","Hitachi"],0,"Roche Diagnostics, a healthcare manufacturer in Switzerland."],
+["x","A 4PL provider mainly:",["Owns the trucks and ships","Oversees the entire supply chain as lead logistics provider without owning physical assets","Does only last-mile delivery","Is the company's own warehouse team"],1,"4PL coordinates multiple 3PLs and offers a single invoice and end-to-end visibility."],
+["x","According to the lecture, roughly what share of Fortune 500 companies use a 3PL?",["30%","50%","70%","90%"],3,"Armstrong and Associates: 90%."],
+["x","In the Elixia case study the savings came mainly from:",["Buying new aircraft","Defining budgeted costs and dedicated vehicle capacity for deliveries","Cutting staff pay","Closing warehouses"],1,"Better vehicle allocation saved INR 6.7 lac in one month."],
+["x","Which concept recovers value from returned products and complies with recycling rules?",["Reverse logistics","Agile logistics","Collaborative logistics","JIT"],0,"Reverse logistics covers returns, exchanges and end-of-life disposal."]
+]};
+
+/* =============== WEEK 2 =============== */
+D[2]={notes:[
+["Lecture 6 - E-Logistics",
+`<p><b>E-logistics</b> = management of all physical flows of an organisation selling goods on an online platform (website, marketplace); it uses digital tools to streamline operations, raise visibility and improve efficiency.</p>`+
+M([['35%','Customers (Fevad) who had a bad delivery will not reorder from that site'],['43%','French online buyers (PayPal/ComScore) abandoned a purchase due to shipping cost']])+
+`<p>E-commerce has a much longer withdrawal (return) period, so returns are far more likely; flawless delivery is central for e-merchants.</p>
+<h4>Solutions customers expect</h4>`+L(['Several delivery methods (home delivery most popular, plus pick-up and eco-friendly options)','Free delivery','Delivery tracking (almost obligatory)'])+
+`<h4>Key elements of e-logistics</h4>`+T(['Element','Role'],[
+['Supply chain visibility','Real-time tracking of goods and inventory'],['<b>WMS</b>','Warehouse operations: inventory, fulfilment, picking'],
+['Inventory management','Real-time tracking across locations, automated processes'],['<b>GTM</b>','Compliance with trade rules, tariffs, customs documentation, trade finance'],
+['Last-mile solutions','Route optimisation, delivery tracking apps, autonomous delivery'],['Reverse logistics platforms','Returns, recalls, recycling'],
+['Analytics and predictive insights','Data analytics and machine learning'],['<b>Blockchain</b>','Immutable decentralised records: transparency, security, traceability, less fraud'],
+['<b>EDI</b>, TMS','Electronic exchange of business documents; transport management']])+
+`<h4>Challenges</h4><p>High returns (Amazon returns overview), delivery expectations, cost of free shipping, last-mile cost.</p>
+<h4>Case: Same-day delivery</h4>`+L(['<b>Amazon</b> - warehouses in densely populated urban areas, inventory closer to customers','<b>Walmart</b> - pilot programmes using its store network, UPS distribution, flat USD 10 fee, no minimum order','<b>eBay</b> - same-day for items not in its own inventory via local retailers and dedicated couriers'])+TIP('India angle: ONDC and quick-commerce (festival season order volumes, fashion e-commerce) were discussed as market context.')],
+["Lecture 7 - International Logistics",
+`<p>Planning and implementing how a business moves physical goods and materials from supplier to customer across borders. <b>Main goals: cost efficiency and reliability</b> (one misunderstood local rule can make a shipment unusable or confiscated).</p>
+<h4>Key components</h4>`+L(['<b>Customs clearance</b> - compliance and documentation of both countries','<b>Supply chain visibility</b> - real-time tracking','<b>Inventory management</b> across borders','<b>Risk management</b> - geopolitics, currency fluctuation, trade barriers, disasters','<b>Incoterms</b> - standard terms defining buyer and seller rights and responsibilities','<b>Cross-border regulations</b>','<b>Cultural and language considerations</b>','<b>Global supply chain network</b>','<b>Sustainability</b>'])+
+`<h4>Cross-border transactions</h4><p>Payers and recipients are in different countries (wholesale, retail, B2B, B2C). Forecast to exceed <b>USD 250 trillion by 2027</b>, up over USD 100 trillion in a decade. Growth drivers: trade and e-commerce, cross-border supply chains, global investment, remote workers and remittances.</p>
+<h4>7 steps</h4>`+F(['Initiation','Routing and processing','Payment verification','Confirmation','Fulfilment','Settlement (ACH, 2-5 business days)','Tracking'])+
+`<h4>Challenges</h4>`+L(['Slower and up to <b>10x costlier</b> than domestic; may take weeks to reconcile','High funding costs (pre-funding)','Transaction fees at each stage','<b>Currency exchange rate fluctuations</b>','Long transaction chains','Tax and legal implications','Limited operating hours','Fragmented data formats','Legacy technology (batch processing)','Complex compliance checks'])+
+`<h4>Stakeholders</h4>`+L(['<b>Exporter</b> (seller / shipper) and <b>importer</b> (buyer)','Customs broker / agent - clearance, documents, inspections, duties','<b>Shipping company</b> and <b>shipping agent</b> (its representative at a port)','<b>Insurance</b> companies covering transport incidents'])],
+["Lecture 8 - International Market Penetration Strategies",
+`<p>Six strategies: <b>Exporting, Licensing, Joint ventures, Ownership, Importing, Countertrade</b>.</p>`+
+T(['Strategy','Types','Benefits','Challenges','Indian examples'],[
+['<b>Exporting</b> (simplest, least risky)','Direct (no intermediaries); indirect (agents, distributors, trading firms)','Diversification, competitive advantage, economies of scale, revenue','Tariffs, logistics, currency and payment risk, legal compliance, culture','Tata Motors; Bajaj Auto (70+ countries); Infosys'],
+['<b>Licensing</b>','Trademark, patent, copyright, franchising','Low capital, risk mitigation, brand exposure','Quality control, IP protection, dependency on licensee, licensee may become competitor','Amul; ITC (Aashirvaad, Sunfeast, Bingo); Fabindia'],
+['<b>Joint venture</b>','Equity JV (new legal entity); contractual JV (no entity)','Risk sharing, resources, market entry','Culture, strategic alignment, governance, IP, exit strategy','Mahindra and Mahindra; HUL; Reliance'],
+['<b>Ownership</b>','Wholly owned subsidiary (100%), equity investment, franchising, <b>acquisition</b>','Control, market presence, knowledge transfer','Capital, regulation, integration, political and economic risk','Aditya Birla; <b>Tata Steel acquired Corus</b>; Dr. Reddy\'s'],
+['<b>Importing</b>','Bringing foreign goods in for use or resale','Product diversity, cost, time-to-market','Trade barriers, supply chain complexity, no quality control, currency risk','Walmart India; Amazon India; Apple India'],
+['<b>Countertrade</b>','Goods or services exchanged for goods or services (reciprocal / offset)','Market access, diversification, risk mitigation','Complexity, negotiation, transaction cost, operational and financial risk','Indian Oil Corp (oil states); ONGC Videsh']])+
+`<h4>Case: Noatum Logistics, Peru</h4><p>Syringes from China were needed urgently for the Covid-19 vaccination campaign. Noatum found the only viable route and ran monthly <b>charter flights</b> to meet the government deadline at reasonable cost.</p>`],
+["Lecture 9 - Logistics KPIs",
+`<p>KPIs measure efficiency and effectiveness of transportation, warehousing, inventory and order fulfilment. Examples: shipping time, order accuracy, picking accuracy, order cycle time, equipment and trailer utilisation, dwell time, carrying cost, inventory turnover, inventory-to-sales ratio.</p>
+<h4>Transportation management</h4>`+T(['KPI','Formula / example'],[
+['Average cost per skid or order','Total cost / number of orders (Bob\'s Hardware: 300 orders, USD 6.83)'],['Average transportation cost','Transport cost / monthly gross income x 100 (800 / 10,000 = 8%)'],['Freight cost per unit shipped','Freight cost / units (4,200 / 6,000 = USD 0.70)']])+
+`<h4>Supply management</h4>`+T(['KPI','Formula / example'],[
+['Transit time to distance','Time / miles (5 days / 2,000 mi = 0.0025 days per mile)'],['Stock rotation (inventory turnover)','Sales / average inventory (10,000 / 5,000)'],['Out-of-network shipment','Out-of-network / total x 100 (20 / 5,450 = 0.4%)']])+
+`<h4>Distribution management</h4>`+T(['KPI','Formula / example'],[
+['<b>On-Time Delivery (OTD)</b>','On-time units / total units x 100 (15 / 18 = 83%)'],['On-time pickup','Pickups on time / total shipments x 100 (43 / 46 = 93.5%)'],['On-time shipping','Orders shipped on time / total x 100 (18 / 23 = 78.3%)']])+
+`<h4>Warehousing and order management</h4>`+T(['KPI','Formula / example'],[
+['Unplanned shipment','Unplanned / total x 100 (4 / 4,000 = 0.1%)'],['Order accuracy','Correct orders / orders picked x 100 (123 / 128 = 96%)'],['Inventory accuracy','Items counted / items in system x 100 (3,458 / 3,506 = 98.6%)'],['Dock-to-stock','Hours to put away / shipments (12 / 18 = 0.67 h)'],['Units processed per sq ft','Units / usable space (60,000 / 16,400 = 3.7)'],['Space use in warehouse','Space with product / total x 100 (3,300 / 16,500 = 20%)']])+
+`<h4>Logistics performance</h4>`+T(['KPI','Formula / example'],[
+['Cost per pound','Shipment cost / weight (836.24 / 2,200 = USD 0.38; typical 0.22-0.42)'],['Cost per mile','(Fixed + variable cost) / miles ((2,540 + 2,312) / 3,600 = USD 1.34)'],['Number of shipments','Monthly shipment count, broken down by region or product']])],
+["Lectures 10 and 11 - Tools for Improving Logistics Efficiency",
+`<p>Quality control ensures products reach customers to specification. Logistics quality = satisfying demand at lowest cost without compromising service level. <b>Quality costs</b> (obtaining quality: systems, upkeep) versus <b>non-quality costs</b> (losses from downtime, malfunction). Tools: Deming's cost of quality, PDCA, 7 QC tools, quality circles, 5S, benchmarking.</p>
+<h4>1. PDCA (Deming cycle / continuous improvement spiral)</h4>`+F(['Plan','Do','Check','Act'])+
+L(['<b>Plan</b> - define problem; identify opportunity and analyse start, set measurable targets, prepare action plan','<b>Do</b> - test phase: perform chosen action, eliminate causes','<b>Check</b> - compare results with plan; goal met leads to Act, not met means revisit (plan not executed properly or plan flawed)','<b>Act / adjust</b> - document, standardise and monitor the change'])+
+`<h4>2. Seven QC tools (Kaoru Ishikawa, Guide to Quality Control, 1976)</h4>`+T(['Tool','Purpose'],[
+['1. Flowchart','Visual steps and sequence; reveals bottlenecks and decision points'],['2. Check sheet','Record data (e.g. defects) systematically'],['3. Histogram','Variation / dispersion and average of data (e.g. delivery times)'],
+['4. <b>Pareto diagram</b>','<b>80-20 rule</b>: ~80% of effects from ~20% of causes; prioritise vital few (e.g. scratched screen, battery issues)'],['5. Cause and effect (fishbone / Ishikawa)','Root-cause categories such as process, people'],
+['6. Scatter diagram','Relationship between two variables'],['7. <b>Control chart</b> (Shewhart chart, 1920s)','Control limits at +/-3 standard deviations; inside = common-cause, outside = special-cause variation']])+
+`<h4>3. Quality circles</h4><p>Dr. Ishikawa is the father of quality circles: a voluntary group of people from the same or similar work area. Roles: top management (support), coordinator (link to management), leader (rotates), members (drawn from the work area).</p>
+<h4>4. 5S philosophy (Japanese origin; waste reduction and efficiency)</h4>`+T(['Term','Meaning'],[['Seiri','Sort'],['Seiton','Set in order'],['<b>Seiso</b>','<b>Shine</b> (clean)'],['Seiketsu','Standardise'],['Shitsuke','Sustain']])+
+`<h4>5. Benchmarking</h4><p>Systematic process of measuring, comparing and improving performance and quality against best practice; a strategic management tool for logistics.</p>`]],
+gl:[["E-logistics","Management of physical flows of an organisation selling online."],["Fevad 35%","Customers who had a bad delivery experience will not reorder."],["WMS","Warehouse Management System: inventory, picking, fulfilment."],["GTM","Global Trade Management: customs, tariffs, trade compliance."],["EDI","Electronic exchange of business documents between trading partners."],["Blockchain","Immutable decentralised records: transparency, security, traceability."],["Same-day delivery","Amazon urban warehouses; Walmart USD 10 flat with UPS; eBay local couriers."],["International logistics","Moving goods across borders; goals: cost efficiency and reliability."],["Incoterms","Standard terms for buyer and seller rights and responsibilities."],["Cross-border transaction","Payer and recipient in different countries; USD 250 tn by 2027."],["ACH settlement","Clearing step taking 2 to 5 business days."],["Exchange rate risk","Currency fluctuation, unique to cross-border."],["Exporter / importer","Seller to a foreign country / buyer from abroad."],["Exporting","Selling goods made at home to foreign customers; direct or indirect."],["Licensing","IP rights granted for royalties; trademark, patent, copyright, franchising."],["Equity JV","Partners form a new legal entity sharing profit, risk, control."],["Contractual JV","Collaboration by contract without a new entity."],["Wholly owned subsidiary","100% ownership and control abroad."],["Acquisition","Buying an existing foreign business (Tata Steel and Corus)."],["Importing","Bringing foreign goods in for use, resale or distribution."],["Countertrade","Goods or services swapped for goods or services (IOC, OVL)."],["KPI","Key Performance Indicator for logistics operations."],["OTD","On-time delivery = on-time units / total units x 100."],["Stock rotation","Inventory turnover = sales / average inventory."],["Dock-to-stock","Hours from receipt to put-away per shipment."],["Quality vs non-quality cost","Cost of obtaining quality vs losses from lack of quality."],["PDCA","Plan, Do, Check, Act; Deming cycle (Shewhart origin)."],["Pareto diagram","80-20 rule."],["Fishbone diagram","Ishikawa root-cause diagram."],["Control chart","Shewhart chart with +/-3 SD limits."],["7 QC tools","Flowchart, check sheet, histogram, Pareto, fishbone, scatter, control chart (Ishikawa, 1976)."],["Quality circle","Voluntary workplace group improving quality; Ishikawa."],["5S","Seiri, Seiton, Seiso, Seiketsu, Shitsuke."],["Benchmarking","Comparing performance with best practice to improve."]],
+q:[
+["o","Which e-logistics key element allows the electronic exchange of business documents like purchase orders and invoices between trading partners?",["Warehouse Management System (WMS)","Transportation Management System (TMS)","Electronic Data Interchange (EDI)","Global Trade Management (GTM)"],2,"EDI exchanges documents electronically between partners."],
+["o","Which technology enhances transparency, security and traceability in supply chain transactions through decentralized record-keeping?",["Blockchain technology","GPS tracking","RFID","Cloud computing"],0,"Blockchain gives immutable, decentralised records."],
+["o","Incoterms are standardized terms that define:",["Packaging standards for global shipments","The rights and responsibilities of buyers and sellers in international transactions","Customs duty rates across countries","Insurance premiums for international cargo"],1,"They allocate rights and responsibilities between buyer and seller."],
+["o","Which market penetration strategy involves selling goods produced in one country directly to customers in another country?",["Licensing","Joint Venture","Exporting","Countertrade"],2,"That is the definition of exporting."],
+["o","Tata Steel's acquisition of Corus Group is an example of which strategy?",["Exporting","Licensing","Joint Venture","Acquisition"],3,"Acquisition falls under the Ownership strategy."],
+["o","According to the 7 QC Tools, the Pareto Diagram is based on which principle?",["70-30 rule","80-20 rule","60-40 rule","90-10 rule"],1,"About 80% of effects arise from 20% of causes."],
+["o","The PDCA cycle was made popular by which consultant, though attributed to Walter Shewhart?",["Joseph Juran","Philip Crosby","William Edwards Deming","Kaoru Ishikawa"],2,"It is known as the Deming cycle."],
+["o","On-Time Delivery (OTD) is a KPI that belongs to which category?",["Transportation Management","Supply Management","Distribution Management","Warehousing and Order Management"],2,"The lecture lists OTD under Distribution Management."],
+["o","In the 5S philosophy, 'SEISO' corresponds to which action?",["Sort","Set in Order","Standardize","Shine"],3,"Seiso means shine."],
+["o","Which is a challenge unique to cross-border transactions compared to domestic ones?",["Use of barcodes","Currency exchange rate fluctuations","Use of warehousing","Product packaging"],1,"Domestic trade has one currency."],
+["x","Cross-border payments can cost up to how many times a domestic transaction?",["2 times","5 times","10 times","50 times"],2,"The lecture states up to ten times more."],
+["x","Settlement of a cross-border transaction through the ACH typically takes:",["Seconds","Same day","2 to 5 business days","About 3 months"],2,"Clearing and reconciliation take two to five business days."],
+["x","Which licensing type is a specialised form where the franchisee operates under the franchisor's brand and model?",["Patent licensing","Copyright licensing","Franchising","Equity JV"],2,"Franchising grants rights to a brand, model and procedures for fees and royalties."],
+["x","An equity joint venture differs from a contractual one because it:",["Has no partners","Creates a new legal entity in which partners hold ownership stakes","Involves only exports","Has no profit sharing"],1,"A contractual JV has no separate entity."],
+["x","Indian Oil Corporation's arrangements with oil-producing countries are an example of:",["Exporting","Countertrade","Franchising","Wholly owned subsidiary"],1,"Goods or services are exchanged for oil."],
+["x","In the Walmart same-day pilot, the delivery fee was:",["Free","Flat USD 10 with no minimum order","USD 50 minimum order","Per kilometre"],1,"Walmart partnered with UPS with a flat USD 10 fee."],
+["x","A company delivered 15 of 18 products on time. Its OTD is about:",["15%","75%","83%","95%"],2,"15 / 18 x 100 = 83%."],
+["x","Control limits on a Shewhart control chart are set at:",["+/-1 standard deviation","+/-2 standard deviations","+/-3 standard deviations","+/-6 standard deviations"],2,"Points outside indicate special-cause variation."],
+["x","In PDCA, standardising and documenting a successful change happens in the:",["Plan phase","Do phase","Check phase","Act phase"],3,"Act (adjust) documents, standardises and monitors the change."],
+["x","Who introduced the 7 QC tools in 'Guide to Quality Control' (1976) and is the father of quality circles?",["Walter Shewhart","Deming","Kaoru Ishikawa","Juran"],2,"Dr. Kaoru Ishikawa."],
+["x","Which 5S term means 'Set in order'?",["Seiri","Seiton","Seiketsu","Shitsuke"],1,"Seiri sort, Seiton set in order, Seiso shine, Seiketsu standardise, Shitsuke sustain."],
+["x","Which QC tool shows the relationship between two variables?",["Scatter diagram","Check sheet","Flowchart","Histogram"],0,"A scatter diagram checks whether a relationship exists between two variables."],
+["x","In the Noatum Logistics case, how were syringes delivered from China to Peru?",["By rail","Monthly charter flights","By sea only","By road"],1,"Charter flights were the only viable route within the timeline."]
+]};
+
+
+D[1].imp=[
+['Definition of logistics','Management of the flow of goods, information and resources from origin to consumption, forward and reverse.'],
+['Order of the logistics process','Order placement, then order processing (immediately after), picking and packing, warehousing, transportation, delivery (last mile), tracking, customer service.'],
+['JIT','Aligns production and delivery with customer demand to minimise inventory holding cost and lead time.'],
+['Modern concepts','Lean (waste), agile (responsiveness), green (eco fuels, less packaging, waste), collaborative, omni-channel (e-commerce driven), reverse (returns), visibility (RFID, IoT, GPS).'],
+['Cross-docking','Unload, sort, load outbound with no long-term storage.'],
+['Utilities of warehousing','Consolidation, cross-docking, value-added services (kitting), seasonal storage, inventory management, risk mitigation.'],
+['1PL to 5PL','1PL in-house; 2PL asset-based carrier; 3PL outsourced multi-service (90% of Fortune 500); 4PL lead logistics provider; 5PL aggregator.'],
+['Challenges in Indian logistics','High order intensity ratio, transportation roadblocks, rail and port issues, skill shortage, slow technology adoption, fuel cost.'],
+['Key numbers','Global logistics cost 10.7% of GDP; India 14% vs BRICS 11%; India market USD 274 bn (2022) to USD 563 bn (2030), 9.4% CAGR.'],
+['Seven R\'s','Right product, quantity, time, condition, place, customer, resources.'],
+['FAST layout','Flow, Accessibility, Space, Throughput.'],
+['Elixia case','Indian 3PL saved INR 6.7 lac in a month through vehicle allocation.']];
+D[2].imp=[
+['E-logistics elements','EDI (document exchange), WMS, TMS, GTM, blockchain (transparency, security, traceability), GPS, RFID, cloud.'],
+['E-logistics numbers','35% of customers with a bad delivery will not reorder (Fevad); 43% of French online buyers abandoned a purchase due to shipping cost.'],
+['Incoterms','Standard terms for buyer and seller rights and responsibilities in international trade.'],
+['Market penetration strategies','Exporting, licensing, joint venture, ownership (wholly owned, acquisition: Tata Steel and Corus), importing, countertrade.'],
+['Cross-border challenges','Exchange rate fluctuation (unique), up to 10x cost, ACH settlement 2-5 days, fees, compliance, fragmented data.'],
+['Cross-border facts','7 steps from initiation to tracking; volume forecast above USD 250 trillion by 2027.'],
+['KPIs by category','Transportation, supply, distribution (OTD), warehousing and order management; OTD = on-time units / total x 100.'],
+['PDCA','Plan, Do, Check, Act; Shewhart origin, popularised by Deming.'],
+['Seven QC tools','Flowchart, check sheet, histogram, Pareto (80-20), fishbone (Ishikawa), scatter, control chart (+/-3 SD); Ishikawa 1976.'],
+['5S','Seiri sort, Seiton set in order, Seiso shine, Seiketsu standardise, Shitsuke sustain.'],
+['Quality circles and benchmarking','Voluntary improvement groups (Ishikawa); benchmarking against best practice.'],
+['Noatum case','Charter flights moved syringes from China to Peru for the Covid-19 campaign.']];
+
+/* ================= PRIORITY SYSTEM ================= */
+const KEYS={
+1:[[/goods, information and resources/i,'Q1'],[/order processing/i,'Q2'],[/just-in-time/i,'Q3'],[/omni-channel/i,'Q4'],[/order intensity|roadblocks/i,'Q5'],[/5PL|aggregator/,'Q6'],[/\bgreen\b/i,'Q7'],[/cross-dock/i,'Q8'],[/seasonal storage/i,'Q9'],[/2PL|asset-based/i,'Q10']],
+2:[[/\bEDI\b|Electronic Data Interchange/,'Q1'],[/blockchain/i,'Q2'],[/incoterms/i,'Q3'],[/\bexporting\b/i,'Q4'],[/acquisition|Corus/i,'Q5'],[/Pareto|80-20/,'Q6'],[/PDCA|Deming/,'Q7'],[/\bOTD\b|On-Time Delivery/,'Q8'],[/Seiso|5S/,'Q9'],[/exchange rate/i,'Q10']],
+5:[[/flexible/i,'Q1'],[/queues/i,'Q2'],[/6 M's|Man, Machine/,'Q3'],[/Identifying and planning|Negotiating the contract/i,'Q4'],[/vertical integration/i,'Q5'],[/\bPull\b/,'Q6'],[/insourcing/i,'Q7'],[/Procurement \/ Supply \/ Sourcing/i,'Q8'],[/minimis(e|ing) costs? and maximis/i,'Q9'],[/Facility role|network design decision/i,'Q10']],
+6:[[/implied demand/i,'Q1, Q10'],[/macro process|\bCRM\b|\bISCM\b|\bSRM\b/,'Q2'],[/cyclic|replenishment cycle/i,'Q3'],[/push\/pull|reactive/i,'Q4'],[/air freight|fast modes|most responsive/i,'Q5'],[/six drivers|Facilities, inventory, transportation/i,'Q6'],[/central(is|iz)ing|centralise/i,'Q7'],[/Little/,'Q8'],[/free shipping/i,'Q9']],
+9:[[/response time/i,'Q1'],[/product availability/i,'Q2'],[/inbound lot sizes|outbound cost per unit exceeds inbound|outbound transportation costs per unit/i,'Q3'],[/last-mile/i,'Q4'],[/direct shipping/i,'Q5'],[/\bFLP\b|computational geometry/,'Q6'],[/point rating/i,'Q7'],[/economic factors/i,'Q8'],[/centre of gravity/i,'Q9'],[/\bDell\b/,'Q10']],
+10:[[/overproduction/i,'Q1'],[/geography/i,'Q2'],[/over-reliance|past data/i,'Q3'],[/insider knowledge/i,'Q4'],[/effective capacity/i,'Q5'],[/Major components of transportation|Load, Mode, Flow/i,'Q6'],[/balanced/i,'Q7'],[/carrying cost|stock-outs/i,'Q8'],[/long-term \/ strategic|strategic capacity/i,'Q9'],[/limited visibility/i,'Q10']]
+};
+const OVR={
+1:[[/^Reference books$/,'L'],[/^Evolution$/,'M'],[/^Global scenario$/,'L'],[/^Indian scenario$/,'L'],[/^7 steps to plan/,'L'],[/^Cases$/,'L'],[/^Key components$/,'L'],[/^Why companies outsource/,'L'],[/^Case study: Elixia/,'L'],[/^Components of storage/,'M'],[/^Architecture/,'M'],[/^Factors driving/,'M'],[/^Key elements$/,'M'],[/^The Seven R/,'M'],[/^Logistics management$/,'M'],[/^Logistics design and manag/,'M']],
+2:[[/^Solutions customers expect/,'L'],[/^Case: Same-day/,'L'],[/^Stakeholders$/,'L'],[/^7 steps$/,'L'],[/^Case: Noatum/,'L'],[/^Logistics performance/,'L'],[/^3\. Quality circles/,'L'],[/^5\. Benchmarking/,'L'],[/^Cross-border transactions/,'M'],[/^Transportation management$/,'M'],[/^Supply management$/,'M'],[/^Warehousing and order/,'M']],
+5:[[/^Worked example: the detergent/,'L'],[/^Logistics versus SCM/,'M'],[/^Basic supply chain stages/,'M'],[/^Objectives$/,'M'],[/^Objectives of SCM \(full/,'L'],[/^Conclusion of the lecture/,'L'],[/^Case: Amazon/,'L'],[/^Amazon in detail/,'L'],[/^Where operations management/,'L'],[/^Operations managers are responsible/,'L'],[/^Case: Zara/,'L'],[/^Zara discussion/,'L'],[/^More objectives/,'L'],[/^Definition and components/,'L'],[/^Supply management$/,'M'],[/^Sourcing vs procurement/,'M'],[/^The 8 procurement steps explained/,'M'],[/^Operations management$/,'M'],[/^Material management$/,'M'],[/^Production management$/,'M'],[/^Logistics management components/,'M'],[/^Significance of the supply chain/,'M'],[/^Service supply chain framework/,'L'],[/^Service attributes and their/,'M'],[/^Factors influencing network/,'M'],[/^Framework$/,'M']],
+6:[[/^Sources \(courier/,'L'],[/^Countering uncertainty/,'M'],[/^Mitigating through automated/,'L'],[/^Why automation reduces/,'L'],[/^Macro process aims/,'M'],[/^Best practices/,'L'],[/^Challenges$/,'L'],[/^Control towers/,'L'],[/^Cases$/,'L'],[/^Benefits of supply chain modelling/,'L'],[/^Facility metrics/,'M'],[/^Inventory metrics/,'M'],[/^SCOR levels/,'L'],[/^Benefits and limitations/,'L'],[/^Major components/,'L'],[/^Model comparison cheat/,'M'],[/^Supply chain models$/,'M'],[/^SCOR model/,'M'],[/^4 P's of SCOR/,'M'],[/^Supply uncertainty/,'M'],[/^Risk versus uncertainty/,'M'],[/^Information$/,'M'],[/^Sourcing$/,'M']],
+9:[[/^Impact of online sales on customer/,'M'],[/^Impact of online sales on costs/,'M'],[/^Selecting a design/,'M'],[/^Comparative ranking/,'M'],[/^Facility location without proper/,'M'],[/^Three-tier model/,'L'],[/^Factors affecting facility location/,'L'],[/^Operations strategies/,'M'],[/^Systematic site evaluation/,'L'],[/^Qualitative models/,'M'],[/^Quantitative models/,'M'],[/^1\. Median/,'M'],[/^3\. Varignon/,'L'],[/^Resource-oriented/,'L'],[/^Design options for/,'M']],
+10:[[/^Context: demand in India/,'L'],[/^Types of demand forecasting/,'M'],[/^Methods$/,'M'],[/^Qualitative methods/,'M'],[/^Delphi method/,'M'],[/^Survey method/,'L'],[/^Interviews and focus groups/,'L'],[/^Salesforce composite/,'L'],[/^Quantitative methods/,'M'],[/^Trend projection/,'L'],[/^Capacity planning strategies/,'L'],[/^Capacity planning process/,'M'],[/^Alternatives$/,'L'],[/^Evaluating alternatives/,'L'],[/^Break-even analysis/,'M'],[/^Example: pizza/,'M'],[/^Make or buy/,'M'],[/^Sequencing rules/,'M'],[/^Advantages and limitations/,'L'],[/^Types of scheduling/,'L'],[/^Johnson's rule/,'M'],[/^n jobs on three/,'L'],[/^1\. Load/,'M'],[/^Fleet selection/,'L'],[/^2\. Mode/,'M'],[/^3\. Flow/,'M'],[/^4\. Route/,'L'],[/^Transportation management systems/,'L'],[/^Assumptions$/,'L'],[/^Phase I/,'M'],[/^1\. North-West/,'M'],[/^2\. Least Cost/,'M'],[/^3\. Vogel/,'M'],[/^Phase II/,'M'],[/^Lecture example: optimal/,'L'],[/^Why transportation programming/,'L'],[/^Mathematical model/,'M'],[/^Hungarian method/,'M'],[/^Worked example$/,'M'],[/^Worked example \d/,'L'],[/^Advantages of assignment/,'L']]
+};
+function tierOf(w,si,p){
+ const hm=p.match(/^<h4>(.*?)<\/h4>/);
+ const head=hm?hm[1].replace(/<[^>]*>/g,''):'Overview';
+ const o=(OVR[w]||[]).find(r=>r[0].test(head)&&(r[2]===undefined||r[2]===si));
+ const asked=(KEYS[w]||[]).filter(k=>k[0].test(p)).map(k=>k[1]);
+ let t,a=[];
+ if(o){t=o[1];}
+ else if(asked.length){t='H';a=asked;}
+ else if(/class="imp"/.test(p)){t='M';}
+ else t='M';
+ return {t,a:a,head};
+}
+function decorate(){
+ document.querySelectorAll('.acc').forEach((acc,si)=>{
+  const c=acc.querySelector('.c');if(c.dataset.d)return;c.dataset.d='1';
+  const cnt={H:0,M:0,L:0};
+  c.innerHTML=c.innerHTML.split(/(?=<h4>)/).filter(p=>p.trim()).map(p=>{
+   const hm=/^<h4>/.test(p);
+   if(!hm&&/class="imp"/.test(p)&&p.replace(/<[^>]*>/g,'').length<420)return p;
+   const r=tierOf(wk,si,p);cnt[r.t]++;
+   const lab=r.t==='H'?'\u2605 Must know'+(r.a.length?' \u00b7 asked in '+[...new Set(r.a.join(', ').split(', '))].join(', '):''):r.t==='M'?'\u25cf Good to know':'\u25cb Background';
+   return '<div class="blk p-'+r.t+'"><span class="pb">'+lab+'</span>'+p+'</div>';
+  }).join('');
+  const h=acc.querySelector('.h');
+  h.innerHTML=h.innerHTML+'<span class="cnt">\u2605 '+cnt.H+' \u00b7 \u25cf '+cnt.M+' \u00b7 \u25cb '+cnt.L+'</span>';
+ });
+}
+document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{document.body.className='mode-'+b.dataset.m;document.querySelectorAll('[data-m]').forEach(x=>x.classList.toggle('on',x===b));});
+
+/* =============== ENGINE =============== */
+let wk=1,tab='notes';
+const main=document.getElementById('main');
+const lab={o:'Original assignment',x:'Extra practice'};
+let S={1:null,2:null};
+function newQ(w){S[w]={st:{},score:0,done:0,f:'all'}}
+newQ(1);newQ(2);
+function render(){
+ if(tab==='notes'){
+  main.innerHTML=D[wk].notes.map(d=>`<div class="acc"><div class="h">${d[0]}</div><div class="c">${d[1]}</div></div>`).join('');
+  main.querySelectorAll('.h').forEach(h=>h.onclick=()=>h.parentNode.classList.toggle('open'));
+  main.querySelector('.acc').classList.add('open');decorate();
+ }else if(tab==='cards'){
+  main.innerHTML=`<input type="search" id="fs" placeholder="Search Week ${wk} terms..."><div class="grid" id="fg"></div>`;
+  const draw=f=>{const g=document.getElementById('fg');
+   g.innerHTML=D[wk].gl.filter(x=>(x[0]+x[1]).toLowerCase().includes(f)).map(x=>`<div class="fc"><div class="fi"><div class="fa">${x[0]}</div><div class="fb">${x[1]}</div></div></div>`).join('');
+   g.querySelectorAll('.fc').forEach(c=>c.onclick=()=>c.classList.toggle('f'));};
+  draw('');document.getElementById('fs').oninput=e=>draw(e.target.value.toLowerCase());
+ }else if(tab==='imp'){
+  main.innerHTML='<div class="imp"><b>★ Important topics for Week '+wk+'.</b> These are the ideas the assignment questions tested or that the lectures stress with numbers, definitions or named examples. Revise these first.</div>'+T(['#','Important topic','What to remember'],D[wk].imp.map((x,i)=>[i+1,'<b>'+x[0]+'</b>',x[1]]));
+ }else quiz();
+}
+function quiz(){
+ const s=S[wk];
+ main.innerHTML=`<div class="bar"><label>Set <select id="qs"><option value="all">All Week ${wk} questions</option><option value="o">Original assignment (10)</option><option value="x">Extra practice (12)</option></select></label><span id="sc"></span><div class="prog"><i id="pg"></i></div><button class="p" id="rs">Reset / Retake</button></div><div id="res"></div><div id="qb"></div>`;
+ const sel=document.getElementById('qs');sel.value=s.f;
+ sel.onchange=()=>{newQ(wk);S[wk].f=sel.value;quiz()};
+ document.getElementById('rs').onclick=()=>{const f=s.f;newQ(wk);S[wk].f=f;quiz()};
+ const qs=D[wk].q,idx=qs.map((q,i)=>i).filter(i=>s.f==='all'||qs[i][0]===s.f);
+ s.order=idx;
+ document.getElementById('qb').innerHTML=idx.map((i,n)=>{const q=qs[i];
+  return `<div class="q" id="q${i}"><div class="t">Q${n+1} &middot; ${lab[q[0]]}</div><p>${q[1]}</p>`+q[2].map((o,j)=>`<button class="o" data-q="${i}" data-o="${j}">${'ABCD'[j]}) ${o}</button>`).join('')+`<button class="chk" data-c="${i}">Check Answer</button><div class="ex" id="e${i}"></div></div>`}).join('');
+ document.querySelectorAll('.o').forEach(b=>b.onclick=()=>ans(+b.dataset.q,+b.dataset.o));
+ document.querySelectorAll('.chk').forEach(b=>b.onclick=()=>ans(+b.dataset.c,-1));
+ idx.forEach(i=>{if(s.st[i]!==undefined)show(i,s.st[i])});
+ upd();
+}
+function show(i,sel){
+ const q=D[wk].q[i];
+ document.querySelectorAll(`#q${i} .o`).forEach((b,j)=>{b.disabled=true;if(j===q[3])b.classList.add('ok');else if(j===sel)b.classList.add('no')});
+ const e=document.getElementById('e'+i);
+ e.innerHTML=(sel===q[3]?'<b style="color:var(--ok)">Correct.</b> ':sel===-1?'<b>Answer: '+'ABCD'[q[3]]+'.</b> ':'<b style="color:var(--no)">Incorrect.</b> Correct answer: '+'ABCD'[q[3]]+'. ')+q[4];
+ e.classList.add('s');
+}
+function ans(i,o){
+ const s=S[wk];if(s.st[i]!==undefined)return;
+ s.st[i]=o;s.done++;if(o===D[wk].q[i][3])s.score++;
+ show(i,o);upd();
+}
+function upd(){
+ const s=S[wk],n=s.order.length;
+ document.getElementById('sc').textContent=`Score: ${s.score} / ${s.done} (of ${n})`;
+ document.getElementById('pg').style.width=(n?s.done/n*100:0)+'%';
+ if(n&&s.done===n){const r=document.getElementById('res'),p=s.score/n;r.style.display='block';
+  r.innerHTML=`<b>${s.score} / ${n}</b><div>${Math.round(p*100)}% &middot; ${p>=.8?'Excellent work':p>=.6?'Good, review the misses':'Revisit the notes and retry'}</div>`}
+}
+document.querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{wk=+b.dataset.w;document.querySelectorAll('[data-w]').forEach(x=>x.classList.toggle('on',x===b));render();scrollTo(0,0)});
+document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tab=b.dataset.t;document.querySelectorAll('[data-t]').forEach(x=>x.classList.toggle('on',x===b));render();scrollTo(0,0)});
+render();
+</script>
+</body>
+</html>

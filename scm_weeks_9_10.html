@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Supply Chain Management - Weeks 9 and 10</title>
+<style>
+:root{--bg:#050505;--card:#111113;--c2:#18181b;--tx:#f5f5f4;--mut:#a1a1aa;--bd:#27272a;--a:#f59e0b;--b:#34d399;--ok:#34d399;--no:#fb7185}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.65 system-ui,Segoe UI,Roboto,sans-serif}
+header{padding:24px 20px 6px;max-width:1060px;margin:auto}
+h1{margin:0;font-size:1.6rem;background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--mut);font-size:.88rem}
+nav{position:sticky;top:0;z-index:5;background:rgba(5,5,5,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--bd);padding:10px 20px}
+.in{max-width:1060px;margin:auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.sp{flex:1}
+nav button{background:var(--card);color:var(--tx);border:1px solid var(--bd);padding:7px 15px;border-radius:999px;cursor:pointer;font-size:.88rem}
+nav button.on{border-color:var(--a);color:var(--a);box-shadow:0 0 0 1px var(--a) inset}
+nav .wk button{border-radius:8px;font-weight:700}
+nav .wk button.on{background:var(--a);color:#050505}
+main{max-width:1060px;margin:auto;padding:18px 20px 60px}
+.acc{background:var(--card);border:1px solid var(--bd);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.acc>.h{padding:13px 18px;cursor:pointer;display:flex;justify-content:space-between;font-weight:600}
+.acc>.h:after{content:"+";color:var(--a);font-size:1.3rem}
+.acc.open>.h:after{content:"\2212"}
+.acc>.c{display:none;padding:2px 18px 16px;border-top:1px solid var(--bd)}
+.acc.open>.c{display:block}
+.c h4{color:var(--a);margin:16px 0 4px}
+.c ul{margin:4px 0;padding-left:20px}.c li{margin:3px 0}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.88rem}
+th,td{border:1px solid var(--bd);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:#000;color:var(--a)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.m{background:#000;border:1px solid var(--bd);border-left:3px solid var(--a);border-radius:10px;padding:9px 12px}
+.m b{display:block;color:var(--a);font-size:1.1rem}.m span{color:var(--mut);font-size:.8rem}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0}
+.flow div{background:#000;border:1px solid var(--b);border-radius:8px;padding:5px 11px;font-size:.84rem}
+.flow i{color:var(--a);font-style:normal}
+.tip{background:#000;border:1px dashed var(--a);border-radius:10px;padding:9px 13px;margin:10px 0;color:#d4d4d8;font-size:.9rem}
+.dg{background:#000;border:1px solid var(--bd);border-radius:12px;padding:10px;margin:12px 0}
+.dg svg{width:100%;height:auto;display:block}
+.dg .cap{color:var(--mut);font-size:.78rem;text-align:center;margin-top:4px}
+.fc{perspective:900px;height:150px;cursor:pointer}
+.fi{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.fc.f .fi{transform:rotateY(180deg)}
+.fa,.fb{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;border:1px solid var(--bd);background:var(--card);display:flex;align-items:center;justify-content:center;text-align:center;padding:12px;font-size:.88rem}
+.fa{font-weight:700;color:var(--a);font-size:1.02rem}
+.fb{transform:rotateY(180deg);border-color:var(--b)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+input[type=search]{width:100%;padding:10px 14px;background:var(--card);border:1px solid var(--bd);color:var(--tx);border-radius:10px;margin-bottom:14px}
+.bar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px 16px;margin-bottom:14px}
+.bar select,.bar button{background:#000;color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:7px 12px;cursor:pointer}
+.bar button.p{background:var(--a);color:#050505;border:0;font-weight:700}
+.prog{flex:1;min-width:120px;height:8px;background:#000;border-radius:9px;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--a),var(--b));transition:width .3s}
+.q{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:15px 18px;margin-bottom:14px}
+.q .t{font-size:.74rem;color:var(--a);text-transform:uppercase;letter-spacing:.06em}
+.q p{margin:4px 0 10px;font-weight:600}
+.o{display:block;width:100%;text-align:left;background:#000;color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:9px 12px;margin:6px 0;cursor:pointer;font-size:.94rem}
+.o:hover:not(:disabled){border-color:var(--a)}
+.o.ok{border-color:var(--ok);background:rgba(52,211,153,.12)}
+.o.no{border-color:var(--no);background:rgba(251,113,133,.12)}
+.ex{display:none;margin-top:8px;padding:10px 12px;border-radius:8px;background:#000;border-left:3px solid var(--a);font-size:.9rem;color:#d4d4d8}
+.ex.s{display:block}
+.chk{margin-top:6px;background:transparent;border:1px solid var(--a);color:var(--a);border-radius:8px;padding:5px 12px;cursor:pointer;font-size:.84rem}
+#res{display:none;text-align:center;background:var(--card);border:1px solid var(--a);border-radius:12px;padding:18px;margin-bottom:14px}
+#res b{font-size:2rem;color:var(--a)}
+
+.imp{background:linear-gradient(90deg,rgba(245,158,11,.14),rgba(245,158,11,.03));border:1px solid var(--a);border-left:4px solid var(--a);border-radius:10px;padding:9px 13px;margin:12px 0;font-size:.9rem;color:#fde68a}
+.imp b{color:var(--a)}
+.star{color:var(--a);font-weight:700}
+
+.prio{margin-top:8px;font-size:.8rem;color:var(--mut);align-items:center}
+.prio button{border-radius:8px!important;padding:4px 11px!important;font-size:.78rem!important}
+.prio .lg{margin-left:auto}
+.prio i.d{display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 4px 0 12px;vertical-align:-1px}
+i.d.H{background:var(--a)}i.d.M{background:var(--b)}i.d.L{background:#52525b}
+.blk{border-left:3px solid transparent;padding:2px 0 4px 12px;margin:10px 0;border-radius:2px}
+.blk.p-H{border-color:var(--a);background:linear-gradient(90deg,rgba(245,158,11,.08),transparent)}
+.blk.p-M{border-color:var(--b)}
+.blk.p-L{border-color:#3f3f46;opacity:.6}
+.blk.p-L:hover{opacity:1}
+.pb{display:inline-block;font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;font-weight:700;padding:1px 9px;border-radius:999px;margin-top:6px}
+.p-H .pb{background:var(--a);color:#050505}
+.p-M .pb{background:rgba(52,211,153,.18);color:var(--b)}
+.p-L .pb{background:#27272a;color:#a1a1aa}
+.cnt{font-size:.72rem;color:var(--mut);font-weight:400;margin-left:auto;margin-right:12px;white-space:nowrap}
+body.mode-hm .blk.p-L{display:none}
+body.mode-h .blk.p-L,body.mode-h .blk.p-M{display:none}
+</style>
+</head>
+<body>
+<header>
+<h1>Supply Chain Management</h1>
+<div class="sub">NPTEL study hub &middot; Week 9 (Lectures 42-44) and Week 10 (Lectures 45-51), with rebuilt diagrams</div>
+</header>
+<nav><div class="in">
+<span class="wk"><button data-w="9" class="on">Week 9</button> <button data-w="10">Week 10</button></span>
+<span class="sp"></span>
+<span><button data-t="notes" class="on">Notes</button> <button data-t="cards">Flashcards</button> <button data-t="imp">★ Important</button> <button data-t="quiz">Quiz</button></span>
+</div><div class="in prio" id="prio"><span>Priority view:</span><button data-m="all" class="on">All topics</button><button data-m="hm">Hide background</button><button data-m="h">Must-know only</button><span class="lg"><i class="d H"></i>Must know<i class="d M"></i>Good to know<i class="d L"></i>Background</span></div></nav>
+<main id="main"></main>
+<script>
+const L=a=>'<ul>'+a.map(x=>'<li>'+x+'</li>').join('')+'</ul>';
+const T=(h,r)=>'<table><tr>'+h.map(x=>'<th>'+x+'</th>').join('')+'</tr>'+r.map(y=>'<tr>'+y.map(x=>'<td>'+x+'</td>').join('')+'</tr>').join('')+'</table>';
+const M=a=>'<div class="cards">'+a.map(x=>'<div class="m"><b>'+x[0]+'</b><span>'+x[1]+'</span></div>').join('')+'</div>';
+const F=a=>'<div class="flow">'+a.map(x=>'<div>'+x+'</div>').join('<i>&rarr;</i>')+'</div>';
+const TIP=s=>'<div class="tip">'+s+'</div>';
+const A='#f59e0b',B='#34d399',R='#fb7185',W='#f5f5f4',G='#71717a';
+/* SVG helpers: boxes [x,y,w,h,text,color], lines [x1,y1,x2,y2,color], texts [x,y,text,color,size,anchor] */
+function SV(w,h,bx,ln,tx,cap){
+ let s=`<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,sans-serif"><defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#a1a1aa"/></marker></defs>`;
+ (ln||[]).forEach(l=>s+=`<line x1="${l[0]}" y1="${l[1]}" x2="${l[2]}" y2="${l[3]}" stroke="${l[4]||G}" stroke-width="2" ${l[5]===0?'':'marker-end="url(#ar)"'}/>`);
+ (bx||[]).forEach(b=>{const c=b[5]||A;s+=`<rect x="${b[0]}" y="${b[1]}" width="${b[2]}" height="${b[3]}" rx="8" fill="#0b0b0c" stroke="${c}" stroke-width="1.6"/>`;
+  const p=b[4].split('|');p.forEach((t,i)=>s+=`<text x="${b[0]+b[2]/2}" y="${b[1]+b[3]/2+(i-(p.length-1)/2)*15+4}" fill="${W}" font-size="12" text-anchor="middle">${t}</text>`)});
+ (tx||[]).forEach(t=>s+=`<text x="${t[0]}" y="${t[1]}" fill="${t[3]||W}" font-size="${t[4]||12}" text-anchor="${t[5]||'middle'}">${t[2]}</text>`);
+ return `<div class="dg">${s}</svg>${cap?'<div class="cap">'+cap+'</div>':''}</div>`;
+}
+const D={};
+
+/* ================= WEEK 9-10 DATA ================= */
+const IMP=s=>'<div class="imp"><b>\u2605 Important:</b> '+s+'</div>';
+const CAP=t=>'<div class="dg"><div class="cap" style="margin:0">'+t+'</div></div>';
+function ROWS(rows,cap){
+ const h=rows.length*62+14;let bx=[],ln=[],tx=[];
+ rows.forEach((r,i)=>{const y=14+i*62;
+  tx.push([10,y+16,r[0],A,11,'start']);
+  const n=r[1].length,w=130,gap=(700-n*w)/(n+1);
+  r[1].forEach((t,j)=>{const x=60+gap+j*(w+gap);bx.push([x,y+24,w,30,t,t[0]==='C'?B:A]);
+   if(j<n-1)ln.push([x+w,y+39,x+w+gap,y+39]);});
+ });
+ return SV(780,h,bx,ln,tx,cap);
+}
+
+/* ---------- Week 9 diagrams ---------- */
+const dDph=SV(760,130,
+ [[10,25,350,70,'PHASE I|Visualise the broad structure|direct sale or through an intermediary?'],[400,25,350,70,'PHASE II|Convert structure into locations,|capabilities, capacities, demand allocation',B]],
+ [[360,60,400,60]],null,'Rebuilt: the two broad phases of distribution network design.');
+const dFacCost=`<div class="dg"><svg viewBox="0 0 760 270" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,sans-serif"><line x1="60" y1="20" x2="60" y2="225" stroke="#71717a"/><line x1="60" y1="225" x2="720" y2="225" stroke="#71717a"/>
+<polyline fill="none" stroke="#fb7185" stroke-width="3" points="80,205 200,188 320,166 440,140 560,112 680,82"/>
+<polyline fill="none" stroke="#f59e0b" stroke-width="3" points="80,215 200,208 320,196 440,180 560,160 680,135"/>
+<polyline fill="none" stroke="#34d399" stroke-width="3" points="80,40 200,95 320,135 440,160 560,175 680,182"/>
+<polyline fill="none" stroke="#f5f5f4" stroke-width="3" stroke-dasharray="6 4" points="80,38 200,75 320,100 440,112 560,108 680,95"/>
+<text x="690" y="82" fill="#fb7185" font-size="11">Inventory cost</text><text x="690" y="138" fill="#f59e0b" font-size="11">Facility cost</text><text x="690" y="186" fill="#34d399" font-size="11">Transportation cost</text><text x="690" y="98" fill="#f5f5f4" font-size="11">Total logistics cost</text>
+<text x="390" y="255" fill="#f5f5f4" font-size="12" text-anchor="middle">Number of facilities</text><text x="20" y="120" fill="#f5f5f4" font-size="12" transform="rotate(-90 20 120)" text-anchor="middle">Cost</text></svg>
+<div class="cap">Rebuilt (schematic): inventory and facility costs rise with the number of facilities; transportation cost falls while inbound economies of scale hold; total logistics cost is U-shaped. Response time also improves as facilities increase.</div></div>`;
+const dSix=ROWS([
+ ['1. Manufacturer storage with direct shipping',['Manufacturer (stores)','Customer']],
+ ['2. Direct shipping with in-transit merge',['Manufacturer A','Manufacturer B','Merge point','Customer']],
+ ['3. Distributor storage with carrier delivery',['Manufacturer','Distributor warehouse','Customer']],
+ ['4. Distributor storage with last-mile delivery',['Manufacturer','Distributor (local)','Customer']],
+ ['5. Manufacturer / distributor storage with customer pickup',['Manufacturer','Pickup site','Customer collects']],
+ ['6. Retail storage with customer pickup',['Manufacturer','Distributor','Retail store','Customer walks in']]
+],'Rebuilt: the six distribution network designs (Chopra and Meindl). Teal-edged boxes mark the customer end.');
+const dLoc=SV(760,210,
+ [[270,15,220,44,'Poorly planned facility location',R],[10,120,170,50,'1. Sell off|(disinvestment)'],[200,120,170,50,'2. Close and|liquidate assets'],[390,120,170,50,'3. Continue at|existing location'],[580,120,170,50,'4. Relocate to a|new location',B]],
+ [[330,59,95,120],[380,59,285,120],[400,59,475,120],[460,59,665,120]],null,'Rebuilt: four options a firm faces after poor facility location planning.');
+const dTier=SV(760,130,
+ [[10,25,230,70,'Tier 1: Country / macro|political, economic, regulatory|environment',A],[265,25,230,70,'Tier 2: Region / state|infrastructure, labour,|incentives, tax regime',B],[520,25,230,70,'Tier 3: Community / site|land, utilities, access,|quality of life',A]],
+ [[240,60,265,60],[495,60,520,60]],null,'Rebuilt: three-tier view of location competitiveness (country, region, community or site). Standard framing; the slide diagram was not in the transcript.');
+
+/* ---------- Week 10 diagrams ---------- */
+const dFc=SV(780,260,
+ [[290,10,200,34,'Demand forecasting methods'],[110,80,200,34,'QUALITATIVE',B],[470,80,200,34,'QUANTITATIVE',A],
+  [10,150,170,40,'Expert / insider|knowledge',B],[190,150,150,40,'Delphi method',B],[10,205,170,40,'Surveys',B],[190,205,150,40,'Interviews and|focus groups',B],[350,205,150,40,'Salesforce composite',B],
+  [440,150,170,40,'Time series:|moving averages',A],[620,150,150,40,'Trend projection',A],[440,205,100,40,'SMA'],[550,205,100,40,'EMA'],[660,205,100,40,'WMA']],
+ [[390,44,210,80],[390,44,570,80],[210,114,95,150],[210,114,265,150],[570,114,525,150],[570,114,695,150],[525,190,490,205],[525,190,600,205],[525,190,710,205]],null,
+ 'Rebuilt: map of the forecasting methods covered in Lecture 45.');
+const dCap=SV(760,170,
+ [[10,15,720,34,'Design capacity (ideal maximum output)',B],[10,60,590,34,'Effective capacity = design capacity - allowances'],[10,105,450,34,'Actual output (cannot exceed effective capacity)',R]],null,
+ [[700,155,'Utilisation = actual / design   |   Efficiency = actual / effective',G,12]],'Rebuilt: relation between design capacity, effective capacity and actual output (bar lengths illustrative).');
+const dBep=`<div class="dg"><svg viewBox="0 0 760 270" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,sans-serif"><line x1="60" y1="20" x2="60" y2="225" stroke="#71717a"/><line x1="60" y1="225" x2="720" y2="225" stroke="#71717a"/>
+<line x1="60" y1="195" x2="700" y2="195" stroke="#a1a1aa" stroke-width="2" stroke-dasharray="4 4"/>
+<line x1="60" y1="195" x2="700" y2="60" stroke="#fb7185" stroke-width="3"/>
+<line x1="60" y1="225" x2="700" y2="30" stroke="#34d399" stroke-width="3"/>
+<circle cx="316" cy="145" r="6" fill="#f59e0b"/><text x="326" y="140" fill="#f59e0b" font-size="12">Break-even point (Q = FC / (r - v))</text>
+<text x="705" y="193" fill="#a1a1aa" font-size="11">Fixed cost</text><text x="705" y="63" fill="#fb7185" font-size="11">Total cost</text><text x="705" y="33" fill="#34d399" font-size="11">Total revenue</text>
+<text x="390" y="255" fill="#f5f5f4" font-size="12" text-anchor="middle">Quantity</text><text x="316" y="240" fill="#f59e0b" font-size="11" text-anchor="middle">Q BEP</text>
+<text x="180" y="115" fill="#fb7185" font-size="12">Loss</text><text x="520" y="115" fill="#34d399" font-size="12">Profit</text></svg>
+<div class="cap">Rebuilt: break-even chart. Below Q BEP the firm makes a loss; above it, a profit.</div></div>`;
+const dTpa=SV(760,150,
+ [[10,25,170,60,'Phase I|Initial basic feasible|solution (NWCR, LCM, VAM)'],[210,25,170,60,'Check|allocations = m + n - 1?|(else add epsilon)',B],[410,25,170,60,'Phase II|Optimise with MODI|(u and v, opportunity cost d)'],[610,25,140,60,'Optimal when|all d >= 0',B]],
+ [[180,55,210,55],[380,55,410,55],[580,55,610,55]],null,'Rebuilt: two phases of the transportation problem.');
+const dHun=SV(780,150,
+ [[10,25,110,60,'1. Balance|(add dummy,|cost 0)'],[130,25,120,60,'2. Row reduce,|then column|reduce',B],[260,25,120,60,'3. Assign|single zeros|(box and strike)'],[390,25,120,60,'4. Assignments|= n?|then optimal',B],[520,25,120,60,'5. Cover zeros|with minimum|lines'],[650,25,120,60,'6. Subtract K|uncovered, add K|at crossings',B]],
+ [[120,55,130,55],[250,55,260,55],[380,55,390,55],[510,55,520,55],[640,55,650,55]],
+ [[390,130,'If lines < n, repeat from step 3 with the revised table',G,12]],'Rebuilt: Hungarian method flow.');
+
+/* ===================== WEEK 9 ===================== */
+D[9]={notes:[
+["Lecture 42 - Importance of Distribution in Supply Chain",
+IMP('Asked: <b>short response time = facilities close to customers</b>; <b>product availability</b> definition; <b>outbound cost per unit is higher than inbound</b> (lot size economies); <b>last-mile delivery</b>.')+
+`<h4>Role of distribution</h4><p><b>Distribution</b> = the steps taken to move and store a product from the supplier stage to the customer stage. It covers raw materials and components moving from suppliers to manufacturers and finished goods moving from manufacturers to end consumers. It is a <b>key driver of overall profitability</b> because it affects both supply chain cost and customer experience.</p>
+<p><b>Walmart:</b> distribution lets it offer high availability of relatively common products at very low cost, through efficient distribution networks that minimise cost and maximise efficiency.</p>`+dDph+
+`<p>An inappropriate network raises cost and lowers customer satisfaction, so firms must evaluate options against their strategy.</p>
+<h4>Service factors influencing network design</h4>`+T(['Factor','Meaning','Design consequence'],[
+['<b>Response time</b>','Time between order placement and receipt','Customers valuing short response need <b>facilities close to them</b>; tolerant customers allow fewer, centralised facilities'],
+['Product variety','Number of different products / configurations offered','Wide variety needs a network that can store and handle many items'],
+['<b>Product availability</b>','<b>Probability of having a product in stock when a customer order arrives</b>','Higher availability needs more inventory and aggregation'],
+['Customer experience','Ease of ordering and receiving, customisation, extra services','Network must support the intended experience'],
+['Time to market','Time to bring a new product to market','Must support quick launches'],
+['Order visibility','Ability to track an order from placement to delivery','Needs tracking systems'],
+['Returnability','Ease of returning unsatisfactory goods and network ability to handle returns','Needs efficient reverse flow']])+
+`<h4>Cost factors</h4><p>Network changes affect inventory, transportation, facilities, and information costs; sourcing and pricing also influence the choice of distribution system. As the number of facilities increases, inventory and facility costs rise, while the response time falls.</p>`+dFacCost+
+T(['Relationship','Behaviour'],[['Facilities vs inventory cost','More facilities, more safety stock (loss of aggregation): inventory cost rises'],['Facilities vs facility cost','Fixed and handling costs rise with more sites'],['Facilities vs transportation cost','Falls, provided <b>inbound economies of scale</b> are maintained (outbound distance shrinks as a fraction of total distance)'],['Facilities vs response time','Response time improves']])+
+`<div class="tip"><b>Why outbound cost per unit exceeds inbound:</b> inbound lot sizes are larger. Example: an Amazon warehouse receives full truckloads of books inbound but ships small packages with a few books per customer outbound.</div>
+<h4>Design options for a distribution network</h4>`+T(['Option','Idea'],[
+['Direct shipping','Ship from manufacturer or supplier straight to the end customer; no intermediaries'],
+['Centralised distribution','One central DC serves all customers; cost effective for large, widely spread customer base'],
+['Decentralised distribution','Several DCs in different regions; better response time and service'],
+['<b>Cross-docking</b>','Move products from inbound to outbound transport with no storage'],
+['Drop-shipping','Supplier or manufacturer ships to the customer; no inventory held, lower upfront cost'],
+['Hybrid distribution','Central DC for bulk storage plus regional DCs for fast delivery'],
+['Third-party logistics (3PL)','Outsource network design and operation to specialists: savings, scalability, expertise']])+
+`<h4>Online sales and the distribution network</h4>`+T(['Consideration','Detail'],[['Fulfilment centres','Dedicated online-order sites, strategically placed'],['Inventory management','Often larger inventories, accurate systems to prevent stock-outs'],['<b>Last-mile delivery</b>','<b>Final leg of delivery to the customer\'s doorstep</b>; partner with logistics providers or own fleet'],['Order processing and packaging','Streamlined for high volume'],['Returns management','Online sales have higher return rates; handle refunds, exchanges, restocking'],['Technology and automation','WMS, order management systems, automated pick and pack'],['Customer experience','User-friendly site, online tracking, responsive service'],['Scalability and flexibility','Handle growth and changing preferences'],['Integration with stores','Ship-from-store and in-store pickup'],['Data analytics','Buying patterns and delivery performance drive improvements']])+
+`<h4>Impact of online sales on customer service</h4>`+T(['Better online','Worse online'],[['Larger selection (Netflix vs rental stores); inventory aggregation improves availability; 24/7 access; global reach; personalisation; quick launch of new products; real-time tracking; dynamic price and promotion changes; lower cost of revenue collection','Physical products take longer (shipping); returns harder and costlier than in stores; instant gratification missing; digital products are instant (movies, music)']])+
+`<h4>Impact of online sales on costs</h4>`+T(['Factor','Effect'],[['<b>Aggregation</b>','Lower inventory by centralising stock if customers accept waiting (Amazon vs Barnes and Noble)'],['<b>Postponement</b>','Delay variety until order arrives (Dell builds PCs after order; Amazon prints low-volume books on demand)'],['Network centralisation','Fewer facilities (Netflix about 50 warehouses vs Blockbuster thousands of stores)'],['Operational efficiency','Customer-entered orders cost less than call centres; smoother order flow'],['Handling and delivery','Groceries cost more online because pick and delivery shift to the seller'],['Digital goods','Internet nearly removes transport cost'],['Nondigital goods','Centralised stock raises outbound transport cost relative to inbound'],['Enhanced visibility','Shared demand data lowers overall supply chain cost'],['Infrastructure cost','Amazon integrating Zappos: about 120,000 product descriptions and over 2 million photos']])],
+["Lecture 43 - Designing Distribution Networks in Supply Chain",
+IMP('Asked: <b>Manufacturer storage with direct shipping eliminates intermediaries</b> and ships to the customer; <b>Dell added retail (Wal-Mart) in 2007</b>.')+
+`<h4>Six distribution network designs</h4>`+dSix+
+T(['Design','Key characteristics','Benefits','Considerations'],[
+['<b>1 Manufacturer storage, direct shipping (drop shipping)</b>','Manufacturer keeps finished goods in own facilities; customers order from the manufacturer, who ships straight to them; <b>no distributors or retailers</b>','Cost savings, control over inventory and quality, fast fulfilment, fewer intermediaries','Needs infrastructure and resources; geographic coverage; transport coordination'],
+['2 Manufacturer storage, direct shipping and <b>in-transit merge</b>','Same as 1, plus consolidating multiple orders (from different sources) into one shipment during transit','Better transport efficiency, one delivery per customer','Needs advanced planning and real-time tracking'],
+['3 <b>Distributor storage with carrier delivery</b>','Distributors hold inventory in own warehouses; package carriers deliver; distributors manage receiving, storing, shipping','Localised inventory, faster fulfilment, handles higher variety than retail stores, value-added services','Warehouse and inventory control, carrier coordination, customer relationships'],
+['4 <b>Distributor storage with last-mile delivery</b>','Distributor stores and also does last leg (own vehicles, 3PL or crowd-sourced); common in e-commerce and grocery','Quicker delivery, reduced transport cost, higher satisfaction; may offer installation or assembly','Route planning, delivery staff, infrastructure, customer communication; route optimisation software'],
+['5 Manufacturer / distributor storage with <b>customer pickup</b>','Product stored at manufacturer or distributor site; customer collects','Lower transport cost, faster response, higher availability','Limited convenience and product variety'],
+['6 <b>Retail storage with customer pickup</b>','Product stored at a retail store; customer picks up (or inspects before buying)','Convenience, fastest response, cross-selling, personalised service','Limited variety and availability; highest inventory and facility costs']])+
+`<h4>Comparative ranking (Chopra and Meindl summary)</h4>`+T(['Dimension','Direct shipping (design 1)','Retail storage with pickup (design 6)'],[['Response time','Slowest (days to weeks)','Fastest (immediate)'],['Product variety','Highest','Lowest'],['Product availability','Easiest to provide (aggregated)','Most expensive to provide'],['Inventory cost','Lowest','Highest'],['Facility cost','Lowest','Highest'],['Transportation cost','Highest','Lowest (bulk to store)'],['Order visibility','Harder','Easier (customer physically present)'],['Returnability','Difficult','Easiest']])+
+`<div class="tip">Designs 3 to 5 sit between these extremes. Move from 1 towards 6 and response time, facility and inventory cost rise while transport cost and variety fall.</div>
+<h4>Selecting a design: factors</h4>`+L(['<b>Customer needs</b> - response time, variety and availability, convenience, order visibility, returnability','<b>Product characteristics</b> - value, demand variability, perishability','<b>Cost factors</b> - inventory, transportation, facilities, handling','<b>Industry dynamics</b> - competition, technology, customer preferences','Scalability and adaptability; ownership structure','Alignment with the company\'s overall strategy'])+
+`<h4>Case study: Dell and online sales</h4>`+L(['Dell pioneered online sales of computer hardware; by <b>2009 online sales were about half</b> of sales in the category','Sold exclusively online at first, then began <b>distributing through retail stores such as Wal-Mart in 2007</b>'])+
+T(['Aspect','Customised high-value hardware','Low-cost standardised hardware'],[['Customer service','Online excels (flexible configurations); slight fulfilment delay is acceptable','Delay is a disadvantage; customers want immediate availability'],['Inventory','Aggregation and <b>postponement</b> (assemble after order, hold only components) cut inventory sharply','Inventory benefit is weaker'],['Facilities','Only manufacturing and component warehouses; no DCs or stores','Same saving, but less decisive'],['Transportation','Higher outbound cost (individual PCs shipped)','Higher outbound cost and slower response hurt more'],['Other benefits','Rapid launch of new products; 24/7 low-cost service; fast payment collection gives negative working capital; IT investment offset by benefits','Benefits less pronounced'],['Verdict','Strong gains in responsiveness and cost','Online channel advantage is smaller']])+
+`<p>Conclusions of the lecture: companies often adopt a <b>hybrid</b> of online and offline channels. Impact on cost varies by industry and firm: Amazon and Blue Nile saw profits increase while Webvan struggled.</p>`],
+["Lecture 44 - Facility Location Planning",
+IMP('Asked: FLP belongs to <b>operations research and computational geometry</b>; <b>point rating weights sum to 1</b>; labour, land, taxation = <b>economic factors</b>; <b>centre of gravity minimises transportation cost</b>.')+
+`<h4>What facility location planning is</h4><p>Facility location decisions are <b>strategic</b>: they can affect the whole organisation, and they stay dynamic because of changing technology, competition and consumer taste. The study of <b>facility location problems (FLP)</b>, also called <b>location analysis</b>, is a branch of <b>operations research and computational geometry</b> concerned with optimal placement of facilities to minimise transportation cost while considering factors such as keeping hazardous materials away from housing and keeping clear of competitors. Facilities planning also applies to units inside a facility, e.g. an airport baggage department.</p>
+<h4>Facility location without proper planning</h4>`+dLoc+
+T(['Option','Implication'],[['1 Sell to another company (disinvestment)','Recovers some investment but signals market retreat and loss of presence'],['2 Close and liquidate assets','Short-term loss, stops drain; liquidation often below book value; manage layoffs and legal needs'],['3 Continue at existing location','Higher operating cost and lower profit, but keeps customers and brand; optimise logistics, renegotiate supplier contracts, invest in technology'],['4 Relocate','Significant moving and site cost and transition disruption; long-term benefits may outweigh them']])+
+`<h4>Three-tier model for assessing location competitiveness</h4>`+dTier+
+`<h4>Factors affecting facility location (domestic)</h4>`+T(['Factor','Why it matters'],[['Electric power availability and cost','Multiple sources, capacity for present and future needs, predictable rates'],['Natural disasters and weather','Hurricanes, floods, tornadoes, earthquakes disrupt beyond contingency plans'],['Property tax rates','Affect real estate improvements and equipment investment'],['Corporate income tax','Apportionment structure; single sales factor states more favourable'],['Sales taxes','Affect capital-intensive projects before operation begins'],['Labour availability and quality','Skilled workforce is essential'],['Construction costs and quality','Drive project cost and quality'],['Telecommunications infrastructure','Points of presence, trunk lines, national carriers'],['Economic development incentives','Lower project and operating cost but cannot offset a poor business climate'],['Quality of life','Attracts and retains skilled workers']])+
+`<h4>Factors for international location planning</h4>`+T(['Category','Factors'],[
+['<b>Economic factors</b>','<b>Cost of labour</b>, <b>cost of land and facilities</b>, transportation and logistics cost, <b>taxation</b>, economic stability, market access, incentives and subsidies'],
+['Environmental','Climate and natural disasters, environmental regulations, sustainability initiatives (renewable energy)'],
+['Political and regulatory','Regulatory environment (labour, environmental, trade), political stability, trade agreements and tariffs, intellectual property protection, ease of doing business'],
+['Social and cultural','Cultural compatibility, quality of life, labour availability and skills, demographic trends, language and communication, healthcare and education facilities'],
+['Technological and infrastructure','Infrastructure quality (roads, ports, airports), telecommunications and IT, R&D and innovation'],
+['Supply chain and operational','Proximity to suppliers and customers, supply chain integration, operational flexibility']])+
+`<h4>Operations strategies for multiple facilities</h4>`+T(['Strategy','Benefit','Case'],[['Separate facilities by <b>product or service</b>','Specialisation, efficiency, simpler quality control','Procter and Gamble: cleaning products plant vs personal care plant'],['Separate facilities by <b>geographical area</b>','Lower transport cost, faster delivery, better local service','Amazon fulfilment centres in North America, Europe, Asia'],['Separate facilities by <b>process</b>','Process specialisation, better control at each stage','Tesla: Nevada Gigafactory (batteries) and Fremont (vehicle assembly)']])+
+`<h4>Systematic site evaluation</h4><p>Step 1: identify all factors (infrastructure, suppliers, cost structure, quality of labour and materials, free trade zones, political risk, business environment, customer proximity, government barriers). Step 2: apply qualitative models when factors cannot be quantified. Step 3: apply quantitative models.</p>
+<h4>Qualitative models</h4>`+L(['<b>Simple comparison chart:</b> list critical subjective factors, compare locations, pick the best fit (e.g. Biratnagar vs Kathmandu on community attitude, lifestyle, cultural alignment)','<b>Weighted factor scoring:</b> list factors, assign weights (1 to 5), develop a rating scale (1 to 10), score each location, multiply and sum, choose the highest'])+
+`<h4>Point rating / factor rating technique</h4>`+F(['Identify factors','Assign weights (sum = 1 or 100%)','Rating scale (e.g. 1 to 5)','Rate each location','Weighted score = rating x weight, summed','Pick the highest'])+
+`<p>Lecture example: new distribution centre with cost factors (weight 0.4: land and construction cost), market factors (0.35: nearness to customers and highways), operational factors (0.25: skilled labour, utilities). Weights add to <b>1</b>.</p>`+
+T(['Illustrative factor group','Weight','Rating A','Rating B','Score A','Score B'],[['Cost','0.40','3','4','1.20','1.60'],['Market','0.35','5','3','1.75','1.05'],['Operational','0.25','4','4','1.00','1.00'],['<b>Total</b>','<b>1.00</b>','','','<b>3.95</b>','<b>3.65</b>']])+
+`<div class="tip">Ratings above are illustrative (the slide table was not in the transcript). Method and weights are from the lecture; Location A wins here.</div>
+<h4>Quantitative models</h4>
+<h4>1. Median (load-distance) method with rectilinear distance</h4><p>Minimises total transport cost / distance between the new facility and existing ones; movement only along X and Y axes. Find the <b>median load</b>, then the facility whose cumulative load first covers the median fixes the coordinate.</p>`+
+L(['Lecture example: total load 2,863, median load about 1,432','Bareilly 1-452, Shahjahanpur 453-1130 do not reach the median; <b>Kanpur 1131-1842 includes it</b>, so X-coordinate = Kanpur\'s = 50','Same on the Y axis gives Gonda = 50','Cost rate is highlighted by dotted lines between facilities'])+
+`<h4>2. Centre of gravity (CG) model</h4><p>Determines the optimal location of a new facility by taking the weighted average of existing facility locations or demand points, thereby <b>minimising transportation cost</b> of serving multiple locations.</p>`+M([['Cx = Σ(wi xi) / Σwi','Weighted average X coordinate'],['Cy = Σ(wi yi) / Σwi','Weighted average Y coordinate'],['wi','Volume shipped, number of customers or other importance weight']])+
+F(['Assign X-Y coordinates','Assign weights','Compute Cx and Cy','Interpret as new site'])+
+`<p>Lecture numbers: weights 452, 678, 483, 711, 539 (total 2,863) with X coordinates 10, 30, 80, 50, 80 give Σ wi xi = 142,170, so <b>Cx = 142,170 / 2,863 = 49.7</b>.</p>
+<h4>3. Varignon frame (mechanical analogue)</h4><p>Strings through holes at raw-material locations R1...Rm and markets, joined at a knot P and weighted by W = (annual trips) x (cost per unit distance); without friction the knot settles at the best plant location.</p>
+<h4>Resource-oriented location examples</h4>`+L(['Sugar mills near sugarcane farms: lower transport time and carriage inwards','Tea factories in Assam, West Bengal and Karnataka: tea needs moist soil and climate','UAE is the largest exporter of crude oil; ADNOC is a leading company'])+
+`<p><b>Conclusion:</b> location planning is not just a cost-effective site; it positions the firm to exploit local advantages, mitigate risk and align with long-term goals (Amazon and Toyota use multi-facility strategies).</p>`]],
+gl:[["Distribution","Steps to move and store a product from supplier stage to customer stage."],["Key profit driver","Distribution affects both supply chain cost and customer experience."],["Network design phases","Phase I broad structure; Phase II locations, capacities, allocation."],["Response time","Time from order to receipt; short time means nearby facilities."],["Product variety","Number of products or configurations offered."],["Product availability","Probability product is in stock when an order arrives."],["Customer experience","Ease of ordering, receiving, customisation, extras."],["Time to market","Speed of bringing new products to the market."],["Order visibility","Ability to track an order from placement to delivery."],["Returnability","Ease of returning goods and handling returns."],["Inbound vs outbound cost","Outbound per unit is higher because inbound lots are larger."],["Facilities vs costs","More facilities: inventory and facility cost up, transport cost down, response faster."],["Cross-docking","Inbound to outbound with no storage."],["Drop-shipping","Supplier ships to customer; retailer holds no stock."],["Hybrid distribution","Central bulk DC plus regional DCs."],["Last-mile delivery","Final leg to the customer's doorstep."],["Aggregation","Centralised stock lowers inventory (Amazon)."],["Postponement","Delay variety until order (Dell, print on demand)."],["Design 1","Manufacturer storage with direct shipping; no intermediaries."],["Design 2","Direct shipping plus in-transit merge of orders."],["Design 3","Distributor storage with carrier delivery."],["Design 4","Distributor storage with last-mile delivery."],["Design 5","Manufacturer or distributor storage with customer pickup."],["Design 6","Retail storage with customer pickup."],["Dell case","Online since start; added Wal-Mart retail in 2007; ~half of category sales online by 2009."],["Webvan","Online grocer that struggled, unlike Amazon and Blue Nile."],["FLP","Facility location problem: OR and computational geometry."],["Disinvestment","Selling a badly located facility."],["Three-tier model","Country, region, community/site view of location competitiveness."],["Economic location factors","Labour cost, land and facility cost, taxation, transport cost."],["Point rating","Weighted factor scoring; weights sum to 1; highest score wins."],["Median method","Rectilinear cost minimisation using median load."],["Centre of gravity","Weighted average coordinates minimising transport cost."],["Varignon frame","Strings and weights as a mechanical analogue to find the best site."],["Multi-facility strategies","By product (P&G), geography (Amazon), process (Tesla)."]],
+q:[
+["o","Which describes how a company targeting customers who value short response times should design its distribution network?",["Locate fewer facilities that are farther away from the customers","Locate facilities close to the customers","Centralize all inventory in a single global warehouse","Rely solely on digital delivery methods"],1,"Short response time needs nearby facilities."],
+["o","What is defined as 'the probability of having a product in stock when a customer order arrives'?",["Product Availability","Response Time","Product Variety","Order Visibility"],0,"That is the definition of product availability."],
+["o","Why do outbound transportation costs per unit tend to be higher than inbound transportation costs?",["Outbound shipments travel much longer distances","Inbound shipments are heavily taxed by the government","Outbound products require specialized temperature-controlled vehicles","Inbound lot sizes are typically larger, allowing for economies of scale"],3,"Amazon receives full truckloads inbound but ships small parcels outbound."],
+["o","What is the final leg of the delivery process, bringing products to the customer's doorstep, called in online sales distribution?",["Fulfillment Centering","Last-Mile Delivery","Inventory Aggregation","Order Processing"],1,"Last-mile delivery."],
+["o","Which is a key characteristic of the 'Manufacturer Storage with Direct Shipping' design?",["Products are stored at retail stores for customer pickup","Inventory is held entirely by third-party distributors in regional hubs","The manufacturer eliminates intermediaries and ships products directly to the end customer","Products must pass through a local distributor before reaching the customer"],2,"No distributors or retailers are involved."],
+["o","The study of facility location problems (FLP), also known as location analysis, is a branch of which two academic fields?",["Operations Research and Computational Geometry","Macroeconomics and Behavioral Psychology","Human Resource Management and Civil Engineering","Financial Accounting and Marketing Analytics"],0,"Operations research and computational geometry."],
+["o","When using the point rating technique, what should the total sum of all assigned weights equal if you are using decimals?",["0.5","1","5","10"],1,"Weights sum to 1 (or 100%)."],
+["o","Cost of Labor, Cost of Land and Facilities, and Taxation fall under which main category?",["Environmental Factors","Social Factors","Economic Factors","Technological Factors"],2,"They are the economic factors for international location planning."],
+["o","The Centre of Gravity (CG) model is primarily used to determine the optimal location of a new facility by minimizing:",["Local property and corporate income tax rates","Transportation costs associated with serving multiple locations","Employee turnover and training costs","Environmental regulations and compliance fees"],1,"Weighted coordinates minimise transport cost."],
+["o","According to the case study, how did Dell's distribution model change in 2007?",["They completely shut down their online sales channel","They began distributing their products through retail stores like Wal-Mart","They shifted entirely to a distributor storage with carrier delivery network","They stopped selling customized hardware to focus only on standardized PCs"],1,"Dell added retail channels in 2007."],
+["x","Distribution is best defined as:",["Only moving finished goods to retailers","The steps to move and store a product from the supplier stage to the customer stage","Only warehouse storage","Only last-mile delivery"],1,"It includes inbound and outbound movement and storage."],
+["x","The two broad phases of distribution network design are:",["Structure visualisation, then locations, capacities and allocation","Forecasting, then pricing","Sourcing, then marketing","Packaging, then labelling"],0,"Phase I broad structure; Phase II specific locations and capacities."],
+["x","As the number of facilities increases, which cost generally falls (while inbound scale economies are kept)?",["Inventory cost","Facility cost","Transportation cost","Information cost"],2,"Outbound distance shrinks while inventory and facility costs rise."],
+["x","Cross-docking in a distribution network means:",["Long-term storage in a central DC","Moving products from inbound to outbound transport without storage","Selling directly to the customer","Returning goods to suppliers"],1,"It cuts holding cost and speeds order fulfilment."],
+["x","Which factor is NOT listed among service factors influencing distribution network design?",["Response time","Returnability","Order visibility","Corporate income tax rate"],3,"Tax rates are a location factor, not a service factor."],
+["x","Dell assembles PCs only after receiving orders and holds component stock. This is called:",["Aggregation","Postponement","Cross-docking","Drop-shipping"],1,"Postponement delays variety until the order."],
+["x","For which Dell product does the online channel give the biggest advantage?",["Low-cost standardised PCs","High-value customised PCs","Printer supplies","Used PCs"],1,"Aggregation and postponement work best there; slight delay is acceptable."],
+["x","Which design has the highest inventory and facility cost but the fastest response?",["Manufacturer storage with direct shipping","Distributor storage with carrier delivery","Retail storage with customer pickup","Drop-shipping"],2,"Retail storage keeps stock near customers."],
+["x","Which option is NOT one of the four choices after a poorly planned facility location?",["Sell it","Close and liquidate","Relocate","Merge it with a competitor's customers"],3,"The options: sell, close and liquidate, continue, relocate."],
+["x","Tesla using the Nevada Gigafactory for batteries and Fremont for assembly illustrates separating facilities by:",["Product","Geography","Process","Customer"],2,"P&G is by product; Amazon is by geography."],
+["x","In the median (load-distance) method with a total load of 2,863, the facility chosen is the one containing which load unit?",["Load 1","About the 1,432nd unit","Load 2,863","The largest load"],1,"The median load fixes the coordinate."],
+["x","In the centre of gravity method, Cx is calculated as:",["Σ xi / n","Σ(wi xi) / Σwi","Σ wi / Σ xi","Max xi"],1,"It is the weighted average coordinate."],
+["x","Which statement about Webvan, Amazon and Blue Nile is correct from the lecture?",["All three struggled","Amazon and Blue Nile saw profits increase while Webvan struggled","Only Blue Nile struggled","None used online sales"],1,"Cost impact of online sales varies by firm."],
+["x","Netflix operating from about 50 warehouses versus Blockbuster's thousands of stores illustrates:",["Network centralisation","Cross-docking","Last-mile delivery","Hybrid distribution"],0,"Online sales allow fewer facilities."]
+]};
+
+/* ===================== WEEK 10 ===================== */
+D[10]={notes:[
+["Lecture 45 - Demand Forecasting",
+IMP('Asked: forecasting avoids <b>overproduction and underproduction</b>; <b>geography</b> factor (swimwear in Florida); <b>over-reliance on past data</b>; <b>expert/insider knowledge</b>; <b>limited visibility</b> (market volatility, rapid tech change, unpredictable events); forecasting helps <b>reduce carrying cost and prevent stock-outs</b>.')+
+`<h4>Context: demand in India (World Bank / press numbers in the lecture)</h4>`+M([['7.2%','India GDP growth FY22/23, second highest among G20'],['6.3%','World Bank forecast FY23/24'],['8.4% YoY','Real GDP growth in Q3 of fiscal 2024'],['6.5% YoY','GVA growth in same quarter'],['10.6% YoY','Private investment spending growth'],['-3.2% YoY','Government consumption (biggest drag)'],['-0.8% YoY','Agriculture contraction (first since 2019)'],['11.6% / 9.5%','Manufacturing / construction growth']])+
+`<p>A wide gap between GDP (8.4%) and GVA (6.5%) means demand (expenditure side) grows faster than supply (production side): possible excess demand for too few goods and higher inflation, which shows why forecasting matters.</p>
+<h4>What is demand forecasting?</h4><p>The process of <b>understanding and predicting customer demand</b> to make smart decisions about supply chain operations, profit margins, cash flow, capital expenditure and capacity planning. It estimates total sales and revenue for a future period, often (not always) from historical data. It is vital to <b>avoid overproduction and underproduction</b>. Steps: decide what is measured and the time perspective, select the type and method, then collect, analyse and interpret.</p>
+<h4>Five factors influencing demand forecast</h4>`+T(['Factor','Example'],[['<b>Seasonality</b>','Boating gear in summer; costumes and candy at Halloween; wedding season'],['<b>Competition</b>','New entrant drops demand; a competitor folding raises it'],['<b>Economy</b>','Recession lowers luxury demand, raises low-priced generic demand'],['<b>Types of goods</b>','Perishables need very precise forecasts; subscription boxes are predictable'],['<b>Geography</b>','Swimwear stored mostly in Florida where it is ordered most']])+
+`<h4>Importance (benefits)</h4>`+T(['Benefit','How'],[['Inventory management','Right stock level: lower carrying cost, no stock-outs'],['Cost reduction','Align production and procurement with demand; less waste'],['Customer satisfaction','Products available when and where wanted'],['Marketing and promotion','Time and place campaigns'],['Financial planning','Project revenue, budget, investment'],['Risk mitigation','Plan contingencies for volatile markets'],['Production planning','Avoid over and underproduction'],['Resource allocation','People, machinery, raw materials'],['Supply chain optimisation','Visibility of future requirements'],['Seasonal planning','Prepare inventory and staffing for peaks'],['Competitive advantage','Agility against demand volatility'],['Strategic decisions','Product development, market and capacity expansion']])+
+`<h4>Challenges</h4>`+T(['Challenge','Detail'],[['Lack of data','Too little data for accurate prediction'],['<b>Over-reliance on past data</b>','History cannot account for evolving market factors'],['<b>Limited visibility into the future</b>','Market volatility, rapid technological change, unpredictable external events'],['Poor forecasting processes','Wrong processes and tools'],['Insufficient resources','Lack of analysts'],['Inaccurate demand models','Errors in inventory and production decisions'],['Unpredictable external factors','Economic shifts, disasters, politics, technology']])+
+`<h4>Types of demand forecasting</h4>`+T(['Type','Meaning'],[['Passive','Past sales used to predict future; assumes similar to last year; for steady-sales firms'],['Active','Used by start-ups and fast growers; includes growth plans, marketing, competitive environment'],['Short-term','Small window; day-to-day, JIT, Black Friday planning'],['Long-term','More than a year; seasonality, annual patterns, capacity, capital plans'],['Macro','External forces: economy, competition, consumer trends'],['Micro','Specific industry or segment (e.g. organic peanut butter for millennial parents in Austin)']])+
+`<h4>Methods</h4>`+dFc+
+`<h4>Qualitative methods</h4>
+<h4>Delphi method</h4><p>Structured, iterative technique relying on a panel of experts to reach convergence of opinion.</p>`+F(['Select experts (10-50)','Design questionnaire','First round, independent answers','Feedback and analysis','Subsequent rounds (usually 2-4)','Final report'])+
+L(['Anonymity avoids groupthink and dominant individuals','Each round shows statistical feedback and anonymised responses; experts revise','Ends at consensus or stable pattern; final report states agreement, disagreement and actions'])+
+`<h4>Expert or insider knowledge</h4><p>Specialised understanding of people with significant experience in a field, industry or organisation. Tools: <b>interviews, focus groups, Delphi, workshops and brainstorming, surveys and questionnaires</b>.</p>
+<h4>Survey method</h4>`+F(['Define objectives','Design questionnaire','Select sample','Administer','Collect and analyse','Interpret','Report'])+
+T(['Mode','Features'],[['Online','Cheap, fast, large reach (SurveyMonkey, Google Forms)'],['Telephone','Real-time clarification'],['Face-to-face','High response, non-verbal cues; slow and costly'],['Mail','Reaches remote areas; low response, slow']])+
+`<p>Question types: multiple choice, Likert scale, ranking, dichotomous (yes/no), open-ended. Sampling: random, stratified, convenience. Analysis tools: SPSS, Excel; qualitative data via thematic analysis.</p>
+<h4>Interviews and focus groups</h4><p>Qualitative methods exploring attitudes, experiences, perceptions: define objectives, interview guide, choose participants, conduct (rapport, open questions, active listening), record and transcribe, analyse themes and report.</p>
+<h4>Salesforce composite forecasting</h4><p>Combines multiple data sources and methods to offset the weaknesses of single methods.</p>`+F(['Collect data (CRM, opportunities, accounts, history)','Choose methods and weights','Generate initial forecasts','Collaborative input from reps and managers','Combine using weights','Review and adjust','Visualise and report'])+
+`<h4>Quantitative methods</h4><p><b>Time series analysis</b> uses historic data to find the underlying <b>trend</b> (general direction) and <b>seasonal variation</b> (regular weekly, monthly or quarterly patterns), then predicts the future for budgeting and forecasting.</p>`+
+T(['Moving average','Idea'],[['<b>SMA</b> (simple)','Average over a fixed number of periods; shorter window reacts faster, longer window smoother'],['<b>EMA</b> (exponential)','More weight on recent data, older data decays; faster response; can be computed from today\'s value and previous EMA; suits non-linear data'],['<b>WMA</b> (weighted)','Chosen weights per period, sum of weighted values divided by sum of weights; filters outliers; flexible']])+
+`<h4>Trend projection</h4>`+F(['Collect historical data','Plot data','Choose trend model (linear, exponential, polynomial)','Fit trend line','Extrapolate','Evaluate and adjust'])+
+`<p>Assumption: past patterns continue into the future.</p>`],
+["Lecture 46 - Capacity Planning",
+IMP('Asked: <b>Efficiency = actual output / effective capacity x 100%</b> (utilisation uses design capacity); <b>long-term / strategic capacity planning</b> covers several years.')+
+`<p><b>Capacity planning</b> balances available resources to satisfy customer demand or project capacity needs: how much production capacity is needed as demand changes. In production and project management, capacity is the amount of work completed in a given time.</p>
+<h4>Types by horizon</h4>`+T(['Type','Horizon and focus'],[['<b>Long-term / strategic</b>','Several years; supply and need forecasting; aligned with business goals and growth; strategic workforce capacity planning'],['Medium-term / tactical','A few months to a year; bridges strategic and operational; scheduling, forecasting, utilisation tracking'],['Short-term / operational','Days to months; reactive; scheduling, workforce management; solves immediate resource gaps']])+
+`<h4>Capacity measures</h4>`+dCap+
+T(['Term','Meaning'],[['<b>Design capacity</b>','Maximum output a facility is engineered to achieve under ideal conditions'],['<b>Effective (system) capacity</b>','Design capacity minus allowances (maintenance, downtime, breaks, scheduling conflicts, variations in demand)'],['<b>Actual output</b>','Rate actually achieved; cannot exceed effective capacity; hit by breakdowns, absenteeism, shortages']])+
+M([['Efficiency','(Actual output / Effective capacity) x 100%'],['Utilisation','(Actual output / Design capacity) x 100%'],['Effective capacity','Design capacity - allowances']])+
+`<h4>Worked example</h4><p>Actual production last week 25,000 units; design capacity 230 units per hour; plant runs 7 days, three 8-hour shifts; effective capacity 28,000.</p>`+
+L(['Weekly design capacity = (7 x 3 x 8) x 230 = <b>38,640 units</b>','Utilisation = 25,000 / 38,640 = <b>64.7%</b>','Efficiency = 25,000 / 28,000 = <b>89.3%</b>'])+
+`<h4>Capacity planning strategies by resource</h4>`+T(['Strategy','Purpose'],[['Workforce','Right number of workers and hours'],['Product','Right products or inventory to fulfil deliverables (pet store: food, toys, carriers)'],['Tool','Machinery, vehicles, assembly parts'],['Resource','Maximise capacity of existing resources; decide which to add or remove'],['Project','Time and resources for a given project; balance workload against milestones']])+
+`<h4>Capacity planning process</h4>`+F(['Estimate capacity requirements','Evaluate existing capacity and gap','Identify alternatives','Financial analysis','Qualitative assessment','Choose best long-term alternative','Implement','Monitor results'])+
+`<h4>Alternatives</h4>`+L(['Increase capacity (new equipment or facilities)','Optimise existing capacity (process improvement)','Outsource production or services','Flexible workforce (temporary, part-time)','Demand management (pricing, promotions)','Contingency plans (buffer inventory, backup suppliers)','Leverage technology and innovation (Industry 4.0)'])+
+`<p>Implementation needs detailed planning, stakeholder engagement, continuous improvement and change management; qualitative issues include culture, employee morale, supply chain relationships and reputation.</p>
+<h4>Evaluating alternatives</h4><p><b>Economic:</b> cost, useful life, compatibility, revenue (break-even analysis). <b>Non-economic:</b> employee and community reactions, and similar considerations.</p>
+<h4>Break-even analysis</h4>`+dBep+
+M([['Q BEP = FC / (r - v)','r = price per unit, v = variable cost per unit'],['TC = FC + v x Q','Total cost'],['Q for profit P','(P + FC) / (r - v)']])+
+`<h4>Example: pizza place</h4><p>New small pizza line: lease USD 4,000 per month, variable cost USD 4, price USD 9.</p>`+
+L(['Break-even = 4,000 / (9 - 4) = <b>800 pizzas per month</b>','Profit at 1,200 pizzas = 1,200 x 9 - (4,000 + 1,200 x 4) = 10,800 - 8,800 = <b>USD 2,000 profit</b> (the slide shows USD 6,000, which is revenue minus variable cost only and leaves out the USD 4,000 fixed cost)','Pizzas for USD 10,000 profit = (10,000 + 4,000) / 5 = <b>2,800</b>','Expected demand 700 < 800: <b>not profitable</b>'])+
+`<h4>Make or buy break-even</h4><p>Set Total cost of Make = Total cost of Buy: Q BEP = FC / (VB - VM). Example (ABX Company): fixed cost 160,000, VM = 100, VB = 150: Q BEP = 160,000 / 50 = <b>3,200</b>. At 1,000 units: Make = 100,000 + 160,000 = 260,000; Buy = 150,000, so <b>buy</b>. Above the break-even quantity the option with the lower variable cost wins.</p>`],
+["Lecture 47 - Sequencing and Scheduling",
+IMP('Sequencing rules and their results (<b>SPT gives the lowest total flow time</b>); <b>Johnson\'s rule</b> for two machines; conditions for three machines.')+
+`<p><b>Sequencing</b> is the order of processing a set of tasks over resources; <b>scheduling</b> adds the allocation of start and finish times to each order. Scheduling provides a shop-floor calendar and is often done by software considering resources, demand and capacity.</p>
+<h4>Sequencing rules (five-job example in the lecture)</h4>`+T(['Rule','Priority to','Total flow time','Average delay'],[
+['<b>FIFO</b> First In First Out','First arrival','50 days (mean 10)','4.6 days'],
+['<b>LIFO</b> Last In First Out','Last arrival (rarely used; accelerates a delayed job)','46 days (mean 9.2)','4.0 days'],
+['<b>SPT</b> Shortest Processing Time','Quickest job; fewer queues','<b>36 days (mean 7.2)</b>','<b>2.4 days</b>'],
+['<b>LPT</b> Longest Processing Time','Longest job; fewer changeovers, better utilisation','60 days (mean 12)','6.8 days'],
+['<b>EDD</b> Earliest Due Date','Most urgent deadline','39 days (mean 7.8)','<b>2.4 days</b>'],
+['<b>LS</b> Least Slack','Smallest slack s = d - p','-','-'],
+['<b>CR</b> Critical Ratio','Smallest (time until due / remaining processing time); dynamic, combines EDD and SPT','-','-']])+
+`<div class="tip">In this example SPT gives the lowest total flow time and, with EDD, the lowest average delay. LPT is worst on both.</div>
+<h4>Advantages and limitations</h4>`+T(['Advantages','Limitations'],[['Avoids bottlenecks; adaptable standard rules; lean stable processes; customer-specific sequences; captures planning know-how','Dynamic changes disrupt plans; limited machines, labour, materials; complexity with many jobs; conflicting priorities; setup and changeover difficulty; software and integration limits']])+
+`<h4>Types of scheduling problems</h4>`+L(['<b>Single machine:</b> n jobs on one machine','<b>Flow shop:</b> n jobs with m operations and the same sequence for every job (general problem has exponential complexity)'])+
+`<h4>Johnson\'s rule (2 machines, n jobs)</h4><p>Gives an optimal sequence in polynomial time. Preconditions: constant job times, job times independent of sequence, every job finishes machine 1 before machine 2, equal priority.</p>`+F(['List jobs and times','Pick the shortest time','If on machine 1: schedule first; if on machine 2: schedule last','Remove job; repeat towards the middle'])+
+`<p>Ties are broken arbitrarily. With heavy idle time at the second centre, job splitting may be used.</p>
+<h4>n jobs on three machines (A, B, C)</h4><p>Apply Johnson if either condition holds: <b>min(A) &gt;= max(B)</b> or <b>min(C) &gt;= max(B)</b>. Then replace the machines with two fictitious machines G and H (Gi = Ai + Bi, Hi = Bi + Ci) and sequence as usual. Example in the lecture: MDH Masala processing five items on machines A, B and C.</p>`],
+["Lecture 48 - Transportation Management",
+IMP('Asked: the four components of transportation decisions are <b>Load, Mode, Flow, Route</b>.')+
+`<h4>Major components of transportation decisions</h4>`+F(['Load','Mode','Flow','Route'])+
+`<h4>1. Load</h4><p>Quantity and composition of goods transported at a given time; goal is high capacity utilisation, low handling cost and timely delivery.</p>`+T(['Aspect','Meaning'],[['Load size','Amount per shipment, from parcels to full truckloads or containers'],['Load weight','Total mass; obey weight limits (safety, fines, delays)'],['Load volume','Space occupied; palletisation and stacking for cubic optimisation'],['Load packaging','Protection against damage, theft, spoilage; easy handling'],['Load composition','Mix of products; consolidation cuts shipping cost'],['Load balancing','Even weight distribution (axle weight, centre of gravity) for stability and fuel efficiency']])+
+`<h4>Fleet selection and size: key factors</h4>`+L(['Transportation demand (history, trends, forecasts)','Service level requirements (lead time, frequency, flexibility, SLAs)','Geographical coverage (area, distance, traffic, accessibility)','Cargo characteristics','Redundancy and flexibility for disruptions','Cost: total cost of ownership (acquisition, operating, maintenance, fuel, depreciation)','Technology: route optimisation, telematics, fleet management','Regulatory compliance (registration, licences, insurance, driver hours)','Scalability and growth'])+
+`<h4>2. Mode</h4>`+T(['Mode','Best for','Advantages','Challenges'],[
+['<b>Road</b>','Short to medium distance, regional, last mile, perishables','Flexibility, door to door, frequent, reaches remote places, JIT','Congestion, weather, regulations, higher cost per mile on long hauls'],
+['<b>Rail</b>','Long-distance bulk and heavy goods','Cheap at scale, low fuel and emissions, reliable schedules','Limited access, slower, extra handling'],
+['<b>Maritime (water)</b>','Bulk, commodities, long haul, international trade','Lowest cost per ton, high capacity, global','Slowest, weather and port congestion, no door to door'],
+['<b>Air</b>','Time-sensitive, high-value, perishable','Speed, predictable schedules, global','Highest cost, limited capacity for bulky cargo, airport dependence'],
+['<b>Pipeline</b>','Petroleum, gas, chemicals, continuous flow','Low cost per unit, safe, low energy, dedicated route','Limited cargo types, high initial investment, leak and maintenance risks'],
+['<b>Intermodal</b>','Combine modes in one shipment','Uses strengths of each mode, door to door, end-to-end visibility','Coordination, documentation, terminal dependence']])+
+`<p>Lecture example (mode choice by cost): finished goods shipped plant to warehouse; annual volume 1,200,000 lb; product worth USD 25 per lb; plant and carrying cost 30% per year (a trade-off between transport cost and inventory carrying cost).</p>
+<h4>3. Flow</h4>`+T(['Flow','Meaning','Challenges'],[['Physical flow','Movement of goods from suppliers to customers (transport, handling, storage)','Delays, capacity limits, disruptions'],['Information flow','Orders, invoices, forecasts, data exchange','Silos, inaccurate data, incompatible systems'],['Financial flow','Payments, pricing, invoicing','Payment delays, invoice mismatch, currency changes'],['Reverse flow','Returns, repairs, recycling, disposal (reverse logistics)','Returns handling, defective goods, regulation, cost']])+
+`<h4>4. Route</h4><p>Strategic selection of optimal routes considering distance, time, cost, capacity, mode, infrastructure and regulation. It minimises cost and transit time, optimises resources and ensures timely delivery. Challenges: traffic, road conditions, weather, restrictions, geopolitics.</p>
+<h4>Transportation management systems (TMS)</h4><p>Software that automates carrier selection, load building, routing and scheduling and freight payment. Lecture facts: US companies spend over <b>USD 600 billion</b> a year on transportation and about USD 1 billion on TMS. Examples: Polaroid (least-cost carrier and method), Tree of Life (inbound freight efficiency from <b>55% to 75%</b>), Orange Glo (automated freight payment, better on-time delivery).</p>`],
+["Lectures 49 and 50 - Transportation Problem Programming",
+IMP('Asked: a <b>balanced transportation problem has total supply = total demand</b>. Know NWCR, LCM, VAM, MODI and the optimality condition <b>m + n - 1</b> allocations.')+
+`<p>The <b>transportation problem</b> finds the cheapest way to ship goods from several sources (factories, warehouses) to several destinations (customers, DCs) while meeting supply and demand. It is a linear programming problem: decision variables are quantities shipped, the objective minimises total cost.</p>
+<h4>Assumptions</h4>`+L(['Fixed supply and demand','Single homogeneous commodity','Cost is linear in quantity shipped','Route capacity limits (maximum per route)','Non-negative variables','Full shipments (goods fully transported)'])+
+`<h4>Types</h4>`+T(['Type','Meaning'],[['<b>Balanced</b>','<b>Total supply = total demand</b>'],['Unbalanced','Supply is not equal to demand; add a <b>dummy source or destination</b> with zero cost to balance']])+dTpa+
+`<h4>Phase I: initial basic feasible solution (IBFS)</h4><p>An initial allocation meeting all supply and demand constraints; problem must be balanced. A basic solution has <b>m + n - 1</b> allocations (m sources, n destinations).</p>
+<h4>1. North-West Corner Rule (NWCR)</h4><p>Start at the upper-left cell; allocate min(supply, demand); strike out the exhausted row or column; move on; repeat. It ignores costs, so it is easy but rarely optimal.</p>
+<p><b>Lecture example:</b> supplies Jaipur 40, Udaipur 60, Mumbai 70; demands Kanpur 70, Pune 40, Delhi 60 (balanced: 170 = 170).</p>`+
+T(['Allocation','Units','Unit cost (Rs)','Cost'],[['Jaipur to Kanpur','40','4','160'],['Udaipur to Kanpur','30','3','90'],['Udaipur to Pune','30','4','120'],['Mumbai to Pune','10','2','20'],['Mumbai to Delhi','60','8','480'],['<b>Total</b>','170','','<b>Rs 870</b>']])+
+`<div class="tip">The slide writes the first term as (40x40); the correct product is 4 x 40 = 160, which is what makes the total Rs 870.</div>
+<h4>2. Least Cost Method (LCM)</h4><p>Pick the cell with the lowest cost in the whole table, allocate min(supply, demand), strike out the satisfied row or column, repeat. Ties are broken arbitrarily (e.g. two cells with cost 3). In the lecture example the lowest cost is 1 (Jaipur to Delhi), and 40 units are allocated.</p>
+<h4>3. Vogel\'s Approximation Method (VAM)</h4><p>Standard method: for each row and column compute the <b>penalty</b> (difference between the two smallest costs), select the row or column with the largest penalty, allocate the maximum to its cheapest cell, strike out, recompute. Usually gives a start closest to optimal.</p>
+<h4>Phase II: optimality with MODI (u-v method)</h4>`+L(['Needs m + n - 1 allocations (add a tiny epsilon if fewer: degenerate case)','Set one u or v to 0; for each occupied cell ui + vj = cij to find all u and v','For each empty cell compute opportunity cost dij = cij - (ui + vj)','<b>If all dij &gt;= 0 the solution is optimal</b>; if some dij = 0 an alternative optimum exists','Otherwise form a loop from the most negative cell, shift units and repeat'])+
+`<h4>Lecture example: optimal result</h4><p>All dij &gt;= 0 with d32 = 0, so the current solution is optimal and an <b>alternative optimum exists</b>. Optimal allocation: X11 = 10, X12 = 50, X13 = 40, X23 = 30, X25 = 90, X31 = 30, X34 = 90.</p>`+
+M([['Rs 1,400','Minimum cost = 4x10 + 1x50 + 2x40 + 3x30 + 7x90 + 5x30 + 4x90']])+
+`<h4>Why transportation programming is useful in logistics</h4>`+L(['<b>Cost minimisation</b> - fuel, maintenance, labour','<b>Improved service levels</b> - faster, more reliable delivery','<b>Inventory management</b> - timely delivery, fewer stock-outs, less excess','<b>Resource optimisation</b> - vehicles, drivers, warehouses, less idle time','<b>Time efficiency</b> - best routes and schedules','<b>Competitive advantage</b> - lower costs, better service'])],
+["Lecture 51 - Assignment Problem Programming",
+IMP('Assignment problem is a <b>special case of the transportation problem</b> (one-to-one, square matrix). Know the <b>Hungarian method</b> and the dummy row/column rule.')+
+`<p>An <b>assignment problem</b> assigns a number of resources to an equal number of activities to minimise total cost (or maximise total profit). It arises because men, machines and so on have different efficiencies for different activities. Uses: workers to machines, markets to factories, salesmen to sales areas.</p>
+<h4>Mathematical model</h4>`+L(['n jobs and n persons; cij = cost of person i on job j','xij = 1 if resource i is assigned to task j, otherwise 0','Minimise ΣΣ cij xij','Constraints: each task gets exactly one resource and each resource exactly one task','A special application of linear programming, a special case of the transportation problem'])+
+T(['Type','Matrix'],[['Balanced','Square (n x n); rows = columns'],['Unbalanced','Non-square; add a <b>dummy row or column with zero costs</b>']])+
+`<h4>Hungarian method</h4>`+dHun+
+T(['Step','Action'],[['1','Build the cost table and balance it (dummy with zero cost)'],['2','Opportunity cost table: subtract row minimum from each row, then column minimum from each column; every row and column now has a zero'],['3','Assign: find a row with exactly one unmarked zero, box it, strike other zeros in its column; repeat for columns; if ties, choose arbitrarily (then an alternative optimum exists)'],['4','If assignments = n, optimal; total cost uses the original costs of assigned cells'],['5','Otherwise cover all zeros with the minimum number of lines: tick unassigned rows, tick columns with zeros in ticked rows, tick rows with assignments in ticked columns, repeat; draw lines through ticked columns and unticked rows'],['6','Revise: K = smallest uncovered element; subtract K from uncovered cells, add K at line crossings; singly covered cells unchanged'],['7','Repeat steps 3 to 6 until optimal']])+
+`<h4>Worked example 1 (computer centre)</h4><p>Three programmers and three programmes: row minima 80, 80 and 110 are subtracted; then column minima 0, 10 and 0; single zeros are assigned in (1,C) and (3,A), then (2,B). Assignments (3) = rows (3), so the solution is optimal.</p>
+<h4>Worked example 2 (unbalanced)</h4><p>Four jobs, five machines: a <b>dummy job 5</b> with zero costs is added; after the first pass only four assignments exist; the covering lines number 4, less than the order 5, so the matrix is revised with the smallest uncovered element; then 5 assignments are found. <b>Machine E receives no job</b> (the dummy), giving the minimum total time.</p>
+<h4>Advantages of assignment programming</h4>`+T(['Group','Points'],[['Efficiency','Minimises cost, time and wastage; can maximise benefits; dynamic optimisation; enhances productivity'],['Clarity','Clear mathematical objective, quantifiable metrics, integrates constraints'],['Ease','Simple binary variables; tabular representation; scalable; accessible to non-experts'],['Flexibility','Adaptable constraints; tailored solutions; what-if scenario analysis'],['Real-time use','Fast response in emergencies and transport; IoT and sensor data; workforce management; routing and scheduling']])+
+`<h4>Assumptions</h4>`+L(['Deterministic demand and supply','Homogeneous tasks and resources','Fixed assignment costs','No intermediate stops or transshipments','Linear relationships','Simple capacity limits','Single period planning','Objective: minimise cost or maximise benefit','Non-negative variables','Fixed origins and destinations'])]],
+gl:[["Demand forecasting","Understanding and predicting customer demand to avoid overproduction and underproduction."],["Seasonality","Demand changes with seasons, holidays, events."],["Types of goods","Perishables need precise forecasts; subscriptions are predictable."],["Geography (forecast)","Where customers live and stock is held (swimwear in Florida)."],["Passive forecasting","Use past sales only; for steady sales."],["Active forecasting","Includes growth plans; for start-ups and fast growers."],["Delphi method","Anonymous expert rounds (usually 2-4) until consensus; 10-50 experts."],["Expert / insider knowledge","Specialised understanding from experienced people."],["Salesforce composite","Weighted combination of several forecasts."],["Time series","Trend plus seasonal variation from historical data."],["SMA","Simple moving average."],["EMA","Exponential moving average; more weight on recent data."],["WMA","Weighted moving average with chosen weights."],["Trend projection","Fit and extend a trend line from history."],["Capacity planning","Balancing resources to meet demand."],["Strategic capacity planning","Long-term, several years."],["Tactical capacity planning","Medium-term, months to a year."],["Operational capacity planning","Short-term, days to months."],["Design capacity","Ideal maximum output."],["Effective capacity","Design capacity minus allowances."],["Actual output","Achieved rate; cannot exceed effective capacity."],["Efficiency","Actual / effective x 100%."],["Utilisation","Actual / design x 100%."],["Break-even point","Q = FC / (r - v)."],["Make or buy BEP","Q = FC / (VB - VM)."],["Sequencing","Order of processing jobs over resources."],["SPT","Shortest processing time; lowest flow time."],["EDD","Earliest due date."],["Critical ratio","Time to due date / remaining processing time."],["Johnson's rule","Optimal sequencing of n jobs on 2 machines."],["Transportation components","Load, mode, flow, route."],["TMS","Software automating carrier selection, routing, scheduling, payment."],["Intermodal","Multiple modes in one shipment."],["Transportation problem","Minimise shipping cost subject to supply and demand."],["Balanced problem","Total supply equals total demand."],["NWCR","Northwest corner rule: start at top-left cell."],["LCM","Least cost method: start at cheapest cell."],["VAM","Vogel's approximation using penalties."],["MODI","Optimality test with u, v and opportunity cost d."],["m + n - 1","Number of allocations in a basic feasible solution."],["Assignment problem","One-to-one assignment minimising cost; special transportation problem."],["Hungarian method","Reduce rows and columns, cover zeros, revise until n assignments."],["Dummy row/column","Added with zero cost to balance an unbalanced problem."]],
+q:[
+["o","Demand forecasting is the process of understanding and predicting customer demand to help businesses avoid which of the following?",["High shipping costs and bad PR","Overproduction and underproduction","Competition entering the market","Falling crude oil prices"],1,"It avoids overproduction and underproduction."],
+["o","A business sells swimwear and stores most of its inventory in Florida where it is ordered most. Which factor influencing demand forecast is addressed?",["Competition","Economy","Geography","Seasonality"],2,"Where customers live and stock is held is geography."],
+["o","Why can relying too heavily on historical sales data lead to inaccurate demand predictions?",["Because past data cannot account for various evolving market factors","Because past data is completely deleted every calendar year","Because historical data is only useful for startup businesses","Because it forces companies to hire too many data analysts"],0,"Over-reliance on past data ignores evolving factors."],
+["o","What does expert or insider knowledge refer to in demand forecasting?",["Information gathered strictly from automated internet search bots","Specialized understanding and insights held by individuals with significant experience in a particular field or industry","Financial data publicly released by international banking institutions","Customer feedback forms collected randomly from retail storefronts"],1,"Interviews, focus groups, Delphi, workshops and surveys draw on it."],
+["o","Which formula calculates a facility's Efficiency percentage?",["Efficiency = (Actual Output / Design Capacity) x 100%","Efficiency = (Effective Capacity / Design Capacity) x 100%","Efficiency = (Actual Output / Effective Capacity) x 100%","Efficiency = (Design Capacity - Allowances) x 100%"],2,"Utilisation divides by design capacity; efficiency by effective capacity."],
+["o","What are the four major components of transportation decisions in supply chain management?",["Production, Planning, Efficiency, and Utilization","Fixed Cost, Variable Cost, Revenue, and Profit","Load, Mode, Flow, and Route","Interviews, Focus Groups, Surveys, and Delphi Method"],2,"Load, mode, flow and route."],
+["o","A Balanced Transportation Problem is a special case where:",["The total variable costs exactly equal the total fixed costs","The total supply from all sources equals the total demand at all destinations","The shipment volume is optimized using only rail and road transit","The number of source factories equals the number of retail outlets"],1,"Otherwise it is unbalanced and needs a dummy."],
+["o","How does accurate demand forecasting help strike the right balance in inventory management?",["By reducing carrying costs and preventing stockouts","By ensuring that products are only sold online","By automatically increasing the prices of older items","By replacing human workers with automated machinery"],0,"Right stock level: lower carrying cost, no stock-outs."],
+["o","Which type of capacity planning considers future requirements over several years using supply and need forecasting?",["Short-term Capacity Planning","Operational Capacity Planning","Medium-term Capacity Planning","Long-term or Strategic Capacity Planning"],3,"Strategic planning aligns capacity with business goals and growth."],
+["o","Which set of factors is explicitly mentioned as why companies have limited visibility into the future?",["Overproduction, underproduction, and short shelf-lives","Lack of human resources, bad PR, and high shipping costs","Market volatility, rapid technological changes, and unpredictable external events","Steady customer retention, passive forecasting, and geographic planning"],2,"Those three are named under limited visibility."],
+["x","Which is NOT one of the five factors influencing demand forecast in the lecture?",["Seasonality","Competition","Economy","Brand logo colour"],3,"Also types of goods and geography."],
+["x","Active demand forecasting is typically used by:",["Companies aiming at steady sales","Start-ups and rapidly growing companies","Only government agencies","Companies with no sales history"],1,"Passive forecasting suits steady sales; active includes growth plans."],
+["x","In the Delphi method, subsequent rounds are usually repeated:",["1 time","2 to 4 times","20 times","Only once a year"],1,"Until consensus or a stable pattern emerges, with anonymous feedback."],
+["x","Which moving average gives more weight to recent data and decreases older data's significance?",["SMA","EMA","Static average","Median"],1,"Exponential moving average."],
+["x","Long-term demand forecasting covers a period of:",["A single day","A week","More than a year","One hour"],2,"It supports seasonality, capacity and capital planning."],
+["x","A plant has design capacity 38,640 units per week and produced 25,000. Utilisation is about:",["54.7%","64.7%","74.7%","89.3%"],1,"25,000 / 38,640 = 64.7%. With effective capacity 28,000, efficiency is 89.3%."],
+["x","Fixed cost USD 4,000, price USD 9, variable cost USD 4. The break-even quantity is:",["400","800","1,200","2,800"],1,"4,000 / (9 - 4) = 800."],
+["x","For make-or-buy with FC = 160,000, VM = 100, VB = 150, the break-even quantity is:",["1,600","3,200","6,400","1,000"],1,"160,000 / (150 - 100) = 3,200."],
+["x","In the lecture's five-job example, which sequencing rule gave the lowest total flow time (36 days)?",["FIFO","LIFO","SPT","LPT"],2,"Shortest processing time."],
+["x","In Johnson's rule for two machines, a job whose shortest time is on machine 1 is scheduled:",["Last","First (towards the front)","Randomly","Removed"],1,"If the shortest time is on machine 2 it is scheduled last."],
+["x","For three machines, Johnson's rule can be applied when:",["min(A) >= max(B) or min(C) >= max(B)","max(A) = min(C)","All times are equal","Never"],0,"Then use fictitious machines G = A + B and H = B + C."],
+["x","Which mode suits petroleum and natural gas with continuous flow?",["Air","Pipeline","Road","Rail"],1,"Pipelines are economical for bulk liquids and gases."],
+["x","The NWCR solution in the lecture's mobile-phone example costs:",["Rs 780","Rs 870","Rs 1,400","Rs 2,310"],1,"160 + 90 + 120 + 20 + 480 = Rs 870."],
+["x","A basic feasible solution of an m x n transportation problem has how many allocations?",["m x n","m + n","m + n - 1","m - n"],2,"This is the optimality (non-degeneracy) condition."],
+["x","An unbalanced transportation problem is balanced by adding:",["A dummy source or destination with zero cost","Extra rows with high cost","Nothing","A penalty"],0,"Total supply is made equal to total demand."],
+["x","In the Hungarian method, the solution is optimal when:",["Lines covering zeros equal n (assignments = n)","All costs are zero","K = 0","The matrix is rectangular"],0,"Otherwise revise with the smallest uncovered element K."]
+]};
+D[9].imp=[
+['Role of distribution','Steps to move and store product supplier to customer; key driver of profitability.'],
+['Service factors','Response time, variety, availability, customer experience, time to market, order visibility, returnability.'],
+['Short response time','Locate facilities close to customers; fewer facilities when customers tolerate waiting.'],
+['Product availability','Probability product is in stock when an order arrives.'],
+['Facilities vs costs','More facilities: inventory and facility cost up, transport cost down (if inbound scale kept), response faster.'],
+['Outbound vs inbound cost','Outbound per unit higher because inbound lot sizes are larger.'],
+['Online sales effects','Aggregation, postponement, centralisation, last-mile delivery, higher returns.'],
+['Six distribution designs','Manufacturer direct; direct + in-transit merge; distributor + carrier; distributor + last mile; pickup at mfr/distributor; retail pickup.'],
+['Manufacturer direct shipping','Removes intermediaries; ships straight to the customer.'],
+['Dell case','Online first, added retail (Wal-Mart) in 2007; best for customised hardware, weaker for standardised.'],
+['FLP','Operations research and computational geometry; strategic and dynamic.'],
+['Economic location factors','Labour, land and facilities, transport, taxation, stability, market access, incentives.'],
+['Multi-facility strategies','By product (P&G), geography (Amazon), process (Tesla).'],
+['Point rating','Factors, weights (sum to 1), ratings, weighted sum, highest wins.'],
+['Median and centre of gravity','Median: rectilinear median load; CG: Cx = Σ(wi xi)/Σwi, minimises transport cost.']];
+D[10].imp=[
+['What forecasting avoids','Overproduction and underproduction; helps inventory balance (lower carrying cost, no stock-outs).'],
+['Five forecast factors','Seasonality, competition, economy, types of goods, geography.'],
+['Forecasting challenges','Lack of data; over-reliance on past data; limited visibility (volatility, rapid tech change, unpredictable events).'],
+['Passive vs active; short vs long; macro vs micro','Steady sales vs growth plans; long-term is over one year.'],
+['Qualitative methods','Delphi (anonymous rounds, 2-4), expert/insider knowledge, surveys, interviews and focus groups, Salesforce composite.'],
+['Quantitative methods','Time series (trend, seasonality), SMA, EMA (recent weight), WMA, trend projection.'],
+['Capacity planning types','Strategic (years), tactical (months to a year), operational (days to months).'],
+['Capacity formulas','Efficiency = actual / effective; utilisation = actual / design; effective = design - allowances.'],
+['Break-even','Q = FC / (r - v); make-or-buy Q = FC / (VB - VM).'],
+['Sequencing rules','FIFO, LIFO, SPT (lowest flow time), LPT, EDD, LS, CR.'],
+['Johnson\'s rule','Shortest time on machine 1 first, on machine 2 last; 3-machine conditions.'],
+['Transportation decisions','Load, Mode, Flow, Route; modes road, rail, water, air, pipeline, intermodal.'],
+['Transportation problem','Balanced = supply equals demand; IBFS (NWCR, LCM, VAM); MODI; m + n - 1 allocations.'],
+['NWCR example','Rs 870 (160 + 90 + 120 + 20 + 480); optimal example Rs 1,400.'],
+['Assignment problem','Special transportation problem; Hungarian method; dummy row/column with zero cost.']];
+
+
+/* split Lectures 49 and 50 */
+(function(){const c=D[10].notes[4][1];const i=c.indexOf('<h4>2. Least Cost Method (LCM)</h4>');
+ const a=c.slice(0,i),b=c.slice(i);
+ D[10].notes.splice(4,1,
+  ['Lecture 49 - Transportation Problem Programming (types, IBFS, NWCR)',a],
+  ['Lecture 50 - Transportation Problem Programming (LCM, VAM, MODI)',IMP('Know <b>LCM</b>, <b>VAM</b> and the <b>MODI optimality test</b>; optimal when all opportunity costs dij &gt;= 0, and dij = 0 signals an alternative optimum.')+b]);
+})();
+
+/* ================= PRIORITY SYSTEM ================= */
+const KEYS={
+1:[[/goods, information and resources/i,'Q1'],[/order processing/i,'Q2'],[/just-in-time/i,'Q3'],[/omni-channel/i,'Q4'],[/order intensity|roadblocks/i,'Q5'],[/5PL|aggregator/,'Q6'],[/\bgreen\b/i,'Q7'],[/cross-dock/i,'Q8'],[/seasonal storage/i,'Q9'],[/2PL|asset-based/i,'Q10']],
+2:[[/\bEDI\b|Electronic Data Interchange/,'Q1'],[/blockchain/i,'Q2'],[/incoterms/i,'Q3'],[/\bexporting\b/i,'Q4'],[/acquisition|Corus/i,'Q5'],[/Pareto|80-20/,'Q6'],[/PDCA|Deming/,'Q7'],[/\bOTD\b|On-Time Delivery/,'Q8'],[/Seiso|5S/,'Q9'],[/exchange rate/i,'Q10']],
+5:[[/flexible/i,'Q1'],[/queues/i,'Q2'],[/6 M's|Man, Machine/,'Q3'],[/Identifying and planning|Negotiating the contract/i,'Q4'],[/vertical integration/i,'Q5'],[/\bPull\b/,'Q6'],[/insourcing/i,'Q7'],[/Procurement \/ Supply \/ Sourcing/i,'Q8'],[/minimis(e|ing) costs? and maximis/i,'Q9'],[/Facility role|network design decision/i,'Q10']],
+6:[[/implied demand/i,'Q1, Q10'],[/macro process|\bCRM\b|\bISCM\b|\bSRM\b/,'Q2'],[/cyclic|replenishment cycle/i,'Q3'],[/push\/pull|reactive/i,'Q4'],[/air freight|fast modes|most responsive/i,'Q5'],[/six drivers|Facilities, inventory, transportation/i,'Q6'],[/central(is|iz)ing|centralise/i,'Q7'],[/Little/,'Q8'],[/free shipping/i,'Q9']],
+9:[[/response time/i,'Q1'],[/product availability/i,'Q2'],[/inbound lot sizes|outbound cost per unit exceeds inbound|outbound transportation costs per unit/i,'Q3'],[/last-mile/i,'Q4'],[/direct shipping/i,'Q5'],[/\bFLP\b|computational geometry/,'Q6'],[/point rating/i,'Q7'],[/economic factors/i,'Q8'],[/centre of gravity/i,'Q9'],[/\bDell\b/,'Q10']],
+10:[[/overproduction/i,'Q1'],[/geography/i,'Q2'],[/over-reliance|past data/i,'Q3'],[/insider knowledge/i,'Q4'],[/effective capacity/i,'Q5'],[/Major components of transportation|Load, Mode, Flow/i,'Q6'],[/balanced/i,'Q7'],[/carrying cost|stock-outs/i,'Q8'],[/long-term \/ strategic|strategic capacity/i,'Q9'],[/limited visibility/i,'Q10']]
+};
+const OVR={
+1:[[/^Reference books$/,'L'],[/^Evolution$/,'M'],[/^Global scenario$/,'L'],[/^Indian scenario$/,'L'],[/^7 steps to plan/,'L'],[/^Cases$/,'L'],[/^Key components$/,'L'],[/^Why companies outsource/,'L'],[/^Case study: Elixia/,'L'],[/^Components of storage/,'M'],[/^Architecture/,'M'],[/^Factors driving/,'M'],[/^Key elements$/,'M'],[/^The Seven R/,'M'],[/^Logistics management$/,'M'],[/^Logistics design and manag/,'M']],
+2:[[/^Solutions customers expect/,'L'],[/^Case: Same-day/,'L'],[/^Stakeholders$/,'L'],[/^7 steps$/,'L'],[/^Case: Noatum/,'L'],[/^Logistics performance/,'L'],[/^3\. Quality circles/,'L'],[/^5\. Benchmarking/,'L'],[/^Cross-border transactions/,'M'],[/^Transportation management$/,'M'],[/^Supply management$/,'M'],[/^Warehousing and order/,'M']],
+5:[[/^Worked example: the detergent/,'L'],[/^Logistics versus SCM/,'M'],[/^Basic supply chain stages/,'M'],[/^Objectives$/,'M'],[/^Objectives of SCM \(full/,'L'],[/^Conclusion of the lecture/,'L'],[/^Case: Amazon/,'L'],[/^Amazon in detail/,'L'],[/^Where operations management/,'L'],[/^Operations managers are responsible/,'L'],[/^Case: Zara/,'L'],[/^Zara discussion/,'L'],[/^More objectives/,'L'],[/^Definition and components/,'L'],[/^Supply management$/,'M'],[/^Sourcing vs procurement/,'M'],[/^The 8 procurement steps explained/,'M'],[/^Operations management$/,'M'],[/^Material management$/,'M'],[/^Production management$/,'M'],[/^Logistics management components/,'M'],[/^Significance of the supply chain/,'M'],[/^Service supply chain framework/,'L'],[/^Service attributes and their/,'M'],[/^Factors influencing network/,'M'],[/^Framework$/,'M']],
+6:[[/^Sources \(courier/,'L'],[/^Countering uncertainty/,'M'],[/^Mitigating through automated/,'L'],[/^Why automation reduces/,'L'],[/^Macro process aims/,'M'],[/^Best practices/,'L'],[/^Challenges$/,'L'],[/^Control towers/,'L'],[/^Cases$/,'L'],[/^Benefits of supply chain modelling/,'L'],[/^Facility metrics/,'M'],[/^Inventory metrics/,'M'],[/^SCOR levels/,'L'],[/^Benefits and limitations/,'L'],[/^Major components/,'L'],[/^Model comparison cheat/,'M'],[/^Supply chain models$/,'M'],[/^SCOR model/,'M'],[/^4 P's of SCOR/,'M'],[/^Supply uncertainty/,'M'],[/^Risk versus uncertainty/,'M'],[/^Information$/,'M'],[/^Sourcing$/,'M']],
+9:[[/^Impact of online sales on customer/,'M'],[/^Impact of online sales on costs/,'M'],[/^Selecting a design/,'M'],[/^Comparative ranking/,'M'],[/^Facility location without proper/,'M'],[/^Three-tier model/,'L'],[/^Factors affecting facility location/,'L'],[/^Operations strategies/,'M'],[/^Systematic site evaluation/,'L'],[/^Qualitative models/,'M'],[/^Quantitative models/,'M'],[/^1\. Median/,'M'],[/^3\. Varignon/,'L'],[/^Resource-oriented/,'L'],[/^Design options for/,'M']],
+10:[[/^Context: demand in India/,'L'],[/^Types of demand forecasting/,'M'],[/^Methods$/,'M'],[/^Qualitative methods/,'M'],[/^Delphi method/,'M'],[/^Survey method/,'L'],[/^Interviews and focus groups/,'L'],[/^Salesforce composite/,'L'],[/^Quantitative methods/,'M'],[/^Trend projection/,'L'],[/^Capacity planning strategies/,'L'],[/^Capacity planning process/,'M'],[/^Alternatives$/,'L'],[/^Evaluating alternatives/,'L'],[/^Break-even analysis/,'M'],[/^Example: pizza/,'M'],[/^Make or buy/,'M'],[/^Sequencing rules/,'M'],[/^Advantages and limitations/,'L'],[/^Types of scheduling/,'L'],[/^Johnson's rule/,'M'],[/^n jobs on three/,'L'],[/^1\. Load/,'M'],[/^Fleet selection/,'L'],[/^2\. Mode/,'M'],[/^3\. Flow/,'M'],[/^4\. Route/,'L'],[/^Transportation management systems/,'L'],[/^Assumptions$/,'L'],[/^Phase I/,'M'],[/^1\. North-West/,'M'],[/^2\. Least Cost/,'M'],[/^3\. Vogel/,'M'],[/^Phase II/,'M'],[/^Lecture example: optimal/,'L'],[/^Why transportation programming/,'L'],[/^Mathematical model/,'M'],[/^Hungarian method/,'M'],[/^Worked example$/,'M'],[/^Worked example \d/,'L'],[/^Advantages of assignment/,'L']]
+};
+function tierOf(w,si,p){
+ const hm=p.match(/^<h4>(.*?)<\/h4>/);
+ const head=hm?hm[1].replace(/<[^>]*>/g,''):'Overview';
+ const o=(OVR[w]||[]).find(r=>r[0].test(head)&&(r[2]===undefined||r[2]===si));
+ const asked=(KEYS[w]||[]).filter(k=>k[0].test(p)).map(k=>k[1]);
+ let t,a=[];
+ if(o){t=o[1];}
+ else if(asked.length){t='H';a=asked;}
+ else if(/class="imp"/.test(p)){t='M';}
+ else t='M';
+ return {t,a:a,head};
+}
+function decorate(){
+ document.querySelectorAll('.acc').forEach((acc,si)=>{
+  const c=acc.querySelector('.c');if(c.dataset.d)return;c.dataset.d='1';
+  const cnt={H:0,M:0,L:0};
+  c.innerHTML=c.innerHTML.split(/(?=<h4>)/).filter(p=>p.trim()).map(p=>{
+   const hm=/^<h4>/.test(p);
+   if(!hm&&/class="imp"/.test(p)&&p.replace(/<[^>]*>/g,'').length<420)return p;
+   const r=tierOf(wk,si,p);cnt[r.t]++;
+   const lab=r.t==='H'?'\u2605 Must know'+(r.a.length?' \u00b7 asked in '+[...new Set(r.a.join(', ').split(', '))].join(', '):''):r.t==='M'?'\u25cf Good to know':'\u25cb Background';
+   return '<div class="blk p-'+r.t+'"><span class="pb">'+lab+'</span>'+p+'</div>';
+  }).join('');
+  const h=acc.querySelector('.h');
+  h.innerHTML=h.innerHTML+'<span class="cnt">\u2605 '+cnt.H+' \u00b7 \u25cf '+cnt.M+' \u00b7 \u25cb '+cnt.L+'</span>';
+ });
+}
+document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{document.body.className='mode-'+b.dataset.m;document.querySelectorAll('[data-m]').forEach(x=>x.classList.toggle('on',x===b));});
+
+/* ================= ENGINE ================= */
+let wk=9,tab='notes';
+const main=document.getElementById('main');
+const lab={o:'Original assignment',x:'Extra practice'};
+const S={};
+function newQ(w){S[w]={st:{},score:0,done:0,f:'all',order:[]}}
+newQ(9);newQ(10);
+function render(){
+ if(tab==='notes'){
+  main.innerHTML=D[wk].notes.map(d=>`<div class="acc"><div class="h">${d[0]}</div><div class="c">${d[1]}</div></div>`).join('');
+  main.querySelectorAll('.h').forEach(h=>h.onclick=()=>h.parentNode.classList.toggle('open'));
+  main.querySelector('.acc').classList.add('open');decorate();
+ }else if(tab==='cards'){
+  main.innerHTML=`<input type="search" id="fs" placeholder="Search Week ${wk} terms..."><div class="grid" id="fg"></div>`;
+  const draw=f=>{const g=document.getElementById('fg');
+   g.innerHTML=D[wk].gl.filter(x=>(x[0]+x[1]).toLowerCase().includes(f)).map(x=>`<div class="fc"><div class="fi"><div class="fa">${x[0]}</div><div class="fb">${x[1]}</div></div></div>`).join('');
+   g.querySelectorAll('.fc').forEach(c=>c.onclick=()=>c.classList.toggle('f'));};
+  draw('');document.getElementById('fs').oninput=e=>draw(e.target.value.toLowerCase());
+ }else if(tab==='imp'){
+  main.innerHTML='<div class="imp"><b>★ Important topics for Week '+wk+'.</b> These are the ideas the assignment questions tested or that the lectures stress with numbers, definitions or named examples. Revise these first.</div>'+T(['#','Important topic','What to remember'],D[wk].imp.map((x,i)=>[i+1,'<b>'+x[0]+'</b>',x[1]]));
+ }else quiz();
+}
+function quiz(){
+ const s=S[wk],qs=D[wk].q;
+ main.innerHTML=`<div class="bar"><label>Set <select id="qs"><option value="all">All Week ${wk} questions</option><option value="o">Original assignment (${qs.filter(q=>q[0]==='o').length})</option><option value="x">Extra practice (${qs.filter(q=>q[0]==='x').length})</option></select></label><span id="sc"></span><div class="prog"><i id="pg"></i></div><button class="p" id="rs">Reset / Retake</button></div><div id="res"></div><div id="qb"></div>`;
+ const sel=document.getElementById('qs');sel.value=s.f;
+ sel.onchange=()=>{newQ(wk);S[wk].f=sel.value;quiz()};
+ document.getElementById('rs').onclick=()=>{const f=s.f;newQ(wk);S[wk].f=f;quiz()};
+ const idx=qs.map((q,i)=>i).filter(i=>s.f==='all'||qs[i][0]===s.f);
+ s.order=idx;
+ document.getElementById('qb').innerHTML=idx.map((i,n)=>{const q=qs[i];
+  return `<div class="q" id="q${i}"><div class="t">Q${n+1} &middot; ${lab[q[0]]}</div><p>${q[1]}</p>`+q[2].map((o,j)=>`<button class="o" data-q="${i}" data-o="${j}">${'ABCD'[j]}) ${o}</button>`).join('')+`<button class="chk" data-c="${i}">Check Answer</button><div class="ex" id="e${i}"></div></div>`}).join('');
+ document.querySelectorAll('.o').forEach(b=>b.onclick=()=>ans(+b.dataset.q,+b.dataset.o));
+ document.querySelectorAll('.chk').forEach(b=>b.onclick=()=>ans(+b.dataset.c,-1));
+ idx.forEach(i=>{if(s.st[i]!==undefined)show(i,s.st[i])});
+ upd();
+}
+function show(i,sel){
+ const q=D[wk].q[i];
+ document.querySelectorAll(`#q${i} .o`).forEach((b,j)=>{b.disabled=true;if(j===q[3])b.classList.add('ok');else if(j===sel)b.classList.add('no')});
+ const e=document.getElementById('e'+i);
+ e.innerHTML=(sel===q[3]?'<b style="color:var(--ok)">Correct.</b> ':sel===-1?'<b>Answer: '+'ABCD'[q[3]]+'.</b> ':'<b style="color:var(--no)">Incorrect.</b> Correct answer: '+'ABCD'[q[3]]+'. ')+q[4];
+ e.classList.add('s');
+}
+function ans(i,o){
+ const s=S[wk];if(s.st[i]!==undefined)return;
+ s.st[i]=o;s.done++;if(o===D[wk].q[i][3])s.score++;
+ show(i,o);upd();
+}
+function upd(){
+ const s=S[wk],n=s.order.length;
+ document.getElementById('sc').textContent=`Score: ${s.score} / ${s.done} (of ${n})`;
+ document.getElementById('pg').style.width=(n?s.done/n*100:0)+'%';
+ if(n&&s.done===n){const r=document.getElementById('res'),p=s.score/n;r.style.display='block';
+  r.innerHTML=`<b>${s.score} / ${n}</b><div>${Math.round(p*100)}% &middot; ${p>=.8?'Excellent work':p>=.6?'Good, review the misses':'Revisit the notes and retry'}</div>`}
+}
+document.querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{wk=+b.dataset.w;document.querySelectorAll('[data-w]').forEach(x=>x.classList.toggle('on',x===b));render();scrollTo(0,0)});
+document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tab=b.dataset.t;document.querySelectorAll('[data-t]').forEach(x=>x.classList.toggle('on',x===b));render();scrollTo(0,0)});
+render();
+</script>
+</body>
+</html>

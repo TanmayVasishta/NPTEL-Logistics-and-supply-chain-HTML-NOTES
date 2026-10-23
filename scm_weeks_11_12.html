@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Supply Chain Management - Weeks 11 and 12</title>
+<style>
+:root{--bg:#050505;--card:#111113;--c2:#18181b;--tx:#f5f5f4;--mut:#a1a1aa;--bd:#27272a;--a:#f59e0b;--b:#34d399;--ok:#34d399;--no:#fb7185}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.65 system-ui,Segoe UI,Roboto,sans-serif}
+header{padding:24px 20px 6px;max-width:1060px;margin:auto}
+h1{margin:0;font-size:1.6rem;background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--mut);font-size:.88rem}
+nav{position:sticky;top:0;z-index:5;background:rgba(5,5,5,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--bd);padding:10px 20px}
+.in{max-width:1060px;margin:auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.sp{flex:1}
+nav button{background:var(--card);color:var(--tx);border:1px solid var(--bd);padding:7px 15px;border-radius:999px;cursor:pointer;font-size:.88rem}
+nav button.on{border-color:var(--a);color:var(--a);box-shadow:0 0 0 1px var(--a) inset}
+nav .wk button{border-radius:8px;font-weight:700}
+nav .wk button.on{background:var(--a);color:#050505}
+main{max-width:1060px;margin:auto;padding:18px 20px 60px}
+.acc{background:var(--card);border:1px solid var(--bd);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.acc>.h{padding:13px 18px;cursor:pointer;display:flex;justify-content:space-between;font-weight:600}
+.acc>.h:after{content:"+";color:var(--a);font-size:1.3rem}
+.acc.open>.h:after{content:"\2212"}
+.acc>.c{display:none;padding:2px 18px 16px;border-top:1px solid var(--bd)}
+.acc.open>.c{display:block}
+.c h4{color:var(--a);margin:16px 0 4px}
+.c ul{margin:4px 0;padding-left:20px}.c li{margin:3px 0}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.88rem}
+th,td{border:1px solid var(--bd);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:#000;color:var(--a)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.m{background:#000;border:1px solid var(--bd);border-left:3px solid var(--a);border-radius:10px;padding:9px 12px}
+.m b{display:block;color:var(--a);font-size:1.1rem}.m span{color:var(--mut);font-size:.8rem}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0}
+.flow div{background:#000;border:1px solid var(--b);border-radius:8px;padding:5px 11px;font-size:.84rem}
+.flow i{color:var(--a);font-style:normal}
+.tip{background:#000;border:1px dashed var(--a);border-radius:10px;padding:9px 13px;margin:10px 0;color:#d4d4d8;font-size:.9rem}
+.dg{background:#000;border:1px solid var(--bd);border-radius:12px;padding:10px;margin:12px 0}
+.dg svg{width:100%;height:auto;display:block}
+.dg .cap{color:var(--mut);font-size:.78rem;text-align:center;margin-top:4px}
+.fc{perspective:900px;height:150px;cursor:pointer}
+.fi{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.fc.f .fi{transform:rotateY(180deg)}
+.fa,.fb{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;border:1px solid var(--bd);background:var(--card);display:flex;align-items:center;justify-content:center;text-align:center;padding:12px;font-size:.88rem}
+.fa{font-weight:700;color:var(--a);font-size:1.02rem}
+.fb{transform:rotateY(180deg);border-color:var(--b)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+input[type=search]{width:100%;padding:10px 14px;background:var(--card);border:1px solid var(--bd);color:var(--tx);border-radius:10px;margin-bottom:14px}
+.bar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px 16px;margin-bottom:14px}
+.bar select,.bar button{background:#000;color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:7px 12px;cursor:pointer}
+.bar button.p{background:var(--a);color:#050505;border:0;font-weight:700}
+.prog{flex:1;min-width:120px;height:8px;background:#000;border-radius:9px;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--a),var(--b));transition:width .3s}
+.q{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:15px 18px;margin-bottom:14px}
+.q .t{font-size:.74rem;color:var(--a);text-transform:uppercase;letter-spacing:.06em}
+.q p{margin:4px 0 10px;font-weight:600}
+.o{display:block;width:100%;text-align:left;background:#000;color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:9px 12px;margin:6px 0;cursor:pointer;font-size:.94rem}
+.o:hover:not(:disabled){border-color:var(--a)}
+.o.ok{border-color:var(--ok);background:rgba(52,211,153,.12)}
+.o.no{border-color:var(--no);background:rgba(251,113,133,.12)}
+.ex{display:none;margin-top:8px;padding:10px 12px;border-radius:8px;background:#000;border-left:3px solid var(--a);font-size:.9rem;color:#d4d4d8}
+.ex.s{display:block}
+.chk{margin-top:6px;background:transparent;border:1px solid var(--a);color:var(--a);border-radius:8px;padding:5px 12px;cursor:pointer;font-size:.84rem}
+#res{display:none;text-align:center;background:var(--card);border:1px solid var(--a);border-radius:12px;padding:18px;margin-bottom:14px}
+#res b{font-size:2rem;color:var(--a)}
+
+.imp{background:linear-gradient(90deg,rgba(245,158,11,.14),rgba(245,158,11,.03));border:1px solid var(--a);border-left:4px solid var(--a);border-radius:10px;padding:9px 13px;margin:12px 0;font-size:.9rem;color:#fde68a}
+.imp b{color:var(--a)}
+.star{color:var(--a);font-weight:700}
+
+.prio{margin-top:8px;font-size:.8rem;color:var(--mut);align-items:center}
+.prio button{border-radius:8px!important;padding:4px 11px!important;font-size:.78rem!important}
+.prio .lg{margin-left:auto}
+.prio i.d{display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 4px 0 12px;vertical-align:-1px}
+i.d.H{background:var(--a)}i.d.M{background:var(--b)}i.d.L{background:#52525b}
+.blk{border-left:3px solid transparent;padding:2px 0 4px 12px;margin:10px 0;border-radius:2px}
+.blk.p-H{border-color:var(--a);background:linear-gradient(90deg,rgba(245,158,11,.08),transparent)}
+.blk.p-M{border-color:var(--b)}
+.blk.p-L{border-color:#3f3f46;opacity:.6}
+.blk.p-L:hover{opacity:1}
+.pb{display:inline-block;font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;font-weight:700;padding:1px 9px;border-radius:999px;margin-top:6px}
+.p-H .pb{background:var(--a);color:#050505}
+.p-M .pb{background:rgba(52,211,153,.18);color:var(--b)}
+.p-L .pb{background:#27272a;color:#a1a1aa}
+.cnt{font-size:.72rem;color:var(--mut);font-weight:400;margin-left:auto;margin-right:12px;white-space:nowrap}
+body.mode-hm .blk.p-L{display:none}
+body.mode-h .blk.p-L,body.mode-h .blk.p-M{display:none}
+</style>
+</head>
+<body>
+<header>
+<h1>Supply Chain Management</h1>
+<div class="sub">NPTEL study hub &middot; Week 11 (Lectures 52-57) and Week 12 (Lectures 58-60), with rebuilt diagrams</div>
+</header>
+<nav><div class="in">
+<span class="wk"><button data-w="11" class="on">Week 11</button> <button data-w="12">Week 12</button></span>
+<span class="sp"></span>
+<span><button data-t="notes" class="on">Notes</button> <button data-t="cards">Flashcards</button> <button data-t="imp">★ Important</button> <button data-t="quiz">Quiz</button></span>
+</div><div class="in prio" id="prio"><span>Priority view:</span><button data-m="all" class="on">All topics</button><button data-m="hm">Hide background</button><button data-m="h">Must-know only</button><span class="lg"><i class="d H"></i>Must know<i class="d M"></i>Good to know<i class="d L"></i>Background</span></div></nav>
+<main id="main"></main>
+<script>
+const L=a=>'<ul>'+a.map(x=>'<li>'+x+'</li>').join('')+'</ul>';
+const T=(h,r)=>'<table><tr>'+h.map(x=>'<th>'+x+'</th>').join('')+'</tr>'+r.map(y=>'<tr>'+y.map(x=>'<td>'+x+'</td>').join('')+'</tr>').join('')+'</table>';
+const M=a=>'<div class="cards">'+a.map(x=>'<div class="m"><b>'+x[0]+'</b><span>'+x[1]+'</span></div>').join('')+'</div>';
+const F=a=>'<div class="flow">'+a.map(x=>'<div>'+x+'</div>').join('<i>&rarr;</i>')+'</div>';
+const TIP=s=>'<div class="tip">'+s+'</div>';
+const A='#f59e0b',B='#34d399',R='#fb7185',W='#f5f5f4',G='#71717a';
+/* SVG helpers: boxes [x,y,w,h,text,color], lines [x1,y1,x2,y2,color], texts [x,y,text,color,size,anchor] */
+function SV(w,h,bx,ln,tx,cap){
+ let s=`<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,sans-serif"><defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#a1a1aa"/></marker></defs>`;
+ (ln||[]).forEach(l=>s+=`<line x1="${l[0]}" y1="${l[1]}" x2="${l[2]}" y2="${l[3]}" stroke="${l[4]||G}" stroke-width="2" ${l[5]===0?'':'marker-end="url(#ar)"'}/>`);
+ (bx||[]).forEach(b=>{const c=b[5]||A;s+=`<rect x="${b[0]}" y="${b[1]}" width="${b[2]}" height="${b[3]}" rx="8" fill="#0b0b0c" stroke="${c}" stroke-width="1.6"/>`;
+  const p=b[4].split('|');p.forEach((t,i)=>s+=`<text x="${b[0]+b[2]/2}" y="${b[1]+b[3]/2+(i-(p.length-1)/2)*15+4}" fill="${W}" font-size="12" text-anchor="middle">${t}</text>`)});
+ (tx||[]).forEach(t=>s+=`<text x="${t[0]}" y="${t[1]}" fill="${t[3]||W}" font-size="${t[4]||12}" text-anchor="${t[5]||'middle'}">${t[2]}</text>`);
+ return `<div class="dg">${s}</svg>${cap?'<div class="cap">'+cap+'</div>':''}</div>`;
+}
+const D={};
+
+/* ================= WEEK 11-12 DATA ================= */
+const IMP=s=>'<div class="imp"><b>\u2605 Important:</b> '+s+'</div>';
+
+/* ---------- diagrams ---------- */
+const dEoq=`<div class="dg"><svg viewBox="0 0 760 270" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,sans-serif"><line x1="60" y1="20" x2="60" y2="225" stroke="#71717a"/><line x1="60" y1="225" x2="720" y2="225" stroke="#71717a"/>
+<polyline fill="none" stroke="#fb7185" stroke-width="3" points="80,200 200,170 320,140 440,110 560,80 680,50"/>
+<polyline fill="none" stroke="#34d399" stroke-width="3" points="80,40 140,95 200,130 260,152 320,167 440,185 560,195 680,200"/>
+<polyline fill="none" stroke="#f59e0b" stroke-width="3" stroke-dasharray="6 4" points="80,55 140,105 200,125 260,132 320,137 380,142 440,150 560,160 680,172"/>
+<line x1="268" y1="30" x2="268" y2="225" stroke="#f5f5f4" stroke-dasharray="3 4"/><text x="268" y="242" fill="#f5f5f4" font-size="12" text-anchor="middle">EOQ (minimum total cost)</text>
+<text x="690" y="52" fill="#fb7185" font-size="11">Holding cost</text><text x="690" y="204" fill="#34d399" font-size="11">Ordering cost</text><text x="690" y="176" fill="#f59e0b" font-size="11">Total cost</text>
+<text x="400" y="262" fill="#a1a1aa" font-size="11" text-anchor="middle">Order quantity per batch</text></svg>
+<div class="cap">Rebuilt (schematic): holding cost rises with batch size, ordering cost falls, and the total is lowest where they meet: the Economic Order Quantity.</div></div>`;
+const dAbc=(()=>{let b='';const d=[['A','20%','70%',20,70],['B','30%','25%',30,25],['C','50%','5%',50,5]];
+ d.forEach((x,i)=>{const bx=90+i*210;
+  b+=`<rect x="${bx}" y="${230-x[3]*3.2}" width="60" height="${x[3]*3.2}" fill="#f59e0b" opacity=".85"/><rect x="${bx+70}" y="${230-x[4]*3.2}" width="60" height="${x[4]*3.2}" fill="#34d399" opacity=".85"/>
+  <text x="${bx+30}" y="${222-x[3]*3.2}" fill="#f5f5f4" font-size="12" text-anchor="middle">${x[1]}</text><text x="${bx+100}" y="${222-x[4]*3.2}" fill="#f5f5f4" font-size="12" text-anchor="middle">${x[2]}</text>
+  <text x="${bx+65}" y="250" fill="#f5f5f4" font-size="13" text-anchor="middle">Category ${x[0]}</text>`;});
+ return `<div class="dg"><svg viewBox="0 0 760 270" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,sans-serif"><line x1="60" y1="230" x2="720" y2="230" stroke="#71717a"/>${b}<rect x="560" y="20" width="12" height="12" fill="#f59e0b"/><text x="578" y="31" fill="#f5f5f4" font-size="12">Share of items</text><rect x="560" y="42" width="12" height="12" fill="#34d399"/><text x="578" y="53" fill="#f5f5f4" font-size="12">Share of income</text></svg><div class="cap">Rebuilt: ABC analysis (Pareto, 80/20 idea). A: 20% of items, 70% of income; B: 30% and 25%; C: 50% and 5%.</div></div>`;})();
+const dMin=SV(760,120,
+ [[40,30,200,50,'Buffer stock|consumption during the|standard replenishment period',A],[290,30,200,50,'Safety stock|extra stock against uncertainty|in supply and demand',B],[540,30,200,50,'MINIMUM STOCK|= Buffer + Safety',R]],
+ [[240,55,290,55,G,0],[490,55,540,55]],[[265,58,'+',W,20],[515,50,'=',W,20]],'Rebuilt: minimum stock formula.');
+const dVmi=SV(760,150,
+ [[20,35,200,60,'Customer / retailer|warehouse and sales data'],[290,35,180,60,'Supplier|monitors stock and decides|replenishment',B],[540,35,200,60,'Delivery to customer|warehouse (supplier owns the|replenishment decision)']],
+ [[220,55,290,55],[470,55,540,55]],[[255,48,'data',G,11],[505,48,'stock',G,11],[380,130,'Prerequisite: regular transfer of inventory and consumption data to the supplier',G,12]],'Rebuilt: Vendor Managed Inventory.');
+const dTemple=SV(760,300,
+ [[270,8,220,28,'Continuous monitoring and intelligence',R],[60,44,640,30,'ROOF: Supply chain transparency (visibility across flows and networks)',A],
+  [50,84,150,120,'Agility',B],[220,84,150,120,'Collaboration',B],[390,84,150,120,'Supply chain risk|management culture',B],[560,84,150,120,'Supply chain design',B],
+  [30,214,700,30,'FLOOR: Product design for supply chain management (raw materials, sourcing locations, configurations)',A],[10,254,740,34,'FOUNDATION: Effective supply chain strategy aligned with competitive strategy',R]],
+ null,null,'Rebuilt: the "Temple of Supply Chain Resilience" from the lecture. Crown = continuous monitoring; roof = transparency; four pillars; floor = product design; foundation = strategy.');
+const dTbl=`<div class="dg"><svg viewBox="0 0 760 290" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,sans-serif">
+<circle cx="300" cy="115" r="95" fill="#f59e0b" fill-opacity=".28" stroke="#f59e0b" stroke-width="2"/><circle cx="460" cy="115" r="95" fill="#34d399" fill-opacity=".28" stroke="#34d399" stroke-width="2"/><circle cx="380" cy="215" r="95" fill="#fb7185" fill-opacity=".28" stroke="#fb7185" stroke-width="2"/>
+<text x="250" y="95" fill="#f5f5f4" font-size="13" text-anchor="middle">PEOPLE</text><text x="250" y="112" fill="#f5f5f4" font-size="11" text-anchor="middle">social</text>
+<text x="510" y="95" fill="#f5f5f4" font-size="13" text-anchor="middle">PLANET</text><text x="510" y="112" fill="#f5f5f4" font-size="11" text-anchor="middle">environmental</text>
+<text x="380" y="262" fill="#f5f5f4" font-size="13" text-anchor="middle">PROFIT</text><text x="380" y="278" fill="#f5f5f4" font-size="11" text-anchor="middle">economic</text>
+<text x="380" y="160" fill="#f5f5f4" font-size="12" text-anchor="middle">Sustainable</text><text x="380" y="176" fill="#f5f5f4" font-size="12" text-anchor="middle">supply chain</text></svg>
+<div class="cap">Rebuilt: Triple Bottom Line (John Elkington): people, planet, profit. The 2005 UN World Summit named the same three pillars of sustainable development.</div></div>`;
+const dDig=SV(780,130,
+ [[10,30,130,60,'1. Clear vision|aligned with|enterprise goals'],[155,30,130,60,'2. Assess resources|legacy systems, data,|workforce skills',B],[300,30,130,60,'3. Unified platform|end-to-end|visibility'],[445,30,130,60,'4. Automate|planning|(routine tasks)',B],[590,30,130,60,'5. Align people|and processes|(adoption)']],
+ [[140,60,155,60],[285,60,300,60],[430,60,445,60],[575,60,590,60]],null,'Rebuilt: steps to implement digital transformation in the supply chain.');
+const dPprr=SV(760,110,
+ [[10,25,170,60,'PREVENTION|precautionary measures',A],[200,25,170,60,'PREPAREDNESS|contingency plan ready',B],[390,25,170,60,'RESPONSE|execute plan, cut impact',A],[580,25,170,60,'RECOVERY|resume normal capacity',B]],
+ [[180,55,200,55],[370,55,390,55],[560,55,580,55]],null,'Rebuilt: PPRR risk management model.');
+const dEsc=SV(760,170,
+ [[10,30,350,100,'CONVENTIONAL SUPPLY CHAIN|goal: maximise service level at lowest cost|effective AND efficient|exists before; disruptions change its configuration|identity stays the same',A],[400,30,350,100,'EMERGENCY SUPPLY CHAIN|goal: results quickly, "at all cost"|effectiveness over efficiency|built after the emergency, new links, routes and demand|e.g. fly supplies instead of sealift',R]],
+ null,[[380,155,'vs',W,14]],'Rebuilt: conventional versus emergency supply chains.');
+
+/* ===================== WEEK 11 ===================== */
+D[11]={notes:[
+["Lecture 52 - Inventory Management",
+IMP('Asked: <b>Minimum Stock = Buffer Stock + Safety Stock</b> and <b>decoupling inventory</b> (reserve for a second machine if the first fails).')+
+`<h4>Inventory management: meaning</h4><p><b>Inventory management</b> is the process of ordering, storing, using and selling a company's inventory: raw materials, components, finished products, and the warehousing and processing of such items. <b>Inventory</b> is any stored material (also called stock; in manufacturing, "stock" strictly means finished goods in the store). In the service industry there is no exchange of physical stock, so inventory is mostly intangible: the steps involved before completing a sale.</p>
+<h4>Useful terms</h4>`+dMin+
+T(['Term','Meaning'],[
+['<b>Minimum Stock</b>','Minimum quantity always available to avoid shortage (critical or hard-to-resupply products): <b>Buffer Stock + Safety Stock</b>'],
+['<b>Buffer Stock</b>','Stock equal to consumption during the standard replenishment period'],
+['<b>Safety Stock</b>','Extra stock kept to mitigate stock-out risk from uncertainties in supply and demand'],
+['Bin card / Stock card','Documents updated by the storekeeper tracking the stock of one product in a bin or the storage'],
+['Committed inventory','Items committed to a particular order'],['Demand signal','Any request to remove stock from a warehouse, in any format'],
+['Inventory ledger','Accounting record of receptions and dispatches in quantity and value'],['Lead time','Time between placing an order and receiving it'],
+['On-hand inventory','Items available to be released'],['Over-stock','Too much inventory kept'],['Physical inventory','Counting and verifying goods to reconcile data'],
+['Re-ordering cycle','Period between two successive regular orders'],['SKU','Stock Keeping Unit: unique code for a single line item'],
+['Stock-out','Inventory cannot cope with demand for an item'],['VMI','Vendor Managed Inventory: suppliers manage physical inventory in the retailer\'s stock'],['WIP','Work in progress / process']])+
+`<h4>Types of inventory</h4>`+T(['Type','Meaning','Example or note'],[
+['Raw materials','Initial components or materials for production','Input to the process'],
+['<b>Work in progress (WIP)</b>','Goods being manufactured but not yet completed','Semi-finished goods on the factory floor'],
+['Finished goods','Fully manufactured, ready for sale',''],
+['<b>MRO</b> (Maintenance, Repair, Operating)','Supplies for upkeep of machines and equipment; <b>not accounted as inventory items in the books</b>','Lubricants, coolants, uniforms, gloves, nuts, bolts, screws'],
+['<b>Buffer inventory</b>','Held for unexpected rise in demand (e.g. promotion that sells more than planned)','"Prevention is better than cure"'],
+['<b>Cycle inventory</b>','Goods ordered in lot sizes to meet minimum production requirements; plan with campaigns, seasonality, trends','Cycle stock'],
+['<b>Decoupling inventory</b>','<b>Items kept in reserve to be processed by another machine if the previous machine fails</b>; shields against supplier problems, inconsistent lead times and production halts','Keeps the chain from collapsing'],
+['<b>Transit (pipeline) inventory</b>','Shipped by the seller but not yet at the buyer\'s destination','Also called pipeline inventory']])+
+`<div class="tip">Distinction used in the lecture: buffer inventory covers an unexpected demand increase; safety stock covers WIP and supplier delays (e.g. manufacturing shutdown).</div>`],
+["Lecture 53 - Inventory Management (Contd.)",
+IMP('Asked: <b>DSI</b> (average days to turn inventory into sales), <b>zero inventory = JIT</b>, <b>ABC: Category A = 20% of stock, 70% of income</b>, and <b>VMI</b> (supplier manages stock at the retailer).')+
+`<p>Four methods in the lecture: <b>JIT, MRP, EOQ, DSI</b>, plus the zero inventory concept, ABC analysis and VMI.</p>
+<h4>Just-in-Time (JIT)</h4><p>Receive goods only as needed in production to raise efficiency and cut waste. Originated in Japan in the 1960s and 1970s; <b>Toyota</b> contributed most. Needs careful scheduling and a strong relationship with suppliers.</p>`+
+T(['Benefits','Risks and limits','Companies'],[['Lower storage and insurance cost; less obsolescence; better cash flow; supplier relationships; efficiency; quality','Supply disruptions halt production; supplier dependency; unpredictable demand causes shortages; costly set-up','Toyota (TPS, 1970s), Dell (build to order), Harley-Davidson']])+
+`<h4>Material Requirements Planning (MRP)</h4><p>Sales-forecast-dependent system making sure materials are available for production and products for delivery. Combines the production schedule, inventory data and the <b>bill of materials (BOM)</b> to compute purchasing and shipping schedules. Example: a ski manufacturer stocks plastic, fibreglass, wood and aluminium from forecast orders.</p>`+
+T(['Benefits','Limits','Users'],[['Inventory control, production planning, cost savings, supplier coordination, efficiency','Needs accurate data; complex and costly; inflexible to sudden change; must integrate with ERP and SCM','Toyota, Intel, Boeing']])+
+`<h4>Economic Order Quantity (EOQ)</h4><p>Number of units to add per batch order to minimise total inventory cost, assuming constant demand. Costs: <b>ordering (set-up) cost</b> and <b>holding cost</b>.</p>`+M([['EOQ = sqrt(2DS / H)','D annual demand, S cost per order, H holding cost per unit per year']])+dEoq+
+`<p>Lecture example (shirt shop selling 1,000 shirts a year): EOQ is about <b>28.3 units</b> per order. (Standard figures for this example: order cost 2, holding cost 5 per shirt.)</p>
+<h4>Days Sales of Inventory (DSI)</h4><p>Average time in days a company takes to <b>turn inventory, including work in progress, into sales</b>. Also called average age of inventory, days inventory outstanding (DIO), days in inventory (DII). It shows liquidity: how many days current stock will last. <b>Lower DSI is generally preferred</b>; norms differ by industry. Example in lecture: Pfizer.</p>`+M([['DSI = (Avg inventory / COGS) x 365','Standard formula; days to clear stock']])+
+`<h4>Zero inventory concept</h4><p>Lean concept aimed at minimising or eliminating excess inventory in production; also Zero Inventory System or Zero Inventory Manufacturing. <b>Based on JIT</b> and lean thinking: produce and deliver exactly when needed, in the right quantity, with minimum waste.</p>`+
+T(['Importance','Notes'],[['Cost reduction','Lower storage, handling, insurance'],['Efficiency','Streamlined processes, less waste'],['Working capital','Less capital tied up in stock'],['Risk mitigation','Less obsolete or spoiled stock']])+
+`<h4>ABC analysis (inventory theory model)</h4><p>Ranks inventory by importance using the <b>80/20 (Pareto)</b> idea; often combined with JIT. Drawback: stock must be classified correctly.</p>`+dAbc+
+T(['Category','Share of items','Share of income','Control'],[['<b>A</b>','<b>20%</b>','<b>70%</b>','Tightest ordering control, most attention'],['B','30%','25%','Moderate; still matters'],['C','50%','5%','Loose control']])+
+`<h4>Vendor Managed Inventory (VMI)</h4><p>The <b>supplier assumes responsibility for inventory management and disposition at the customer's warehouse</b>. Prerequisite: regular transfer of all relevant data (inventory, consumption) to the supplier. It optimises performance along the chain; the supplier ensures optimal stock levels, and production and inventories can be planned better.</p>`+dVmi+
+`<h4>Product-based versus service-based companies</h4><p>Product companies manage physical stock (inventory management); service companies have no physical stock and manage waiting (queue management), as in Week 5.</p>`],
+["Lecture 54 - Supply Chain Digitalization",
+IMP('Asked: <b>IoT</b> (sensors and RFID for real-time data), <b>ERP</b> = Enterprise Resource Planning, and the benefit <b>better financial management through automated reorder notifications</b>.')+
+`<h4>What supply chain digitization is</h4><p>Using digital technologies and analytics to connect, automate and optimise supply chain processes for end-to-end visibility, better decisions and efficiency. <b>Digital transformation</b> adds a change in culture, processes and skills.</p>
+<h4>Key components</h4>`+T(['Component','Role'],[['<b>IoT</b> (Internet of Things)','Sensors, RFID tags and devices collecting real-time data on inventory and shipments'],['<b>ERP</b> (Enterprise Resource Planning)','Integrates inventory, procurement, production planning and finance in one system'],['AI / machine learning, analytics','Demand forecasts, optimisation, preventing stock-outs'],['Blockchain','Traceability and transparency'],['Cloud platforms','Shared, unified data across partners'],['Risk management tools','Assess geopolitical, natural disaster and supplier risks; contingency plans'],['Compliance tools','Track regulatory requirements and documentation'],['Continuous improvement','Automate workflows, culture of experimentation']])+
+`<h4>Implementing digital transformation</h4>`+dDig+
+L(['<b>Vision:</b> aligned with enterprise objectives (decision-making, automation, visibility)','<b>Assess resources:</b> legacy systems, capability to generate, collect and analyse data, workforce skills','<b>Unified platform:</b> complete end-to-end visibility for inventory, warehouse, forecasting, logistics','<b>Automate planning:</b> routine tasks, not complex or collaborative scenarios; real-time and AI analytics','<b>Align the team:</b> success depends on collaboration and adopting new methods'])+
+`<h4>Benefits of digitization</h4>`+T(['Benefit','Example'],[
+['<b>Better financial management</b>','Automated notifications when to reorder, avoiding high <b>stockout costs</b>; more accurate replenishment cuts carrying cost and dead stock'],
+['Minimised lead times','Fulfilment software linked to the e-commerce store receives and prepares orders automatically'],
+['Improved decision making','Historical sales and buying behaviour predict demand and set inventory per DC'],
+['Increased automation','Less manual work and human error'],
+['Organisational flexibility','Freedom to choose the degree of centralisation'],
+['Accelerates innovation','Strengthens business model and partner relationships'],
+['End-to-end customer engagement','Order tracking keeps customers informed and in control']])+
+`<h4>Factors fostering digitalization</h4>`+T(['Factor','Detail'],[['Government initiatives and policies','Funding, tax incentives, regulatory frameworks'],['Market demand and competition','Customer expectations force adoption'],['Technological advancement','AI, ML, IoT, blockchain'],['Globalization and complexity','Manual, disconnected systems no longer viable']])+
+`<h4>Challenges</h4><p>Three unavoidable issues from technical tools and human factors. The main one remains <b>technical</b>: companies' information systems and the availability and quality of data; others are people and process related (skills, resistance, adoption).</p>`],
+["Lecture 55 - Smart Supply Chains",
+IMP('Know the smart supply chain components (real-time visibility, predictive analytics, automation, dynamic optimisation, collaborative networks) and the <b>three Ps: Profit, People, Planet</b>.')+
+`<h4>Evolution</h4>`+F(['Early 20th century: Taylor, Ford (efficiency)','Late 20th century: globalization','1980s-90s: IT and ERP','Recent: smart technologies, Industry 4.0'])+
+`<h4>Definition and characteristics</h4><p>Smart supply chains use data-driven insight, automation and connectivity to improve agility, efficiency and resilience, with real-time monitoring of inventory, production and transport. Characteristics: <b>instrumented, interconnected, intelligent, automated, integrated, innovative</b>, adaptable. Definitions in the literature are inconsistent; they refer to smart drivers (logistics, warehouse), data streams, technologies, and characteristics. <b>Industry 4.0</b> = cyber-physical systems, cloud and AI.</p>
+<h4>Key components</h4>`+T(['Component','Meaning'],[['Real-time visibility','IoT sensors across the chain; track goods, spot bottlenecks'],['Predictive analytics','Big data and AI forecast demand, optimise inventory, anticipate maintenance'],['Automated processes','Robotics, automated material handling, autonomous vehicles'],['Dynamic optimisation','AI and algorithms re-optimise schedules, stock and routes'],['Collaborative networks','Cloud platforms and digital ecosystems share information'],['Sustainable practices','Lower energy, waste; renewable energy, green logistics, eco packaging'],['Agile and resilient','Real-time monitoring and predictive analytics to adapt to disruption']])+
+`<h4>Responsiveness, efficiency, flexibility, resilience</h4>`+T(['Concept','Meaning'],[['Responsiveness','Adapt quickly to market change and deliver superior customer experience'],['<b>Efficiency</b>','Produce goods or services without wasting materials, time or energy; maximise outputs from given inputs'],['Flexibility','Anticipate and respond to changes in demand and operating conditions'],['Resilience','Efficiency + visibility and traceability + flexibility, supported by IoT, AI and blockchain, so disruptions (disasters, cyber-attacks) are anticipated and handled']])+
+`<h4>Sustainability in the smart supply chain</h4><p>A chain that <b>closes the loop</b> of upstream and downstream flows by recycling and recovering used items and re-entering them in production, with goals from economic, environmental and social dimensions.</p>`+M([['Profit','Economic value through efficient manufacturing and distribution'],['People','Customer value with attention to social and environmental effects'],['Planet','Minimise resource use; eliminate environmental impact of waste']])+
+`<h4>Implementation</h4><p>IoT-based, blockchain-based, and cloud and AI-based sustainable smart supply chains; example: power distribution supply chain using Industry 4.0 smart grids.</p>`],
+["Lecture 56 - Robust and Resilient Supply Chain Design",
+IMP('Asked: the <b>ultimate goal of a resilient supply chain is to bounce back from disruptions and learn from them</b>. Know robustness, vulnerability, PPRR and the Temple.')+
+`<h4>Vulnerability, risk, robustness, resilience</h4>`+T(['Concept','Meaning'],[['Risk','Operational, financial or strategic; identify, assess, mitigate (redundancy, supplier diversification, contingency plans)'],['Vulnerability','Susceptibility to disruptions (disasters, geopolitics, downturns, demand shifts) that hit flows of materials, information, resources'],['Robustness','Ability to withstand and recover while keeping essential functions; flexible, adaptable, agile'],['<b>Resilience</b>','<b>Ultimate goal: bounce back from disruptions and learn from them to improve future performance</b>; adaptive capacity, collaboration, transparency, technology']])+
+`<h4>Types of supply chain risk</h4>`+T(['External (harder to predict)','Internal (more manageable)'],[['<b>Demand</b> (miscalculated demand); <b>Supply</b> (late or no raw materials); <b>Environmental</b> (socio-economic, political, governmental, environmental); <b>Business</b> (unexpected change in a dependent entity, e.g. supplier sale)','<b>Manufacturing</b> (key component disrupted); <b>Business</b> (personnel, management, reporting); <b>Planning and control</b> (poor forecasting); <b>Mitigation and contingency</b> (no contingency plan)']])+
+`<h4>PPRR risk management model</h4>`+dPprr+
+`<h4>SCRM strategies (7 in the lecture)</h4>`+L(['Leverage the <b>PPRR</b> model','Manage environmental risk (COVID-19: multi-sourcing; breweries made hand sanitiser, Ford made ventilators; diversify suppliers, source closer, stress tests, inventory buffers, harmonise technology)','Track freight carrier metrics: transit time, number of stops and stop time, loading time, route optimisation, maintenance schedule; have a logistics contingency plan','Conduct internal risk awareness training (best practices, cybersecurity, risk software)','Continuously monitor every level for risk indicators','Use data to model key risk event scenarios (predictive analytics)','Consolidate data in one centralised repository'])+
+`<h4>Temple of Supply Chain Resilience</h4>`+dTemple+
+`<h4>Components of a robust supply chain</h4>`+L(['<b>Flexibility</b> (flexible manufacturing, agile inventory, dynamic distribution)','<b>Resilience</b> (contingency plans, backup inventory, alternative sourcing)','<b>Redundancy</b> (alternative suppliers, facilities, routes)','<b>Collaboration</b> with partners','<b>Risk management</b>','<b>Technology integration</b> (analytics, AI, IoT)','<b>Visibility</b> across the chain'])+
+`<h4>Case: JD.com</h4><p>Integrated retail giant with a self-operated mode: buys all products from suppliers under long-term agreements and handles inventory, distribution, delivery and after-sales, controlling quality. Self-operated stores give about <b>60% of sales</b>; affiliated stores the rest. Traditional multi-stage chains (factory to brand manufacturer to agent to distributor to retailer) lack information sharing and suffer bullwhip magnification; the integrated chain is more resilient.</p>`],
+["Lecture 57 - 21st Century Supply Chain",
+IMP('Know the five themes (digitalization, visibility, globalization, sustainability and CSR, customer-centricity) and the trends (visibility, sustainability, regionalisation, robotics).')+
+`<h4>Evolution and challenges</h4><p>Technology, globalization and changing consumer preferences forced supply chains to evolve. Global chains raised interconnectedness and complexity: efficient when stable but <b>highly vulnerable</b> to disruption. COVID-19 showed the need for resilience: diversified suppliers, contingency plans, risk assessment.</p>
+<h4>Five themes</h4>`+T(['Theme','Meaning'],[['Digitalization and automation','AI, ML, big data, IoT: real-time data and decisions'],['Visibility and transparency','Insight from sourcing to delivery; better risk management and forecasting'],['Globalization and outsourcing','Cost, expertise, markets; but geopolitical and trade risks'],['Sustainability and CSR','Lower emissions and waste, ethical sourcing, fair labour'],['Customer-centricity and omni-channel','Speed, convenience, personalisation across stores, e-commerce, apps, social media']])+
+`<h4>Trends highlighted for 2024</h4>`+T(['Trend','Detail'],[['1 Integral visibility','Real-time visibility moves from nice-to-have to must-have; unified data platforms (IoT, logistics providers, ERP), analytics and digital twins'],['2 Sustainability as differentiator','Green transport, recyclable packaging, circular models, life cycle assessment, ESG disclosure; Paris Agreement context'],['3 Regionalised supply chains','Nearshoring, multi-node networks, dual or multi-sourcing to reduce risk and enable just-in-time'],['4 Robotic and autonomous operations','Automation of warehouses and transport'],['ESG','Environmental, social, governance factors increasingly shape supply chain dynamics'],['Web-based SCM','Web platforms integrate partners and information']])]],
+gl:[["Inventory management","Ordering, storing, using and selling a firm's inventory."],["Minimum stock","Buffer stock + safety stock."],["Buffer stock","Stock equal to consumption during the standard replenishment period."],["Safety stock","Extra stock against uncertainty in supply and demand."],["Lead time","Order placement to receipt."],["Stock-out","Stock cannot meet demand."],["SKU","Stock keeping unit; unique item code."],["WIP","Goods in production, not yet completed."],["MRO inventory","Maintenance, repair, operating supplies; not booked as inventory."],["Buffer inventory","Held for unexpected demand increases."],["Cycle inventory","Goods ordered in lot sizes for minimum production needs."],["Decoupling inventory","Reserve to be processed by another machine if one fails."],["Transit inventory","Shipped but not yet delivered; pipeline inventory."],["JIT","Receive goods only as needed; Toyota pioneered."],["MRP","Material requirements planning using BOM and forecasts."],["BOM","Bill of materials."],["EOQ","Order quantity minimising ordering plus holding cost."],["DSI","Days sales of inventory: average days to turn stock into sales; lower is better."],["Zero inventory","Lean concept based on JIT."],["ABC analysis","Pareto-based inventory ranking."],["Category A","20% of items, 70% of income."],["Category B","30% of items, 25% of income."],["Category C","50% of items, 5% of income."],["VMI","Supplier manages stock at the customer's location."],["Digitization","Digital tools for connected, automated supply chain."],["IoT","Sensors and RFID for real-time data."],["ERP","Enterprise Resource Planning."],["Digitization benefit","Automated reorder notifications avoid stockout costs."],["Smart supply chain","Data-driven, automated, connected chain (Industry 4.0)."],["Three Ps","Profit, People, Planet."],["Vulnerability","Susceptibility to disruption."],["Robustness","Withstand and recover while keeping function."],["Resilience","Bounce back and learn from disruptions."],["SCRM","Supply chain risk management."],["PPRR","Prevention, Preparedness, Response, Recovery."],["Temple of resilience","Foundation strategy; floor design; pillars agility, collaboration, risk culture, design; roof transparency."],["Regionalisation","Nearshoring and multi-node networks."],["JD.com","Self-operated mode, about 60% of sales."]],
+q:[
+["o","Which of the following formulas is used to calculate Minimum Stock?",["Minimum Stock = Safety Stock - Buffer Stock","Minimum Stock = Buffer Stock + Safety Stock","Minimum Stock = Reorder level + Safety Stock","Minimum Stock = Maximum Daily Sales + Maximum Lead Time"],1,"Minimum stock is buffer stock plus safety stock."],
+["o","Which type of inventory consists of items kept in reserve to be processed by a second machine if the first machine fails?",["Cycle Inventory","Transit Inventory","MRO Inventory","Decoupling Inventory"],3,"Decoupling inventory shields the process from breakdowns."],
+["o","What does the Days Sales of Inventory (DSI) metric specifically indicate about a company's inventory?",["The total cost of raw materials purchased in a single year","The percentage of profit earned from each unit of inventory sold","The maximum number of days a company can store finished goods before they expire","The average time in days it takes for a company to turn its inventory into sales"],3,"DSI is the average age of inventory in days; lower is generally better."],
+["o","The 'Zero Inventory' concept is primarily based on which strategy?",["Bulk Ordering Strategy","Over-Stocking Principle","Just-In-Time (JIT)","Manual Data Recording"],2,"Zero inventory builds on JIT and lean thinking."],
+["o","What is the ultimate goal of a resilient supply chain?",["To bounce back from disruptions and learn from them to improve future performance","To ensure a company never has to change its suppliers","To eliminate all human workers from the manufacturing process","To increase the amount of paperwork required for every transaction"],0,"Resilience is the ultimate goal of supply chain design."],
+["o","Which is a key benefit of supply chain digitization that helps avoid high stockout costs?",["Better financial management through automated reorder notifications","Manual record-keeping","Increased reliance on paper-based documentation","Eliminating all human workers from the warehouse"],0,"Automated reorder notifications avoid stock-outs."],
+["o","What is the core principle of Vendor Managed Inventory (VMI)?",["The retailer is solely responsible for managing all stock in the warehouse","Inventory is only managed once it has been fully depleted","Customers must manage the inventory themselves before making a purchase","The supplier assumes responsibility for managing the inventory at the retailer's location"],3,"The supplier manages stock using shared data."],
+["o","In ABC Analysis, which category typically represents only 20% of total stock but 70% of total income?",["Category C","Category B","Category A","Category D"],2,"A: 20% / 70%; B: 30% / 25%; C: 50% / 5%."],
+["o","Which key component of digitization uses sensors and RFID tags to collect real-time data on inventory and shipments?",["Manual Ledger Entry","Traditional Filing Systems","Paper-based Documentation","Internet of Things (IoT)"],3,"IoT provides real-time data."],
+["o","In supply chain digitization, what does ERP stand for?",["Enterprise Resource Planning","Electronic Resource Planning","Efficient Retail Processing","Essential Reliable Procurement"],0,"ERP integrates inventory, procurement, production planning and more."],
+["x","Buffer stock is best defined as:",["Stock equal to consumption during the standard replenishment period","Stock held only for MRO","Goods in transit","Finished goods only"],0,"Minimum stock adds safety stock to it."],
+["x","Safety stock is kept mainly to:",["Reduce lead time","Mitigate the risk of stock-out from uncertain supply and demand","Replace JIT","Track WIP"],1,"It covers uncertainty in supply and demand."],
+["x","Which items are MRO inventory?",["Finished products for sale","Lubricants, coolants, gloves, nuts and bolts","Raw materials for the product","Goods in transit"],1,"MRO items are not accounted as inventory in the books."],
+["x","Transit inventory is also called:",["Pipeline inventory","Cycle stock","Decoupling stock","Dead stock"],0,"It has been shipped but not yet delivered."],
+["x","Which inventory method was pioneered by Toyota in the 1960s to 70s?",["EOQ","JIT","ABC analysis","VMI"],1,"Just-in-Time."],
+["x","MRP uses which key input to compute material needs?",["Bill of materials with production schedule and forecasts","Only last year's sales","Customer complaints","Transport routes"],0,"It integrates BOM, schedule and inventory data."],
+["x","The EOQ model balances which two costs?",["Ordering cost and holding cost","Labour and energy","Transport and tax","Marketing and design"],0,"Total cost is lowest at the EOQ."],
+["x","A lower DSI generally indicates:",["Slower clearing of inventory","Faster conversion of inventory into sales","Higher holding cost","More safety stock"],1,"Lower DSI is usually preferred."],
+["x","ABC Category C typically represents:",["20% of items and 70% of income","30% of items and 25% of income","50% of items and 5% of income","5% of items and 50% of income"],2,"Category C needs loose control."],
+["x","A prerequisite for VMI is:",["Regular transfer of inventory and consumption data to the supplier","No data sharing","Manual counting only","Retailer-set reorder dates"],0,"The supplier needs data to manage stock."],
+["x","Which is NOT one of the four pillars of the Temple of Supply Chain Resilience?",["Agility","Collaboration","Price discounting","Supply chain design"],2,"Pillars: agility, collaboration, SCRM culture, supply chain design."],
+["x","PPRR stands for:",["Prevention, Preparedness, Response, Recovery","Planning, Pricing, Routing, Returns","Production, Procurement, Retail, Repair","Prediction, Protection, Reporting, Review"],0,"A popular supply chain risk management model."],
+["x","Which is an external supply chain risk?",["Demand risk","Planning and control risk","Manufacturing risk","Mitigation and contingency risk"],0,"External: demand, supply, environmental, business."],
+["x","The three Ps of sustainable smart supply chains are:",["Profit, People, Planet","Price, Product, Place","Plan, Prepare, Produce","Pull, Push, Predict"],0,"Economic, social and environmental dimensions."],
+["x","Which trend reduces risk through nearshoring and multi-node networks?",["Regionalised supply chains","Single global sourcing","Manual ledgers","Longer lead times"],0,"A highlighted 2024 trend."],
+["x","JD.com's self-operated stores contribute about what share of sales?",["10%","30%","60%","95%"],2,"Affiliated stores contribute the rest."]
+]};
+
+/* ===================== WEEK 12 ===================== */
+D[12]={notes:[
+["Lecture 58 - Sustainable Supply Chain",
+IMP('Asked: <b>goal = minimise environmental harm (energy, water, waste)</b>; <b>Triple Bottom Line coined by John Elkington</b>; <b>revenue and profit are traditional concerns</b>; <b>cost is the primary barrier</b>.')+
+`<h4>Role of sustainability in the supply chain</h4><p><b>Supply chain sustainability</b> = companies' efforts to consider the environmental and human impact of their products' journey: raw material sourcing, production, storage, delivery and every transport link. <b>Goal:</b> minimise environmental harm (<b>energy usage, water consumption, waste production</b>) while having a positive impact on people and communities. These concerns are <b>in addition to</b> traditional corporate concerns such as <b>revenue and profit</b>.</p>
+<p>The <b>Brundtland Commission</b> (UN) defined sustainable development as development that meets present needs without compromising future generations. The <b>2005 UN World Summit</b> named economic, environmental and social sustainability as the three pillars; all three must be reconciled. Growth in Brazil, China and India raised pressure on resources, so focus rose.</p>
+<h4>Why firms focus on sustainability (3 factor groups)</h4>`+L(['Reducing risk and improving financial performance','Attracting customers who value sustainability','Making the world more sustainable'])+
+`<h4>Cases</h4>`+L(['<b>Unilever</b> helped tomato growers in Brazil adopt drip irrigation; almost half its sales and most growth come from emerging economies; buys about 10% of world tea and 30% of spinach','<b>Wal-Mart</b> began defensively after activist criticism, then cut energy costs (efficient bulbs, skylights) and packaging; redesigned milk jugs with Costco, saving 10 to 20 cents a gallon'])+
+`<h4>Triple Bottom Line (TBL)</h4>`+dTbl+
+`<p>Coined by <b>John Elkington</b>: a yardstick for assessing supply chain sustainability while driving profitability. Aims: transparency in performance, economic opportunity, stronger local activities and competitive advantage, less environmental degradation.</p>`+
+T(['TBL measure','Includes'],[['<b>Social</b>','Health, well-being, quality of life: supportive work environments, gender equality, ethical practices, labour rights'],['<b>Environmental</b>','Green practices, certified suppliers, lower fossil fuel, waste and electricity use'],['<b>Economic</b>','Financial flow, expenditure, ROI, sustainable investments, growth prospects']])+
+L(['Reduces carbon footprint and energy expense','Paves the way for future growth and financial security','Enhances brand image and productivity'])+
+`<h4>Benefits: five business activities</h4>`+T(['Activity','Benefit'],[['Supply chain operations','Lower energy cost by setting emission targets with suppliers'],['Branding','MIT Sloan: consumers may pay <b>2-10% more</b> for supply chain transparency'],['Compliance','Government mandates; UN 2030 Sustainable Development Goals; traceability, e-waste, conflict minerals'],['Investor relations','Irresponsible practices hurt stock prices; nearly half of investors (Gallup) interested in sustainable funds'],['Corporate culture','Millennials seek purpose; helps hire and retain']])+
+`<h4>Key metrics (10)</h4>`+T(['Metric','Meaning'],[['Carbon footprint','Total greenhouse gas emissions of operations'],['Energy consumption','Energy used across manufacturing, transport, distribution'],['Water usage','Water consumed in production'],['Waste generation','Waste at each stage; recycling'],['Supplier diversity','Size, location, ownership, social responsibility'],['Ethical sourcing','Share of materials from suppliers meeting labour and environmental standards'],['Supplier compliance','Adherence, e.g. Fair Trade or FSC certification'],['Product lifecycle analysis','Environmental impact from extraction to disposal'],['Transportation efficiency','MPG or kg CO2 per ton-km'],['Social impact','Fair wages, worker safety, community development']])+
+`<h4>Drivers adding to sustainability (links to the six drivers)</h4>`+T(['Driver','Example'],[['Facilities','Energy-efficient stores; waste turned into profit (Walmart)'],['Inventory','Cut landfill stock and harmful additives; Walmart removed phosphates and redesigned packaging'],['Transportation','Walmart cut delivery fuel use by <b>65%</b>; IKEA designs for density'],['Sourcing','Starbucks C.A.F.E. programme; Mattel recall due to lead paint shows the risk'],['Information','Lack of standard measurement; internal scorecards (Walmart packaging tool)'],['Pricing','Differential pricing by load or time; tax credits (Nissan Leaf); customer willingness to pay long term']])+
+`<h4>Improving sustainability</h4><p>First step: find the supply chain's pain points by calculating the <b>product carbon footprint (PCF)</b>, which shows which operations need improvement; then set targets with suppliers, redesign packaging and transport, and track metrics.</p>
+<h4>Challenges</h4><p><b>Cost is the primary barrier</b> to implementing sustainable supply chains. Other difficulties: lack of standard measurement and reporting, supplier compliance, and the time customers take to accept change.</p>`],
+["Lecture 59 - Emergency Supply Chain",
+IMP('Asked: conventional chains adopt <b>proactive or reactive strategies for disruptions (fires, floods, labour strikes)</b>; the <b>2015 Nepal earthquake</b> as an example of humanitarian coordination.')+
+`<h4>What is an emergency supply chain (ESC)?</h4><p>A specialised logistical framework for urgent, unforeseen situations: natural disasters, public health emergencies, geopolitical crises. The Joint Logistics Enterprise defines a <b>complex emergency</b> as international conflict, humanitarian and domestic disaster relief scenarios involving warfare, food insecurity, epidemics and social conflict. ESCs have two domains: <b>networks supporting military expeditions</b> and <b>chains supporting NGO disaster relief</b>. Aim: timely and effective response, minimal disruption, support for recovery (stockpiling, alternate routes, agile communication).</p>
+<h4>Why a separate framework: disruption versus emergency</h4>`+T(['Conventional supply chain disruption','Emergency supply chain'],[['Conventional chains adopt <b>proactive or reactive strategies</b> for fires, floods, labour strikes','Formed in response to the emergency, often without prior relationships'],['Existing configuration is adjusted; <b>identity unchanged</b> (same stakeholders, products, facilities)','New locations, routes and demand points set up quickly'],['Disruption happens to an existing chain','Disaster relief chains exist specifically to address disasters'],['Success: results at lowest cost, effective and efficient','Success: results quickly; <b>effectiveness over efficiency</b>, "at all cost"']])+dEsc+
+`<h4>Uniqueness of emergency logistics</h4>`+L(['Upstream and downstream elements assemble rapidly and need heavy coordination and information sharing','Cost-saving optimisation may be inappropriate; faster modes (flying instead of sealift)','Objective is operational effectiveness, not meeting general demand','Prioritisation of needs is required and urgent decisions carry risk'])+
+`<h4>Humanitarian supply chain management</h4><p>Coordination of relief organisations such as UNICEF, using technology for tracking and prioritisation. Highlighted example: the <b>2015 Nepal earthquake</b> as effective humanitarian supply chain coordination.</p>`],
+["Lecture 60 - Assets Management in Supply Chain",
+IMP('Asked: the <b>meaning of supply chain asset</b> (tangible or intangible resource), <b>WIP vs raw materials</b>, and <b>asset vs inventory management (complete life cycle)</b>.')+
+`<h4>Supply chain asset</h4><p>A <b>supply chain asset</b> is any <b>tangible or intangible resource within a supply chain that contributes to its overall functioning and value creation</b>: physical (manufacturing facilities, warehouses, vehicles, inventory) and intangible (information systems, intellectual property, supplier relationships, brand reputation). The definition in the lecture excludes the company's cash and liquid investments.</p>
+<h4>Supply chain asset management</h4><p>Per the Corporate Finance Institute: developing, operating, maintaining and selling assets cost-effectively. It covers scheduled maintenance, work orders, historical and inventory data, employee and vendor scheduling, institutional knowledge. Example: a driver's post-trip inspection flags brake issues, so a quick work order cuts downtime. Reactive-only asset management hurts productivity; keep a birds-eye view.</p>
+<h4>Inventory management versus asset management</h4>`+T(['Inventory management','Asset management'],[['Tracks stock as it enters and leaves','Manages items the organisation intends to keep <b>through their complete life cycles</b>, from procurement to disposal'],['Replenishes goods and parts to sell to customers','Regular inspection, cleaning, repair or replacement'],['Customers return items to inventory only if dissatisfied','Users borrow items and return them to the system'],['Minimal contact and minimal details per item','Detailed history per asset; decides which assets provide value']])+
+`<h4>Types of asset in the supply chain</h4>`+T(['Asset','Meaning'],[['<b>Raw materials</b>','Initial components or materials used in production'],['<b>Work-in-progress (WIP)</b>','Goods being manufactured, not yet complete'],['Finished goods','Fully manufactured, ready for sale or distribution'],['Packaging materials','For packing finished goods for transport and storage'],['Tools and equipment','Machinery and tools for manufacturing or distribution'],['Transportation vehicles','Trucks, ships, airplanes'],['Warehousing infrastructure','Warehouses and storage units'],['IT assets','Software, hardware, technology infrastructure'],['Intellectual property','Patents, trademarks, copyrights'],['Human resources','Skilled labour and workforce']])+
+`<h4>Asset management KPIs</h4>`+T(['KPI','Formula / use'],[['<b>MTBF</b> (mean time between failures)','(Time in use - unplanned downtime) / number of breakdowns; anticipate failures'],['<b>MTTR</b> (mean time to repair)','Total maintenance time / number of repairs; compare technicians'],['<b>OEE</b> (overall equipment effectiveness)','Availability x Performance x Quality; supports repair-or-replace and maintenance decisions'],['Asset utilisation rate','How effectively assets are used compared with full potential'],['Return on assets','Profit generated per unit of asset value']])+
+M([['Availability','True operating time / planned production time'],['Performance','Actual cycle time vs planned (speed)'],['Quality','Valid pieces / total pieces produced']])+
+`<h4>Asset tracking and best practices</h4><p>Asset tracking systems (barcodes, RFID, GPS, IoT) give location and condition in real time, improve uptime and cut loss, with risks of cost and data accuracy. Best practices: maintain an accurate asset register, use preventive and predictive maintenance, track KPIs, adopt technology, and plan replacement by life cycle.</p>`]],
+gl:[["Supply chain sustainability","Considering environmental and human impact from sourcing to delivery."],["Goal of sustainability","Minimise environmental harm (energy, water, waste) and help communities."],["Traditional concerns","Revenue and profit, in addition to sustainability."],["Brundtland definition","Meet present needs without compromising future generations."],["Three pillars","Economic, environmental, social (UN 2005)."],["Triple Bottom Line","People, planet, profit; coined by John Elkington."],["Social measures","Health, well-being, labour rights, gender equality."],["Environmental measures","Fossil fuel, waste, electricity use, certified suppliers."],["Economic measures","Cash flow, ROI, sustainable investment, growth."],["Consumer premium","MIT Sloan: pay 2-10% more for transparency."],["Carbon footprint","Total greenhouse gas emissions of operations."],["PCF","Product carbon footprint; first step to find pain points."],["Transportation efficiency","MPG or kg CO2 per ton-km."],["Walmart transport","Cut delivery fuel use by 65%."],["Starbucks C.A.F.E.","Supplier programme for environmental and social responsibility."],["Mattel recall","Lead paint; sourcing sustainability risk."],["Cost barrier","Cost is the primary barrier to sustainable supply chains."],["Emergency supply chain","Rapidly formed chain for urgent, unforeseen situations."],["Two ESC domains","Military expedition networks and NGO disaster relief chains."],["Complex emergency","Conflict, humanitarian, disaster scenarios (warfare, food insecurity, epidemics)."],["Disruption vs emergency","Disruption changes an existing chain; emergency creates a new one."],["Proactive or reactive","Conventional strategies for disruptions like fires, floods, strikes."],["Effectiveness over efficiency","ESC success is speed, 'at all cost'."],["2015 Nepal earthquake","Example of humanitarian supply chain coordination."],["UNICEF","Humanitarian supply chain example."],["Supply chain asset","Tangible or intangible resource contributing to functioning and value."],["Asset management","Developing, operating, maintaining and selling assets cost-effectively."],["Asset vs inventory management","Asset management covers complete life cycles."],["Raw materials (asset)","Initial components used in production."],["WIP (asset)","Goods in the process of being manufactured."],["Finished goods","Ready for sale."],["IT assets","Software, hardware and infrastructure."],["Intellectual property","Patents, trademarks, copyrights."],["MTBF","Mean time between failures."],["MTTR","Mean time to repair."],["OEE","Availability x Performance x Quality."]],
+q:[
+["o","What is the core goal of supply chain sustainability?",["To minimize environmental harm from factors like energy, water, and waste","To replace traditional corporate supply chain concerns entirely","To focus exclusively on raw material sourcing and ignore storage or delivery","To find the fastest transportation links available"],0,"It also aims for a positive effect on people and communities."],
+["o","Who originally coined and developed the concept of the Triple Bottom Line?",["John Elkington","Michael Porter","Edward Freeman","Peter Drucker"],0,"John Elkington."],
+["o","Goods currently in the middle of being manufactured but not yet completed are classified as:",["Raw Materials","Work-in-Progress (WIP)","Packaging Materials","Finished Goods"],1,"WIP."],
+["o","Which represents a traditional corporate supply chain concern that exists in addition to sustainability efforts?",["Human impact on communities","Water consumption","Revenue and profit","Energy usage"],2,"The others are sustainability concerns."],
+["o","What is the primary barrier to implementing sustainable supply chains?",["Lack of corporate offices","Cost","Fast shipping speeds","Excessive software options"],1,"Cost is the primary barrier."],
+["o","Why do conventional supply chains adopt proactive or reactive strategies?",["To completely change their business model every year","To shut down all local operations permanently","To address disruptions like fires, floods, or labour strikes","To avoid using any transportation networks"],2,"Disruptions change configuration but not identity."],
+["o","Which type of supply chain asset refers to the initial components or materials used to start production?",["Raw Materials","Tools and Equipment","Finished Goods","Work-in-Progress (WIP)"],0,"Raw materials."],
+["o","Which real-world event is highlighted as an example of effective humanitarian supply chain coordination?",["The 2024 global shipping route restructuring","The EY sustainability survey launch","The Unilever global distribution expansion","The 2015 Nepal earthquake"],3,"The 2015 Nepal earthquake."],
+["o","What is the meaning of supply chain asset?",["Any tangible or intangible resource within a supply chain that contributes to its overall functioning and value creation","Only the cash stored in a company's corporate bank account","A government tax applied to international shipping routes","The total number of customers who buy a product online"],0,"The lecture definition excludes cash and liquid investments."],
+["o","Unlike inventory management, Asset Management is responsible for managing items:",["Only when customers return them due to dissatisfaction","With minimal contact and minimal details recorded","Through their complete life cycles, from procurement to disposal","Strictly to replenish goods and parts to sell to customers"],2,"Inventory management tracks stock in and out; asset management covers the full life cycle."],
+["x","The Brundtland Commission defined sustainable development as development that:",["Maximises profit","Meets present needs without compromising future generations' ability to meet theirs","Reduces all trade","Uses only renewable energy"],1,"The 2005 UN World Summit later named three pillars."],
+["x","The three pillars of sustainable development named at the 2005 UN World Summit are:",["Economic, environmental and social","Price, quality and speed","Plan, source and make","Risk, cost and time"],0,"All three must be reconciled."],
+["x","Unilever helped tomato growers in Brazil by promoting:",["Drip irrigation","Air freight","Fertiliser imports","Cold storage only"],0,"This saved water in an emerging market."],
+["x","Walmart reduced fuel use in product delivery by about:",["15%","35%","65%","90%"],2,"Through efficient loading and better vehicle fuel efficiency."],
+["x","MIT Sloan research found consumers may pay how much more for supply chain transparency?",["0.1-0.5%","2-10%","25-30%","50%"],1,"This supports the branding benefit."],
+["x","The Mattel toy recall due to lead paint illustrates risk in:",["Sourcing","Pricing","Facilities","Information"],0,"Sourcing sustainability failures cause reputational damage."],
+["x","The first step to improve supply chain sustainability suggested in the lecture is to:",["Buy new vehicles","Calculate the product carbon footprint to find pain points","Cut all suppliers","Raise prices"],1,"PCF shows which operations need improvement."],
+["x","Emergency supply chains prioritise:",["Lowest possible cost","Effectiveness (speed of results) over efficiency","Long lead times","Pricing power"],1,"They operate 'at all cost'."],
+["x","Emergency supply chains are primarily composed of which two domains?",["Retail and wholesale","Networks for military expeditions and chains for NGO disaster relief","Air and sea freight","Suppliers and customers"],1,"Both are built quickly in response to emergencies."],
+["x","In a conventional supply chain disruption, the chain's identity:",["Is completely replaced","Remains unchanged (same stakeholders, products and facilities)","Moves to a new country","Becomes an emergency chain"],1,"Only the configuration is adjusted."],
+["x","OEE is calculated as:",["Availability x Performance x Quality","Availability + Performance + Quality","Cost / Quality","MTBF - MTTR"],0,"A key asset management KPI."],
+["x","MTBF stands for:",["Mean time between failures","Maximum time before failure","Mean transit by freight","Minimum tooling basic fund"],0,"It anticipates breakdowns from failure history."],
+["x","Which is an intangible supply chain asset?",["Intellectual property","Warehouse","Truck","Raw material stock"],0,"Also information systems, supplier relationships, brand reputation."],
+["x","Which metric is used for transportation efficiency in sustainability tracking?",["kg of CO2 per ton-kilometre","Number of suppliers","Sales per store","Customer age"],0,"Or miles per gallon for vehicles."]
+]};
+D[11].imp=[
+['Minimum stock','Minimum Stock = Buffer Stock + Safety Stock; buffer = consumption during replenishment period; safety = cover for uncertainty.'],
+['Types of inventory','Raw materials, WIP, finished goods, MRO, buffer, cycle, decoupling (reserve if a machine fails), transit (pipeline).'],
+['JIT, MRP, EOQ, DSI','JIT (Toyota, cuts holding cost); MRP (BOM and forecasts); EOQ (ordering vs holding cost); DSI (average days to turn inventory into sales).'],
+['Zero inventory','Based on JIT and lean manufacturing.'],
+['ABC analysis','A: 20% of items, 70% of income; B: 30%, 25%; C: 50%, 5%; Pareto based.'],
+['VMI','Supplier manages inventory at the customer location; needs regular data sharing.'],
+['Digitization components and benefits','IoT (sensors, RFID), ERP (Enterprise Resource Planning); benefit: automated reorder notifications avoid stockout costs.'],
+['Digital transformation steps','Vision, assess resources, unified platform, automate planning, align people.'],
+['Smart supply chain','Real-time visibility, predictive analytics, automation, dynamic optimisation, collaboration; three Ps: Profit, People, Planet.'],
+['Resilience vs robustness','Resilience = bounce back and learn (ultimate goal); robustness = withstand disruption while keeping function.'],
+['Risk types and PPRR','External: demand, supply, environmental, business; internal: manufacturing, business, planning and control, contingency; PPRR = Prevention, Preparedness, Response, Recovery.'],
+['Temple of resilience','Foundation strategy, floor product design, pillars agility, collaboration, risk culture, supply chain design, roof transparency, crown monitoring.'],
+['21st century trends','Visibility, sustainability and ESG, regionalisation, robotics, omni-channel.']];
+D[12].imp=[
+['Goal of sustainability','Minimise environmental harm (energy, water, waste) and benefit people; in addition to revenue and profit concerns.'],
+['Brundtland and three pillars','Meet present needs without harming future generations; economic, environmental, social (UN 2005).'],
+['Triple Bottom Line','John Elkington; people, planet, profit; social, environmental, economic measures.'],
+['Benefits of sustainability','Operations, branding (2-10% premium), compliance, investor relations, culture.'],
+['Metrics and drivers','Carbon footprint, energy, water, waste, ethical sourcing, lifecycle, transport efficiency; drivers map to the six SC drivers.'],
+['Company cases','Unilever (drip irrigation), Wal-Mart (65% fuel cut, milk jug), IKEA, Starbucks C.A.F.E., Mattel recall.'],
+['Primary barrier','Cost is the primary barrier to implementing sustainable supply chains.'],
+['Emergency supply chain','Rapidly formed for urgent events; military and NGO relief domains; effectiveness over efficiency, at all cost.'],
+['Disruption vs emergency','Conventional chains use proactive or reactive strategies; identity unchanged. Emergency chains are new.'],
+['Humanitarian example','2015 Nepal earthquake coordination; UNICEF.'],
+['Supply chain asset','Tangible or intangible resource contributing to function and value; excludes cash.'],
+['Asset types','Raw materials, WIP, finished goods, packaging, tools, vehicles, warehouses, IT, IP, human resources.'],
+['Asset vs inventory management','Asset management covers complete life cycle, procurement to disposal; inventory management tracks stock for sale.'],
+['Asset KPIs','MTBF, MTTR, OEE = Availability x Performance x Quality, utilisation, ROA.']];
+
+/* ================= PRIORITY SYSTEM ================= */
+const KEYS={
+11:[[/Minimum Stock/,'Q1'],[/Decoupling inventory/i,'Q2'],[/Days Sales of Inventory/,'Q3'],[/Zero inventory/i,'Q4'],[/bounce back/i,'Q5'],[/stockout costs|automated notifications/i,'Q6'],[/Vendor Managed Inventory|\bVMI\b/,'Q7'],[/ABC analysis/i,'Q8'],[/\bIoT\b|Internet of Things/,'Q9'],[/\bERP\b/,'Q10']],
+12:[[/minimi[sz]e environmental harm/i,'Q1'],[/Elkington/,'Q2'],[/Work-in-progress|\bWIP\b/i,'Q3'],[/revenue and profit/i,'Q4'],[/primary barrier/i,'Q5'],[/proactive or reactive/i,'Q6'],[/Raw materials/,'Q7'],[/Nepal/,'Q8'],[/tangible or intangible/i,'Q9'],[/complete life cycles/i,'Q10']]
+};
+const OVR={
+11:[[/^Evolution$/,'L'],[/^Implementation$/,'L'],[/^Case: JD\.com/,'L'],[/^Factors fostering/,'L'],[/^Challenges$/,'M'],[/^Key components$/,'M',3],[/^Definition and characteristics/,'M'],[/^Responsiveness, efficiency/,'M'],[/^Sustainability in the smart/,'M'],[/^Material Requirements Planning/,'M'],[/^Economic Order Quantity/,'M'],[/^Just-in-Time/,'M'],[/^Product-based versus/,'L'],[/^Inventory management: meaning/,'M'],[/^Implementing digital transformation/,'M'],[/^Types of supply chain risk/,'M'],[/^SCRM strategies/,'M'],[/^Temple of Supply/,'M'],[/^Components of a robust/,'M'],[/^PPRR/,'M'],[/^Evolution and challenges/,'L'],[/^Five themes/,'M'],[/^Trends highlighted/,'M']],
+12:[[/^Cases$/,'L'],[/^Why firms focus/,'M'],[/^Benefits: five/,'M'],[/^Key metrics/,'M'],[/^Drivers adding/,'M'],[/^Improving sustainability/,'M'],[/^Uniqueness of emergency/,'M'],[/^Supply chain asset management$/,'M'],[/^Asset management KPIs/,'M'],[/^Asset tracking/,'L']]
+};
+function tierOf(w,si,p){
+ const hm=p.match(/^<h4>(.*?)<\/h4>/);
+ const head=hm?hm[1].replace(/<[^>]*>/g,''):'Overview';
+ const o=(OVR[w]||[]).find(r=>r[0].test(head)&&(r[2]===undefined||r[2]===si));
+ const asked=(KEYS[w]||[]).filter(k=>k[0].test(p)).map(k=>k[1]);
+ let t,a=[];
+ if(o){t=o[1];}
+ else if(asked.length){t='H';a=asked;}
+ else if(/class="imp"/.test(p)){t='M';}
+ else t='M';
+ return {t,a:a,head};
+}
+function decorate(){
+ document.querySelectorAll('.acc').forEach((acc,si)=>{
+  const c=acc.querySelector('.c');if(c.dataset.d)return;c.dataset.d='1';
+  const cnt={H:0,M:0,L:0};
+  c.innerHTML=c.innerHTML.split(/(?=<h4>)/).filter(p=>p.trim()).map(p=>{
+   const hm=/^<h4>/.test(p);
+   if(!hm&&/class="imp"/.test(p)&&p.replace(/<[^>]*>/g,'').length<420)return p;
+   const r=tierOf(wk,si,p);cnt[r.t]++;
+   const lab=r.t==='H'?'\u2605 Must know'+(r.a.length?' \u00b7 asked in '+[...new Set(r.a.join(', ').split(', '))].join(', '):''):r.t==='M'?'\u25cf Good to know':'\u25cb Background';
+   return '<div class="blk p-'+r.t+'"><span class="pb">'+lab+'</span>'+p+'</div>';
+  }).join('');
+  const h=acc.querySelector('.h');
+  h.innerHTML=h.innerHTML+'<span class="cnt">\u2605 '+cnt.H+' \u00b7 \u25cf '+cnt.M+' \u00b7 \u25cb '+cnt.L+'</span>';
+ });
+}
+document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{document.body.className='mode-'+b.dataset.m;document.querySelectorAll('[data-m]').forEach(x=>x.classList.toggle('on',x===b));});
+
+/* ================= ENGINE ================= */
+let wk=11,tab='notes';
+const main=document.getElementById('main');
+const lab={o:'Original assignment',x:'Extra practice'};
+const S={};
+function newQ(w){S[w]={st:{},score:0,done:0,f:'all',order:[]}}
+newQ(11);newQ(12);
+function render(){
+ if(tab==='notes'){
+  main.innerHTML=D[wk].notes.map(d=>`<div class="acc"><div class="h">${d[0]}</div><div class="c">${d[1]}</div></div>`).join('');
+  main.querySelectorAll('.h').forEach(h=>h.onclick=()=>h.parentNode.classList.toggle('open'));
+  main.querySelector('.acc').classList.add('open');decorate();
+ }else if(tab==='cards'){
+  main.innerHTML=`<input type="search" id="fs" placeholder="Search Week ${wk} terms..."><div class="grid" id="fg"></div>`;
+  const draw=f=>{const g=document.getElementById('fg');
+   g.innerHTML=D[wk].gl.filter(x=>(x[0]+x[1]).toLowerCase().includes(f)).map(x=>`<div class="fc"><div class="fi"><div class="fa">${x[0]}</div><div class="fb">${x[1]}</div></div></div>`).join('');
+   g.querySelectorAll('.fc').forEach(c=>c.onclick=()=>c.classList.toggle('f'));};
+  draw('');document.getElementById('fs').oninput=e=>draw(e.target.value.toLowerCase());
+ }else if(tab==='imp'){
+  main.innerHTML='<div class="imp"><b>★ Important topics for Week '+wk+'.</b> These are the ideas the assignment questions tested or that the lectures stress with numbers, definitions or named examples. Revise these first.</div>'+T(['#','Important topic','What to remember'],D[wk].imp.map((x,i)=>[i+1,'<b>'+x[0]+'</b>',x[1]]));
+ }else quiz();
+}
+function quiz(){
+ const s=S[wk],qs=D[wk].q;
+ main.innerHTML=`<div class="bar"><label>Set <select id="qs"><option value="all">All Week ${wk} questions</option><option value="o">Original assignment (${qs.filter(q=>q[0]==='o').length})</option><option value="x">Extra practice (${qs.filter(q=>q[0]==='x').length})</option></select></label><span id="sc"></span><div class="prog"><i id="pg"></i></div><button class="p" id="rs">Reset / Retake</button></div><div id="res"></div><div id="qb"></div>`;
+ const sel=document.getElementById('qs');sel.value=s.f;
+ sel.onchange=()=>{newQ(wk);S[wk].f=sel.value;quiz()};
+ document.getElementById('rs').onclick=()=>{const f=s.f;newQ(wk);S[wk].f=f;quiz()};
+ const idx=qs.map((q,i)=>i).filter(i=>s.f==='all'||qs[i][0]===s.f);
+ s.order=idx;
+ document.getElementById('qb').innerHTML=idx.map((i,n)=>{const q=qs[i];
+  return `<div class="q" id="q${i}"><div class="t">Q${n+1} &middot; ${lab[q[0]]}</div><p>${q[1]}</p>`+q[2].map((o,j)=>`<button class="o" data-q="${i}" data-o="${j}">${'ABCD'[j]}) ${o}</button>`).join('')+`<button class="chk" data-c="${i}">Check Answer</button><div class="ex" id="e${i}"></div></div>`}).join('');
+ document.querySelectorAll('.o').forEach(b=>b.onclick=()=>ans(+b.dataset.q,+b.dataset.o));
+ document.querySelectorAll('.chk').forEach(b=>b.onclick=()=>ans(+b.dataset.c,-1));
+ idx.forEach(i=>{if(s.st[i]!==undefined)show(i,s.st[i])});
+ upd();
+}
+function show(i,sel){
+ const q=D[wk].q[i];
+ document.querySelectorAll(`#q${i} .o`).forEach((b,j)=>{b.disabled=true;if(j===q[3])b.classList.add('ok');else if(j===sel)b.classList.add('no')});
+ const e=document.getElementById('e'+i);
+ e.innerHTML=(sel===q[3]?'<b style="color:var(--ok)">Correct.</b> ':sel===-1?'<b>Answer: '+'ABCD'[q[3]]+'.</b> ':'<b style="color:var(--no)">Incorrect.</b> Correct answer: '+'ABCD'[q[3]]+'. ')+q[4];
+ e.classList.add('s');
+}
+function ans(i,o){
+ const s=S[wk];if(s.st[i]!==undefined)return;
+ s.st[i]=o;s.done++;if(o===D[wk].q[i][3])s.score++;
+ show(i,o);upd();
+}
+function upd(){
+ const s=S[wk],n=s.order.length;
+ document.getElementById('sc').textContent=`Score: ${s.score} / ${s.done} (of ${n})`;
+ document.getElementById('pg').style.width=(n?s.done/n*100:0)+'%';
+ if(n&&s.done===n){const r=document.getElementById('res'),p=s.score/n;r.style.display='block';
+  r.innerHTML=`<b>${s.score} / ${n}</b><div>${Math.round(p*100)}% &middot; ${p>=.8?'Excellent work':p>=.6?'Good, review the misses':'Revisit the notes and retry'}</div>`}
+}
+document.querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{wk=+b.dataset.w;document.querySelectorAll('[data-w]').forEach(x=>x.classList.toggle('on',x===b));render();scrollTo(0,0)});
+document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tab=b.dataset.t;document.querySelectorAll('[data-t]').forEach(x=>x.classList.toggle('on',x===b));render();scrollTo(0,0)});
+render();
+</script>
+</body>
+</html>
